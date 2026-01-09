@@ -17,12 +17,12 @@ import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.swerve.SwerveDrivetrain;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DigitalInput;
-import frc4388.robot.constants.Constants.ElevatorConstants;
+//import frc4388.robot.constants.Constants.ElevatorConstants;
 import frc4388.robot.constants.Constants.LiDARConstants;
 import frc4388.robot.constants.Constants.SimConstants;
 import frc4388.robot.constants.Constants.VisionConstants;
-import frc4388.robot.subsystems.elevator.ElevatorIO;
-import frc4388.robot.subsystems.elevator.ElevatorReal;
+// import frc4388.robot.subsystems.elevator.ElevatorIO;
+// import frc4388.robot.subsystems.elevator.ElevatorReal;
 import frc4388.robot.subsystems.lidar.LiDAR;
 import frc4388.robot.subsystems.lidar.LidarIO;
 import frc4388.robot.subsystems.lidar.LidarReal;
@@ -44,13 +44,13 @@ public class RobotMap {
     // private Pigeon2 m_pigeon2 = new Pigeon2(SwerveDriveConstants.IDs.DRIVE_PIGEON.id);
     // public RobotGyro gyro = new RobotGyro(m_pigeon2);
 
-    public final VisionIO leftCamera;
-    public final VisionIO rightCamera;
+    // public final VisionIO leftCamera;
+    // public final VisionIO rightCamera;
 
     // public final LiDAR lidar = new 
 
-    public final LidarIO reefLidar;
-    public final LidarIO reverseLidar;
+    // public final LidarIO reefLidar;
+    // public final LidarIO reverseLidar;
 
 
     /* LED Subsystem */
@@ -59,25 +59,25 @@ public class RobotMap {
     /* Swreve Drive Subsystem */
     public final SwerveIO swerveDrivetrain;
 
-    /* Elevator Subsystem */
-    public final ElevatorIO elevatorIO;
+    // /* Elevator Subsystem */
+    // public final ElevatorIO elevatorIO;
 
     public RobotMap(SimConstants.Mode mode) {
         switch (mode) {
             case REAL:
-                // Configure cameras
-                PhotonCamera leftCameraReal = new PhotonCamera(VisionConstants.LEFT_CAMERA_NAME);
-                PhotonCamera rightCameraReal = new PhotonCamera(VisionConstants.RIGHT_CAMERA_NAME);
+                // // Configure cameras
+                // PhotonCamera leftCameraReal = new PhotonCamera(VisionConstants.LEFT_CAMERA_NAME);
+                // PhotonCamera rightCameraReal = new PhotonCamera(VisionConstants.RIGHT_CAMERA_NAME);
 
-                leftCamera =  new VisionReal(leftCameraReal, VisionConstants.LEFT_CAMERA_POS);                ;
-                rightCamera = new VisionReal(rightCameraReal, VisionConstants.RIGHT_CAMERA_POS);
+                // leftCamera =  new VisionReal(leftCameraReal, VisionConstants.LEFT_CAMERA_POS);                ;
+                // rightCamera = new VisionReal(rightCameraReal, VisionConstants.RIGHT_CAMERA_POS);
 
-                FaultPhotonCamera.addDevice(leftCameraReal, "Left Camera");
-                FaultPhotonCamera.addDevice(rightCameraReal , "Right Camera");
+                // FaultPhotonCamera.addDevice(leftCameraReal, "Left Camera");
+                // FaultPhotonCamera.addDevice(rightCameraReal , "Right Camera");
 
-                // Configure LiDAR
-                reefLidar = new LidarReal(LiDARConstants.REEF_LIDAR_DIO_CHANNEL);
-                reverseLidar = new LidarReal(LiDARConstants.REVERSE_LIDAR_DIO_CHANNEL);
+                // // Configure LiDAR
+                // reefLidar = new LidarReal(LiDARConstants.REEF_LIDAR_DIO_CHANNEL);
+                // reverseLidar = new LidarReal(LiDARConstants.REVERSE_LIDAR_DIO_CHANNEL);
 
                 // Configure swerve drive train
                 SwerveDrivetrain<TalonFX, TalonFX, CANcoder> swerveDrivetrainReal = new SwerveDrivetrain<TalonFX, TalonFX, CANcoder> (TalonFX::new, TalonFX::new, CANcoder::new, 
@@ -90,23 +90,23 @@ public class RobotMap {
 
                 // Configure elevator
 
-                TalonFX elevator = new TalonFX(ElevatorConstants.ELEVATOR_ID.id);
-                TalonFX endeffector = new TalonFX(ElevatorConstants.ENDEFFECTOR_ID.id);
+                // TalonFX elevator = new TalonFX(ElevatorConstants.ELEVATOR_ID.id);
+                // TalonFX endeffector = new TalonFX(ElevatorConstants.ENDEFFECTOR_ID.id);
                 
 
-                DigitalInput basinLimitSwitch = new DigitalInput(ElevatorConstants.BASIN_LIMIT_SWITCH);
-                DigitalInput endeffectorLimitSwitch = new DigitalInput(ElevatorConstants.ENDEFFECTOR_LIMIT_SWITCH);
-                DigitalInput IRIntakeBeam = new DigitalInput(ElevatorConstants.INTAKE_LIMIT_SWITCH);
+                // DigitalInput basinLimitSwitch = new DigitalInput(ElevatorConstants.BASIN_LIMIT_SWITCH);
+                // DigitalInput endeffectorLimitSwitch = new DigitalInput(ElevatorConstants.ENDEFFECTOR_LIMIT_SWITCH);
+                // DigitalInput IRIntakeBeam = new DigitalInput(ElevatorConstants.INTAKE_LIMIT_SWITCH);
 
-                elevatorIO = new ElevatorReal(elevator, endeffector, basinLimitSwitch, endeffectorLimitSwitch, IRIntakeBeam);
+                // elevatorIO = new ElevatorReal(elevator, endeffector, basinLimitSwitch, endeffectorLimitSwitch, IRIntakeBeam);
 
 
 
                 // Fault
                 FaultPidgeon2.addDevice(swerveDrivetrainReal.getPigeon2(), "Gyro");
 
-                FaultTalonFX.addDevice(elevator, "Elevator");
-                FaultTalonFX.addDevice(endeffector, "Endeffector");
+                // FaultTalonFX.addDevice(elevator, "Elevator");
+                // FaultTalonFX.addDevice(endeffector, "Endeffector");
                 
                 FaultTalonFX.addDevice(swerveDrivetrainReal.getModule(0).getDriveMotor(), "Module 0 Drive");
                 FaultTalonFX.addDevice(swerveDrivetrainReal.getModule(0).getSteerMotor(), "Module 0 Steer");
@@ -125,12 +125,12 @@ public class RobotMap {
             // case SIM:
             //     break;
             default:
-                leftCamera = new VisionIO() {};
-                rightCamera = new VisionIO() {};
-                reefLidar = new LidarIO() {};
-                reverseLidar = new LidarIO() {};
+                // leftCamera = new VisionIO() {};
+                // rightCamera = new VisionIO() {};
+                // reefLidar = new LidarIO() {};
+                // reverseLidar = new LidarIO() {};
                 swerveDrivetrain = new SwerveIO() {};
-                elevatorIO = new ElevatorIO() {};
+                // elevatorIO = new ElevatorIO() {};
                 break;
         }
     }
