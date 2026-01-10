@@ -4,6 +4,8 @@
 
 package frc4388.robot.subsystems.swerve;
 
+import java.util.function.Supplier;
+
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
@@ -313,6 +315,10 @@ public class SwerveDrive extends SubsystemBase implements Queryable {
         if(state.currentPose == null)
             return initalPose2d;
         return state.currentPose;
+    }
+
+    public Supplier<Pose2d> getPoseSupplier() {
+        return () -> this.getPose2d();
     }
 
     public void resetGyro() {
