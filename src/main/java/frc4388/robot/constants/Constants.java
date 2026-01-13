@@ -36,16 +36,16 @@ import frc4388.utility.structs.LEDPatterns;
 public final class Constants {
     public static final String CANBUS_NAME = "rio";
 
-    public static final class LiDARConstants {
-        public static final int REEF_LIDAR_DIO_CHANNEL = 7;
-        public static final int REVERSE_LIDAR_DIO_CHANNEL = 4;
+    // public static final class LiDARConstants {
+    //     public static final int REEF_LIDAR_DIO_CHANNEL = 7;
+    //     public static final int REVERSE_LIDAR_DIO_CHANNEL = 4;
 
-        public static final int HUMAN_PLAYER_STATION_DISTANCE = 40;
+    //     public static final int HUMAN_PLAYER_STATION_DISTANCE = 40;
 
-        public static final int LIDAR_DETECT_DISTANCE = 100; // Min distance to detect pole
-        public static final int LIDAR_MICROS_TO_CM = 10;
-        public static final int SECONDS_TO_MICROS = 1000000;
-    }
+    //     public static final int LIDAR_DETECT_DISTANCE = 100; // Min distance to detect pole
+    //     public static final int LIDAR_MICROS_TO_CM = 10;
+    //     public static final int SECONDS_TO_MICROS = 1000000;
+    // }
 
     public static final class AutoConstants {
         // public static final Gains XY_GAINS = new Gains(5,0.6,0.0);

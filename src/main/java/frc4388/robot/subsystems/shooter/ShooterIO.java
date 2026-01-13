@@ -16,13 +16,13 @@ import edu.wpi.first.units.measure.LinearVelocity;
 public interface ShooterIO {
     @AutoLog
     public class ShooterState {
-        Angle shooterAngle = Rotations.of(0);
-        Angle shooterTargetAngle = Rotations.of(0);
-        Current angleMotorCurrent = Amps.of(0);
+        // Angle shooterAngle = Rotations.of(0);
+        // Angle shooterTargetAngle = Rotations.of(0);
+        // Current angleMotorCurrent = Amps.of(0);
 
-        Angle shooterPitch = Rotations.of(0);
-        Angle shooterTargetPitch = Rotations.of(0);
-        Current pitchMotorCurrent = Amps.of(0);
+        // Angle shooterPitch = Rotations.of(0);
+        // Angle shooterTargetPitch = Rotations.of(0);
+        // Current pitchMotorCurrent = Amps.of(0);
 
         AngularVelocity flywheelVelocity = RotationsPerSecond.of(0);
         AngularVelocity flywheelTargetVelocity = RotationsPerSecond.of(0);
@@ -33,8 +33,8 @@ public interface ShooterIO {
         Current feederMotorCurrent = Amps.of(0);
     }
 
-    public default void setShooterAngle(ShooterState state, Angle angle) {}
-    public default void setShooterPitch(ShooterState state, Angle angle) {}
+    // public default void setShooterAngle(ShooterState state, Angle angle) {}
+    // public default void setShooterPitch(ShooterState state, Angle angle) {}
     public default void setFlywheelVelocity(ShooterState state, AngularVelocity angularVelocity) {}
     public default void setFeederVelocity(ShooterState state, LinearVelocity linearVelocity) {}
 
