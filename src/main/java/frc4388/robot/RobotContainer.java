@@ -7,18 +7,14 @@
 
 package frc4388.robot;
 
-// Drive Systems
-import edu.wpi.first.wpilibj.DriverStation;
-
 import java.io.File;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc4388.utility.controller.XboxController;
+import frc4388.utility.DeferredBlock;
+import frc4388.utility.compute.TimesNegativeOne;
 import frc4388.utility.controller.ButtonBox;
 import frc4388.utility.controller.DeadbandedXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -27,43 +23,23 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 // Commands
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
-import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 // Autos
 import frc4388.utility.controller.VirtualController;
+import frc4388.utility.controller.XboxController;
 import frc4388.robot.commands.MoveForTimeCommand;
-import frc4388.robot.commands.MoveUntilSuply;
-// import frc4388.robot.commands.alignment.DriveToReef;
-import frc4388.robot.commands.alignment.DriveUntilLiDAR;
-import frc4388.robot.commands.alignment.LidarAlign;
-// import frc4388.robot.commands.wait.waitElevatorRefrence;
-// import frc4388.robot.commands.wait.waitEndefectorRefrence;
-// import frc4388.robot.commands.wait.waitFeedCoral;
-import frc4388.robot.commands.wait.waitSupplier;
+import frc4388.robot.commands.alignment.RotTo45;
 import frc4388.robot.constants.Constants;
-import frc4388.robot.constants.Constants.AutoConstants;
-import frc4388.robot.constants.Constants.LiDARConstants;
 import frc4388.robot.constants.Constants.OIConstants;
 import frc4388.robot.constants.Constants.SimConstants.Mode;
 
-import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
 // Subsystems
 import frc4388.robot.subsystems.LED;
-// import frc4388.robot.subsystems.elevator.Elevator;
-// import frc4388.robot.subsystems.elevator.Elevator.CoordinationState;
-import frc4388.robot.subsystems.lidar.LiDAR;
 import frc4388.robot.subsystems.swerve.SwerveDrive;
 import frc4388.robot.subsystems.vision.Vision;
-// Utilites
-import frc4388.utility.DeferredBlock;
-import frc4388.utility.compute.TimesNegativeOne;
-// import frc4388.utility.compute.ReefPositionHelper.Side;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -91,7 +67,7 @@ public class RobotContainer {
     /* Controllers */
     private final DeadbandedXboxController m_driverXbox   = new DeadbandedXboxController(OIConstants.XBOX_DRIVER_ID);
     private final DeadbandedXboxController m_operatorXbox = new DeadbandedXboxController(OIConstants.XBOX_OPERATOR_ID);
-    private final ButtonBox m_buttonBox = new ButtonBox(OIConstants.BUTTONBOX_ID);
+    // private final ButtonBox m_buttonBox = new ButtonBox(OIConstants.BUTTONBOX_ID);
 
     // public List<Subsystem> subsystems = new ArrayList<>();
 
@@ -106,30 +82,54 @@ public class RobotContainer {
     private SendableChooser<String> autoChooser;
     private Command autoCommand;
 
+
+    public RobotContainer() {
+        
+        configureButtonBindings();
+        
+        DeferredBlock.addBlock(() -> { // Called on first robot enable
+            m_robotSwerveDrive.resetGyro();
+        }, false);
+        DeferredBlock.addBlock(() -> { // Called on every robot enable
+            TimesNegativeOne.update();
+        }, true);
+
+
+        DriverStation.silenceJoystickConnectionWarning(true);
+
+                m_robotSwerveDrive.setDefaultCommand(new RunCommand(() -> {
+            m_robotSwerveDrive.driveWithInput(getDeadbandedDriverController().getLeft(),
+            // m_robotSwerveDrive.driveWithInput(new Translation2d(.4, 0),
+                                            getDeadbandedDriverController().getRight(),
+                                true);
+        }, m_robotSwerveDrive)
+        .withName("SwerveDrive DefaultCommand"));
+        m_robotSwerveDrive.setToSlow();
+
+    }
     
+
+
+
     /**
-     * This method is used to replcate {@link Trigger Triggers} for {@link VirtualController Virtual Controllers}. <p/>
-     * Please use {@link RobotContainer#DualJoystickButton} in {@link RobotContainer#configureButtonBindings} for standard buttons.
+     * Use this method to define your button->command mappings. Buttons can be
+     * created by instantiating a {@link GenericHID} or one of its subclasses
+     * ({@link edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then
+     * passing it to a {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
      */
-    private void configureVirtualButtonBindings() {
-
-        // ? /* Driver Buttons */
+    private void configureButtonBindings() {
         
-        /* Notice: the following buttons have not been replicated
-         * Swerve Drive Slow and Fast mode Gear Shifts : Fast mode is known to cause drift, so we disable that feature in Autoplayback
-         * Swerve Drive Rotation Gear Shifts           : Same reason as Slow and Fast mode.
-         * Auto Recording controls                     : We don't want an Null Ouroboros for an auto.
-         */
 
-        // ? /* Operator Buttons */
+        new JoystickButton(getDeadbandedDriverController(), XboxController.A_BUTTON)
+            .onTrue(new InstantCommand(() -> m_robotSwerveDrive.resetGyro()));
 
-        /* Notice: the following buttons have not been replicated
-         * Override Intake Position Encoder : It's an emergancy overide, for when the position of intake when the robot boots, the intake is not inside the robot.
-         *                                    We don't need it in an auto.
-         * Climbing controls                : We don't need to climb in auto.
-         */
-        
-         // ? Notice: the Programer Buttons are not to be replicated because they are designed for debuging the robot, and do not need to be replicated in auto.
+            
+        new JoystickButton(getDeadbandedDriverController(), XboxController.X_BUTTON)
+            .onTrue(new RotTo45(m_robotSwerveDrive));
+
+            
+        new JoystickButton(getDeadbandedDriverController(), XboxController.B_BUTTON)
+            .onTrue(new InstantCommand(() -> {m_robotSwerveDrive.softStop();}, m_robotSwerveDrive)); 
 
     }
 
@@ -215,7 +215,7 @@ public class RobotContainer {
         return this.m_operatorXbox;
     }
 
-    public ButtonBox getButtonBox() {
-        return this.m_buttonBox;
-    }
+    // public ButtonBox getButtonBox() {
+    //     return this.m_buttonBox;
+    // }
 }
