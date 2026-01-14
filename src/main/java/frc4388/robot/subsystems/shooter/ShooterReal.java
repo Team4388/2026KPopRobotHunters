@@ -12,25 +12,25 @@ import edu.wpi.first.units.measure.*;
 
 public class ShooterReal implements ShooterIO {
 
-    TalonFX m_angleMotor;
-    TalonFX m_pitchMotor;
+    // TalonFX m_angleMotor;
+    // TalonFX m_pitchMotor;
     TalonFX m_flywheelMotor;
     TalonFX m_feederMotor;
 
     public ShooterReal(
-        TalonFX angleMotor,
-        TalonFX pitchMotor,
+        // TalonFX angleMotor,
+        // TalonFX pitchMotor,
         TalonFX flywheelMotor,
         TalonFX feederMotor
     ) {
-        m_angleMotor = angleMotor;
-        m_pitchMotor = pitchMotor;
+        // m_angleMotor = angleMotor;
+        // m_pitchMotor = pitchMotor;
         m_flywheelMotor = flywheelMotor;
         m_feederMotor = feederMotor;
 
         // Apply the configs
-        m_angleMotor.getConfigurator().apply(ShooterConstants.ANGLE_MOTOR_CONFIG);
-        m_pitchMotor.getConfigurator().apply(ShooterConstants.PITCH_MOTOR_CONFIG);
+        // m_angleMotor.getConfigurator().apply(ShooterConstants.ANGLE_MOTOR_CONFIG);
+        // m_pitchMotor.getConfigurator().apply(ShooterConstants.PITCH_MOTOR_CONFIG);
         m_flywheelMotor.getConfigurator().apply(ShooterConstants.FLYWHEEL_MOTOR_CONFIG);
         m_feederMotor.getConfigurator().apply(ShooterConstants.FEEDER_MOTOR_CONFIG);
     }
@@ -45,35 +45,35 @@ public class ShooterReal implements ShooterIO {
         }
     }
 
+    // // TODO: Test
+    // @Override
+    // public void setShooterAngle(ShooterState state, Angle angle) {
+    //     state.shooterTargetAngle = angle;
+    //     // Assume that the angle is always accurate, because I think we will use a shaft encoder
+    //     // Assume that 0 degrees = forwards. Might need an offset here
+
+    //     Angle boundedAngle = clampAng(angle, ShooterConstants.ANGLE_LIMIT_LEFT, ShooterConstants.ANGLE_LIMIT_RIGHT);
+    //     // (REAL_ROT) * (MOTOR_ROT / REAL_ROT) = MOTOR_ROT
+    //     double motorTargetAngle = boundedAngle.in(Rotations) / ShooterConstants.ANGLE_MOTOR_GEAR_RATIO;
+    //     PositionDutyCycle posRequest = new PositionDutyCycle(motorTargetAngle);
+    //     m_angleMotor.setControl(posRequest);
+    // }
+
+
     // TODO: Test
-    @Override
-    public void setShooterAngle(ShooterState state, Angle angle) {
-        state.shooterTargetAngle = angle;
-        // Assume that the angle is always accurate, because I think we will use a shaft encoder
-        // Assume that 0 degrees = forwards. Might need an offset here
-
-        Angle boundedAngle = clampAng(angle, ShooterConstants.ANGLE_LIMIT_LEFT, ShooterConstants.ANGLE_LIMIT_RIGHT);
-        // (REAL_ROT) * (MOTOR_ROT / REAL_ROT) = MOTOR_ROT
-        double motorTargetAngle = boundedAngle.in(Rotations) / ShooterConstants.ANGLE_MOTOR_GEAR_RATIO;
-        PositionDutyCycle posRequest = new PositionDutyCycle(motorTargetAngle);
-        m_angleMotor.setControl(posRequest);
-    }
+    // @Override
+    // public void setShooterPitch(ShooterState state, Angle angle) {
+    //     state.shooterTargetPitch = angle;
+    //     // TODO: Test
+    //     // This assumes that the 0 is paralell to the ground. Might need an offset here
 
 
-    // TODO: Test
-    @Override
-    public void setShooterPitch(ShooterState state, Angle angle) {
-        state.shooterTargetPitch = angle;
-        // TODO: Test
-        // This assumes that the 0 is paralell to the ground. Might need an offset here
-
-
-        Angle boundedAngle = clampAng(angle, ShooterConstants.PITCH_LIMIT_UPPER, ShooterConstants.PITCH_LIMIT_LOWER);
-        // (REAL_ROT) * (MOTOR_ROT / REAL_ROT) = MOTOR_ROT
-        double motorTargetAngle = boundedAngle.in(Rotations) / ShooterConstants.PITCH_MOTOR_GEAR_RATIO;
-        PositionDutyCycle posRequest = new PositionDutyCycle(motorTargetAngle);
-        m_angleMotor.setControl(posRequest);
-    }
+    //     Angle boundedAngle = clampAng(angle, ShooterConstants.PITCH_LIMIT_UPPER, ShooterConstants.PITCH_LIMIT_LOWER);
+    //     // (REAL_ROT) * (MOTOR_ROT / REAL_ROT) = MOTOR_ROT
+    //     double motorTargetAngle = boundedAngle.in(Rotations) / ShooterConstants.PITCH_MOTOR_GEAR_RATIO;
+    //     PositionDutyCycle posRequest = new PositionDutyCycle(motorTargetAngle);
+    //     m_pitchMotor.setControl(posRequest);
+    // }
     
     @Override
     public void setFlywheelVelocity(ShooterState state, AngularVelocity angularVelocity) {
@@ -95,11 +95,11 @@ public class ShooterReal implements ShooterIO {
 
     @Override
     public void updateInputs(ShooterState state) {
-        state.shooterAngle = m_angleMotor.getPosition().getValue().times(ShooterConstants.ANGLE_MOTOR_GEAR_RATIO);
-        state.angleMotorCurrent = m_angleMotor.getStatorCurrent(false).getValue();
+        // state.shooterAngle = m_angleMotor.getPosition().getValue().times(ShooterConstants.ANGLE_MOTOR_GEAR_RATIO);
+        // state.angleMotorCurrent = m_angleMotor.getStatorCurrent(false).getValue();
 
-        state.shooterPitch = m_pitchMotor.getPosition().getValue().times(ShooterConstants.PITCH_MOTOR_GEAR_RATIO);
-        state.pitchMotorCurrent = m_pitchMotor.getStatorCurrent().getValue();
+        // state.shooterPitch = m_pitchMotor.getPosition().getValue().times(ShooterConstants.PITCH_MOTOR_GEAR_RATIO);
+        // state.pitchMotorCurrent = m_pitchMotor.getStatorCurrent().getValue();
 
         state.flywheelVelocity = m_flywheelMotor.getVelocity().getValue();
         state.flywheelMotorCurrent = m_flywheelMotor.getStatorCurrent().getValue();
