@@ -8,6 +8,8 @@
 package frc4388.robot;
 
 import java.io.File;
+
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
@@ -104,11 +106,24 @@ public class RobotContainer {
 
         DriverStation.silenceJoystickConnectionWarning(true);
 
-                m_robotSwerveDrive.setDefaultCommand(new RunCommand(() -> {
-            m_robotSwerveDrive.driveWithInput(getDeadbandedDriverController().getLeft(),
-            // m_robotSwerveDrive.driveWithInput(new Translation2d(.4, 0),
-                                            getDeadbandedDriverController().getRight(),
-                                true);
+        m_robotSwerveDrive.setDefaultCommand(new RunCommand(() -> {
+
+            // IF the driver is holding the aim button, aim the robot towards the hub
+            if(m_driverXbox.getRightTriggerAxis() > 0.5) {
+                // Aim 
+                Translation2d shootTarget = new Translation2d();
+                // new Rotation2()
+                Rotation2d ang = m_robotSwerveDrive.getPose2d().getTranslation().minus(shootTarget).getAngle();
+                m_robotSwerveDrive.driveFieldAngle(
+                    getDeadbandedDriverController().getLeft(),
+                    ang);
+            } else {
+                // Drive normally
+                m_robotSwerveDrive.driveWithInput(
+                    getDeadbandedDriverController().getLeft(),
+                    getDeadbandedDriverController().getRight(),true);
+            }
+
         }, m_robotSwerveDrive)
         .withName("SwerveDrive DefaultCommand"));
         m_robotSwerveDrive.setToSlow();
@@ -131,13 +146,24 @@ public class RobotContainer {
             .onTrue(new InstantCommand(() -> m_robotSwerveDrive.resetGyro()));
 
             
-        new JoystickButton(getDeadbandedDriverController(), XboxController.X_BUTTON)
-            .onTrue(new RotTo45(m_robotSwerveDrive));
+        // new JoystickButton(getDeadbandedDriverController(), XboxController.X_BUTTON)
+        //     .onTrue(new RotTo45(m_robotSwerveDrive));
 
             
         new JoystickButton(getDeadbandedDriverController(), XboxController.B_BUTTON)
             .onTrue(new InstantCommand(() -> {m_robotSwerveDrive.softStop();}, m_robotSwerveDrive)); 
 
+        new JoystickButton(getDeadbandedDriverController(), XboxController.RIGHT_BUMPER_BUTTON)
+            .onTrue(new InstantCommand(()  -> m_robotSwerveDrive.shiftUp()));
+        
+        new JoystickButton(getDeadbandedDriverController(), XboxController.LEFT_BUMPER_BUTTON)
+            .onTrue(new InstantCommand(() -> m_robotSwerveDrive.shiftDown()));
+
+        new JoystickButton(getDeadbandedDriverController(), XboxController.START_BUTTON)
+            .onTrue(new InstantCommand(()  -> m_robotSwerveDrive.activateLuigiMode()));
+        
+        new JoystickButton(getDeadbandedDriverController(), XboxController.BACK_BUTTON)
+            .onTrue(new InstantCommand(()  -> m_robotSwerveDrive.deactivateLuigiMode()));
     }
 
     /**
