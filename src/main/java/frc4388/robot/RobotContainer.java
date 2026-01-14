@@ -44,7 +44,6 @@ import frc4388.robot.commands.MoveUntilSuply;
 import frc4388.robot.commands.wait.waitSupplier;
 import frc4388.robot.constants.Constants;
 import frc4388.robot.constants.Constants.AutoConstants;
-import frc4388.robot.constants.Constants.LiDARConstants;
 import frc4388.robot.constants.Constants.OIConstants;
 import frc4388.robot.constants.Constants.SimConstants.Mode;
 

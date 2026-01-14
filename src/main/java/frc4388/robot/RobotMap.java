@@ -18,7 +18,6 @@ import com.ctre.phoenix6.swerve.SwerveDrivetrain;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DigitalInput;
 //import frc4388.robot.constants.Constants.ElevatorConstants;
-import frc4388.robot.constants.Constants.LiDARConstants;
 import frc4388.robot.constants.Constants.SimConstants;
 import frc4388.robot.constants.Constants.VisionConstants;
 // import frc4388.robot.subsystems.elevator.ElevatorIO;
