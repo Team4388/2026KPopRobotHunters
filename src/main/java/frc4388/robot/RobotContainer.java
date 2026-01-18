@@ -39,6 +39,7 @@ import frc4388.robot.commands.MoveUntilSuply;
 // import frc4388.robot.commands.wait.waitFeedCoral;
 import frc4388.robot.commands.wait.waitSupplier;
 import frc4388.robot.constants.Constants;
+import frc4388.robot.constants.FieldConstants;
 import frc4388.robot.constants.Constants.AutoConstants;
 import frc4388.robot.constants.Constants.OIConstants;
 import frc4388.robot.constants.Constants.SimConstants.Mode;
@@ -111,12 +112,9 @@ public class RobotContainer {
             // IF the driver is holding the aim button, aim the robot towards the hub
             if(m_driverXbox.getRightTriggerAxis() > 0.5) {
                 // Aim 
-                Translation2d shootTarget = new Translation2d();
-                // new Rotation2()
-                Rotation2d ang = m_robotSwerveDrive.getPose2d().getTranslation().minus(shootTarget).getAngle();
-                m_robotSwerveDrive.driveFieldAngle(
+                m_robotSwerveDrive.driveFacingPosition(
                     getDeadbandedDriverController().getLeft(),
-                    ang);
+                    FieldConstants.BLUE_HUB_POS);
             } else {
                 // Drive normally
                 m_robotSwerveDrive.driveWithInput(

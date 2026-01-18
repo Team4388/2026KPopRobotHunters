@@ -92,19 +92,6 @@ public final class Constants {
         public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.1, 0.1, 1);
     }
 
-    public static final class FieldConstants {
-        public static final AprilTagFieldLayout kTagLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeWelded);
-
-        // Test april tag field layout
-        // public static final AprilTagFieldLayout kTagLayout = new AprilTagFieldLayout(
-        //     Arrays.asList(new AprilTag[] {
-        //         new AprilTag(1, new Pose3d(
-        //             new Translation3d(0.,0.,0.26035), new Rotation3d(0.,0.,0.)
-        //         )),
-        //     }), 100, 100);
-
-    }
-
     public static final class LEDConstants {
         public static final int LED_SPARK_ID = 9;
 

@@ -22,6 +22,7 @@ import com.ctre.phoenix6.swerve.SwerveModuleConstantsFactory;
 
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.Angle;
+import frc4388.utility.configurable.ConfigurableDouble;
 //import edu.wpi.first.units.measure.measure.Distance;
 import frc4388.utility.status.CanDevice;
 import frc4388.utility.structs.Gains;
@@ -36,6 +37,9 @@ public final class SwerveDriveConstants {
     public static       double ROTATION_SPEED       = MAX_ROT_SPEED;
     public static       double PLAYBACK_ROTATION_SPEED = AUTO_MAX_ROT_SPEED;
     public static       double ROT_CORRECTION_SPEED = 10; // MIN_ROT_SPEED;
+
+    // TODO: Replace with a constant
+    public static final ConfigurableDouble AIM_LEAD_TIME = new ConfigurableDouble("Aim lead time", 0);
 
     public static final double CORRECTION_MIN = 10;
     public static final double CORRECTION_MAX = 50;
@@ -156,6 +160,14 @@ public final class SwerveDriveConstants {
         
         public static final Gains DRIFT_CORRECTION_GAINS = new Gains(2.5, 0, 0.1);
         public static final Gains RELATIVE_LOCKED_ANGLE_GAINS = new Gains(10, 0, 1);
+
+
+
+        // TODO: Replace this with a static constant
+        public static final ConfigurableDouble AIM_kP = new ConfigurableDouble("Aim kP", 2.5);
+        public static final ConfigurableDouble AIM_kI = new ConfigurableDouble("Aim kI", 0);
+        public static final ConfigurableDouble AIM_kD = new ConfigurableDouble("Aim kD", 0.1);
+        // public static final Gains AIM_GAINS = new Gains(2.5, 0, 0.1);
     }
 
     public static final class Configurations {

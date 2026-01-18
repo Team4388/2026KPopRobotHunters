@@ -251,13 +251,10 @@ public class SwerveDrive extends SubsystemBase implements Queryable {
         io.setControl(ctrl);
     }
 
+    // Drive with a specific velocity and heading
     public void driveFieldAngle(Translation2d leftStick, Rotation2d heading) {
         if (leftStick.getNorm() < 0.05) // if no imput and the swerve drive is still going:
             stopModules(); // stop the swerve
-
-        // if (leftStick.getNorm() < 0.05) // if no imput
-        //     return; // don't bother doing swerve drive math and return early.
-
 
         leftStick = leftStick.rotateBy(TimesNegativeOne.ForwardOffset);
         leftStick = TimesNegativeOne.invert(leftStick, TimesNegativeOne.XAxis, TimesNegativeOne.YAxis);
@@ -268,13 +265,33 @@ public class SwerveDrive extends SubsystemBase implements Queryable {
             .withVelocityY(leftStick.getY() * speedAdjust)
             .withTargetDirection(heading);
         ctrl.HeadingController.setPID(
-            SwerveDriveConstants.PIDConstants.DRIFT_CORRECTION_GAINS.kP,
-            SwerveDriveConstants.PIDConstants.DRIFT_CORRECTION_GAINS.kI,
-            SwerveDriveConstants.PIDConstants.DRIFT_CORRECTION_GAINS.kD
+            SwerveDriveConstants.PIDConstants.AIM_kP.get(),
+            SwerveDriveConstants.PIDConstants.AIM_kI.get(),
+            SwerveDriveConstants.PIDConstants.AIM_kD.get()
+            // SwerveDriveConstants.PIDConstants.AIM_GAINS.kP,
+            // SwerveDriveConstants.PIDConstants.AIM_GAINS.kI,
+            // SwerveDriveConstants.PIDConstants.AIM_GAINS.kD
         );
         io.setControl(ctrl);
         // SmartDashboard.putBoolean("drift correction", true);
-        
+    }
+
+    // Drive with the robot facing towards a specific position
+    public void driveFacingPosition(Translation2d leftStick, Translation2d fieldPos) {
+
+        // Get the current speed of the robot
+        Translation2d robotSpeed = new Translation2d(
+            chassisSpeeds.vxMetersPerSecond, 
+            chassisSpeeds.vyMetersPerSecond
+        );
+
+        // Calculate a point to aim ahead of the actual position.
+        Translation2d fieldPosLead = robotSpeed.times(SwerveDriveConstants.AIM_LEAD_TIME.get()).plus(fieldPos);
+
+        // Calculate the angle between the current position and the lead position
+        Rotation2d ang = getPose2d().getTranslation().minus(fieldPosLead).getAngle();
+
+        driveFieldAngle(leftStick, ang);
     }
 
     public void driveRelativeLockedAngle(Translation2d leftStick, Rotation2d heading) {
