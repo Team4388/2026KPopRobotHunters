@@ -25,7 +25,6 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc4388.robot.commands.MoveForTimeCommand;
-import frc4388.robot.commands.Autos.neoPlaybackChooser;
 import frc4388.robot.constants.Constants;
 import frc4388.robot.constants.Constants.OIConstants;
 import frc4388.robot.constants.Constants.SimConstants.Mode;
@@ -81,7 +80,6 @@ public class RobotContainer {
     // ! /*  Autos */
     private SendableChooser<String> autoChooser;
     private Command autoCommand;
-    private neoPlaybackChooser m_autoChooser= new neoPlaybackChooser(m_robotSwerveDrive, null);
 
     public RobotContainer() {
         
@@ -191,7 +189,7 @@ public class RobotContainer {
             dir = new File("/home/lvuser/deploy/pathplanner/autos/");
         } else {
             // dir = new File("C:\\Users\\Ridgebotics\\Documents\\GitHub\\2025RidgeScape\\src\\main\\deploy\\pathplanner\\autos\\");
-            dir = new File("/home/astatin3/Documents/GitHub/2025RidgeScape/src/main/deploy/pathplanner/autos");
+            dir = new File("C:\\Users\\Ridgebotics\\Documents\\GitHub\\2026KPopRobotHunters\\src\\main\\deploy\\pathplanner\\autos");
         }
 
         String[] autos = dir.list();
