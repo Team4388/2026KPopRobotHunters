@@ -115,6 +115,9 @@ public class RobotContainer {
         }, m_robotSwerveDrive)
         .withName("SwerveDrive DefaultCommand"));
         m_robotSwerveDrive.setToSlow();
+        
+        makeAutoChooser();
+        SmartDashboard.putData("Auto Chooser", autoChooser);
 
     }
     
