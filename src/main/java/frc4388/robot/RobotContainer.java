@@ -9,47 +9,37 @@ package frc4388.robot;
 
 import java.io.File;
 
-import edu.wpi.first.math.geometry.Rotation2d;
+import com.pathplanner.lib.commands.PathPlannerAuto;
+
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import frc4388.utility.DeferredBlock;
-import frc4388.utility.compute.TimesNegativeOne;
-import frc4388.utility.controller.ButtonBox;
-import frc4388.utility.controller.DeadbandedXboxController;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
-
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 // Commands
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-// Autos
-import frc4388.utility.controller.VirtualController;
-import frc4388.utility.controller.XboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc4388.robot.commands.MoveForTimeCommand;
-import frc4388.robot.commands.alignment.RotTo45;
-import frc4388.robot.commands.MoveUntilSuply;
-// import frc4388.robot.commands.alignment.DriveToReef;
-// import frc4388.robot.commands.wait.waitElevatorRefrence;
-// import frc4388.robot.commands.wait.waitEndefectorRefrence;
-// import frc4388.robot.commands.wait.waitFeedCoral;
-import frc4388.robot.commands.wait.waitSupplier;
+import frc4388.robot.commands.Autos.neoPlaybackChooser;
 import frc4388.robot.constants.Constants;
-import frc4388.robot.constants.FieldConstants;
-import frc4388.robot.constants.Constants.AutoConstants;
 import frc4388.robot.constants.Constants.OIConstants;
 import frc4388.robot.constants.Constants.SimConstants.Mode;
-
-import com.pathplanner.lib.commands.PathPlannerAuto;
-
+import frc4388.robot.constants.FieldConstants;
 // Subsystems
 import frc4388.robot.subsystems.LED;
 import frc4388.robot.subsystems.swerve.SwerveDrive;
 import frc4388.robot.subsystems.vision.Vision;
+import frc4388.utility.DeferredBlock;
+import frc4388.utility.compute.TimesNegativeOne;
+import frc4388.utility.controller.DeadbandedXboxController;
+// Autos
+import frc4388.utility.controller.VirtualController;
+import frc4388.utility.controller.XboxController;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -65,7 +55,7 @@ public class RobotContainer {
     
     /* Subsystems */
     public final LED m_robotLED = new LED();
-    public final Vision m_vision = new Vision();
+    public final Vision m_vision = new Vision(m_robotMap.rightCamera, m_robotMap.leftCamera);
     // public final Elevator m_robotElevator = new Elevator(m_robotMap.elevatorIO, m_robotLED);
     public final SwerveDrive m_robotSwerveDrive = new SwerveDrive(m_robotMap.swerveDrivetrain, m_vision);
     // public final SwerveDrive m_robotSwerveDrive = new SwerveDrive(m_robotMap.swerveDrivetrain);
@@ -91,7 +81,7 @@ public class RobotContainer {
     // ! /*  Autos */
     private SendableChooser<String> autoChooser;
     private Command autoCommand;
-
+    private neoPlaybackChooser m_autoChooser= new neoPlaybackChooser(m_robotSwerveDrive, null);
 
     public RobotContainer() {
         
@@ -224,7 +214,7 @@ public class RobotContainer {
             }
             System.out.println("Robot Auto Changed " + filename);
         });
-        // SmartDashboard.putData(autoChooser);
+        SmartDashboard.putData(autoChooser);
 
     }
 

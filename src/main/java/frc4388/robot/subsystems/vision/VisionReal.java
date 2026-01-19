@@ -45,11 +45,11 @@ public class VisionReal implements VisionIO {
         
         var result = results.get(results.size()-1);
 
-        state.isTagDetected = state.isTagDetected | result.hasTargets();
-
         // If there are no tags
         if(!result.hasTargets())
             return;
+
+        state.isTagDetected = state.isTagDetected | result.hasTargets();
 
         Optional<EstimatedRobotPose> estimatedRobotPose = getEstimatedGlobalPose(result, estimator);
 

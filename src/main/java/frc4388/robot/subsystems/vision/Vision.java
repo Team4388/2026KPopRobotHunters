@@ -43,6 +43,7 @@ public class Vision extends SubsystemBase implements Queryable {
             io[i].updateInputs(state[i]);
             Logger.processInputs("Vision/Camera" + i , state[i]);
         }
+        Logger.recordOutput("Vision/isTagDectected", isTag());
     }
 
     public List<PoseObservation> getPosesToAdd(){

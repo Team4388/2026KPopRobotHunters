@@ -289,7 +289,8 @@ public class SwerveDrive extends SubsystemBase implements Queryable {
         Translation2d fieldPosLead = robotSpeed.times(SwerveDriveConstants.AIM_LEAD_TIME.get()).plus(fieldPos);
 
         // Calculate the angle between the current position and the lead position
-        Rotation2d ang = getPose2d().getTranslation().minus(fieldPosLead).getAngle();
+        Rotation2d ang = fieldPosLead.minus(getPose2d().getTranslation()).getAngle();
+
 
         driveFieldAngle(leftStick, ang);
     }
