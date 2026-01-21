@@ -10,6 +10,12 @@ import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
 import com.ctre.phoenix6.swerve.SwerveRequest;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.config.PIDConstants;
+import com.pathplanner.lib.config.RobotConfig;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import com.pathplanner.lib.util.PathPlannerLogging;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -19,15 +25,9 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc4388.robot.constants.Constants.AutoConstants;
 import frc4388.robot.subsystems.vision.Vision;
 import frc4388.utility.compute.TimesNegativeOne;
-import frc4388.utility.status.Status;
 import frc4388.utility.status.FaultReporter;
 import frc4388.utility.status.Queryable;
-
-import com.pathplanner.lib.controllers.PPHolonomicDriveController;
-import com.pathplanner.lib.util.PathPlannerLogging;
-import com.pathplanner.lib.config.PIDConstants;
-import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.config.RobotConfig;
+import frc4388.utility.status.Status;
 
 public class SwerveDrive extends SubsystemBase implements Queryable {
     // private SwerveDrivetrain<TalonFX, TalonFX, CANcoder> swerveDriveTrain;
@@ -138,6 +138,15 @@ public class SwerveDrive extends SubsystemBase implements Queryable {
         initalPose2d = pose;
         io.resetPose(pose);
     }
+    // MIRA public void setOdoPose(Pose2d pose) {
+    //     if (pose == null) return;
+    //     io.tareEverything();
+    //     initalPose2d = pose;
+    //     io.resetPose(pose);
+    //     robotKnowsWhereItIs = true;
+    //     rotTarget = pose.getRotation().getDegrees();
+    // }
+
 
     // public void oneModuleTest(SwerveModule module, Translation2d leftStick,
     // Translation2d rightStick){
