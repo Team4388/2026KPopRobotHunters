@@ -4,35 +4,37 @@ import static edu.wpi.first.units.Units.InchesPerSecond;
 import static edu.wpi.first.units.Units.Rotations;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 
+import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.controls.PositionDutyCycle;
 import com.ctre.phoenix6.controls.VelocityDutyCycle;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.units.measure.*;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc4388.utility.configurable.ConfigurableDouble;
 
 public class IntakeReal implements IntakeIO {
 
-    // TalonFX m_angleMotor;
-    // TalonFX m_pitchMotor;
-    TalonFX m_flywheelMotor;
-    TalonFX m_feederMotor;
+
+    TalonFX m_armMotor;
+    TalonFX m_rollerMotor;
 
     public IntakeReal(
-        // TalonFX angleMotor,
-        // TalonFX pitchMotor,
-        TalonFX flywheelMotor,
-        TalonFX feederMotor
+
+        TalonFX armMotor,
+        TalonFX rollerMotor
     ) {
         // m_angleMotor = angleMotor;
         // m_pitchMotor = pitchMotor;
-        m_flywheelMotor = flywheelMotor;
-        m_feederMotor = feederMotor;
+        m_armMotor = armMotor;
+        m_rollerMotor = rollerMotor;
 
         // Apply the configs
-        // m_angleMotor.getConfigurator().apply(IntakeConstants.ANGLE_MOTOR_CONFIG);
-        // m_pitchMotor.getConfigurator().apply(IntakeConstants.PITCH_MOTOR_CONFIG);
-        m_flywheelMotor.getConfigurator().apply(IntakeConstants.FLYWHEEL_MOTOR_CONFIG);
-        m_feederMotor.getConfigurator().apply(IntakeConstants.FEEDER_MOTOR_CONFIG);
+        m_armMotor.getConfigurator().apply(IntakeConstants.ARM_PID);
+        m_armMotor.getConfigurator().apply(IntakeConstants.ARM_MOTOR_CONFIG);
+        m_rollerMotor.getConfigurator().apply(IntakeConstants.ROLLER_PID);
+        m_rollerMotor.getConfigurator().apply(IntakeConstants.ROLLER_MOTOR_CONFIG);
     }
 
     private Angle clampAng(Angle x, Angle min, Angle max){
@@ -45,67 +47,42 @@ public class IntakeReal implements IntakeIO {
         }
     }
 
-    // // TODO: Test
-    // @Override
-    // public void setIntakeAngle(IntakeState state, Angle angle) {
-    //     state.IntakeTargetAngle = angle;
-    //     // Assume that the angle is always accurate, because I think we will use a shaft encoder
-    //     // Assume that 0 degrees = forwards. Might need an offset here
 
-    //     Angle boundedAngle = clampAng(angle, IntakeConstants.ANGLE_LIMIT_LEFT, IntakeConstants.ANGLE_LIMIT_RIGHT);
-    //     // (REAL_ROT) * (MOTOR_ROT / REAL_ROT) = MOTOR_ROT
-    //     double motorTargetAngle = boundedAngle.in(Rotations) / IntakeConstants.ANGLE_MOTOR_GEAR_RATIO;
-    //     PositionDutyCycle posRequest = new PositionDutyCycle(motorTargetAngle);
-    //     m_angleMotor.setControl(posRequest);
-    // }
-
-
-    // TODO: Test
-    // @Override
-    // public void setIntakePitch(IntakeState state, Angle angle) {
-    //     state.IntakeTargetPitch = angle;
-    //     // TODO: Test
-    //     // This assumes that the 0 is paralell to the ground. Might need an offset here
-
-
-    //     Angle boundedAngle = clampAng(angle, IntakeConstants.PITCH_LIMIT_UPPER, IntakeConstants.PITCH_LIMIT_LOWER);
-    //     // (REAL_ROT) * (MOTOR_ROT / REAL_ROT) = MOTOR_ROT
-    //     double motorTargetAngle = boundedAngle.in(Rotations) / IntakeConstants.PITCH_MOTOR_GEAR_RATIO;
-    //     PositionDutyCycle posRequest = new PositionDutyCycle(motorTargetAngle);
-    //     m_pitchMotor.setControl(posRequest);
-    // }
     
     @Override
-    public void setFlywheelVelocity(IntakeState state, AngularVelocity angularVelocity) {
-        state.flywheelTargetVelocity = angularVelocity;
+    public void setRollerVelocity(IntakeState state, AngularVelocity angularVelocity) {
+        state.rollerTargetVelocity = angularVelocity;
         // (REAL_ROT / SEC) * (MOTOR_ROT / REAL_ROT) = (MOTOR_ROT / SEC)
-        double motorSpeed = angularVelocity.in(RotationsPerSecond) / IntakeConstants.FLYWHEEL_GEAR_RATIO;
+        double motorSpeed = angularVelocity.in(RotationsPerSecond) / IntakeConstants.ROLLER_MOTOR_GEAR_RATIO;
         VelocityDutyCycle velocity = new VelocityDutyCycle(motorSpeed);
-        m_feederMotor.setControl(velocity);
+        m_rollerMotor.setControl(velocity);
     }
 
     @Override
-    public void setFeederVelocity(IntakeState state, LinearVelocity linearVelocity) {
-        state.feederTargetVelocity = linearVelocity;
-        // (IN / SEC) * (ROT / IN) = (ROT / SEC)
-        double motorSpeed = linearVelocity.in(InchesPerSecond) / IntakeConstants.FEEDER_INCHES_PER_ROT;
-        VelocityDutyCycle velRequest = new VelocityDutyCycle(motorSpeed);
-        m_feederMotor.setControl(velRequest);
+    public void setArmAngle(IntakeState state, Angle angle) {
+        state.armTargetAngle = angle;
+        // Assume that the angle is always accurate, because I think we will use a shaft encoder
+        // Assume that 0 degrees = forwards. Might need an offset here
+        
+        Angle boundedAngle = clampAng(angle, IntakeConstants.ARM_LIMIT_LOWER, IntakeConstants.ARM_LIMIT_UPPER);
+        // (REAL_ROT) * (MOTOR_ROT / REAL_ROT) = MOTOR_ROT
+        double motorTargetAngle = boundedAngle.in(Rotations) / IntakeConstants.ARM_MOTOR_GEAR_RATIO;
+        PositionDutyCycle posRequest = new PositionDutyCycle(motorTargetAngle);
+        m_armMotor.setControl(posRequest);
     }
 
     @Override
     public void updateInputs(IntakeState state) {
-        // state.IntakeAngle = m_angleMotor.getPosition().getValue().times(IntakeConstants.ANGLE_MOTOR_GEAR_RATIO);
-        // state.angleMotorCurrent = m_angleMotor.getStatorCurrent(false).getValue();
+        state.armAngle = m_armMotor.getPosition().getValue().times(IntakeConstants.ARM_MOTOR_GEAR_RATIO);
+        state.armMotorCurrent = m_armMotor.getStatorCurrent(false).getValue();
 
-        // state.IntakePitch = m_pitchMotor.getPosition().getValue().times(IntakeConstants.PITCH_MOTOR_GEAR_RATIO);
+        // state.shooterPitch = m_pitchMotor.getPosition().getValue().times(ShooterConstants.PITCH_MOTOR_GEAR_RATIO);
         // state.pitchMotorCurrent = m_pitchMotor.getStatorCurrent().getValue();
 
-        state.flywheelVelocity = m_flywheelMotor.getVelocity().getValue();
-        state.flywheelMotorCurrent = m_flywheelMotor.getStatorCurrent().getValue();
+        // state.armAngle = m_armMotor.getPosition().getValue();
+        // state.armMotorCurrent = m_armMotor.getStatorCurrent().getValue();
 
-        state.feederVelocity = InchesPerSecond.of(m_feederMotor.getVelocity().getValue().in(RotationsPerSecond) * IntakeConstants.FEEDER_INCHES_PER_ROT);
-        state.feederMotorCurrent = m_feederMotor.getStatorCurrent().getValue();
+        state.rollerVelocity = m_rollerMotor.getVelocity().getValue();
+        state.rollerMotorCurrent = m_rollerMotor.getStatorCurrent().getValue();
     }
-    
 }
