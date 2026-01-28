@@ -1,38 +1,40 @@
 package frc4388.robot.subsystems.shooter;
 
 import static edu.wpi.first.units.Units.InchesPerSecond;
-import static edu.wpi.first.units.Units.Rotations;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 
-import com.ctre.phoenix6.controls.PositionDutyCycle;
+import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.controls.VelocityDutyCycle;
 import com.ctre.phoenix6.hardware.TalonFX;
 
-import edu.wpi.first.units.measure.*;
+import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc4388.utility.configurable.ConfigurableDouble;
 
-public class ShooterReal implements ShooterIO {
+public class ShooterReal extends SubsystemBase implements ShooterIO {
 
-    // TalonFX m_angleMotor;
-    // TalonFX m_pitchMotor;
-    TalonFX m_flywheelMotor;
-    TalonFX m_feederMotor;
+    TalonFX m_shooter1Motor;
+    TalonFX m_shooter2Motor;
+    TalonFX m_indexerMotor;
+    VelocityDutyCycle shooter1Velocity = new VelocityDutyCycle(0);
+    VelocityDutyCycle shooter2Velocity = new VelocityDutyCycle(0);
+    VelocityDutyCycle m_indexerVelocity = new VelocityDutyCycle(0);
+
 
     public ShooterReal(
-        // TalonFX angleMotor,
-        // TalonFX pitchMotor,
-        TalonFX flywheelMotor,
-        TalonFX feederMotor
+         TalonFX shooter1Motor,
+         TalonFX shooter2Motor,
+         TalonFX indexerMotor
     ) {
-        // m_angleMotor = angleMotor;
-        // m_pitchMotor = pitchMotor;
-        m_flywheelMotor = flywheelMotor;
-        m_feederMotor = feederMotor;
-
-        // Apply the configs
-        // m_angleMotor.getConfigurator().apply(ShooterConstants.ANGLE_MOTOR_CONFIG);
-        // m_pitchMotor.getConfigurator().apply(ShooterConstants.PITCH_MOTOR_CONFIG);
-        m_flywheelMotor.getConfigurator().apply(ShooterConstants.FLYWHEEL_MOTOR_CONFIG);
-        m_feederMotor.getConfigurator().apply(ShooterConstants.FEEDER_MOTOR_CONFIG);
+        m_shooter1Motor= shooter1Motor;
+        m_shooter2Motor= shooter2Motor;
+        m_indexerMotor = indexerMotor;
+        
+        
+        m_shooter1Motor.getConfigurator().apply(ShooterConstants.SHOOTER1_MOTOR_CONFIG);
+        m_shooter2Motor.getConfigurator().apply(ShooterConstants.SHOOTER2_MOTOR_CONFIG);
+        m_indexerMotor.getConfigurator().apply(ShooterConstants.INDEXER_MOTOR_CONFIG);
     }
 
     private Angle clampAng(Angle x, Angle min, Angle max){
@@ -44,6 +46,25 @@ public class ShooterReal implements ShooterIO {
             return x;
         }
     }
+
+    public static Slot0Configs SHOOTER_PID;
+
+    static {
+        SHOOTER_PID = new Slot0Configs();
+        SHOOTER_PID.kV = 0.0;
+        SHOOTER_PID.kP = 0.0;
+        SHOOTER_PID.kI = 0.0;
+        SHOOTER_PID.kD = 0.0;
+    }
+
+
+    ConfigurableDouble kV = new ConfigurableDouble("Shooter kV", 0.12);
+    ConfigurableDouble kP = new ConfigurableDouble("Shooter kP", 0.11);
+    ConfigurableDouble kI = new ConfigurableDouble("Shooter kI", 0.48);
+    ConfigurableDouble kD = new ConfigurableDouble("Shooter kD", 0.01);
+
+
+    
 
     // // TODO: Test
     // @Override
@@ -75,37 +96,50 @@ public class ShooterReal implements ShooterIO {
     //     m_pitchMotor.setControl(posRequest);
     // }
     
+     @Override
+    public void periodic() {
+        
+        SHOOTER_PID = new Slot0Configs();
+        SHOOTER_PID.kV = kV.get();
+        SHOOTER_PID.kP = kP.get();
+        SHOOTER_PID.kI = kI.get();
+        SHOOTER_PID.kD = kD.get();
+
+        m_shooter1Motor.getConfigurator().apply(SHOOTER_PID);
+        m_shooter2Motor.getConfigurator().apply(SHOOTER_PID);
+    }
+
+
     @Override
-    public void setFlywheelVelocity(ShooterState state, AngularVelocity angularVelocity) {
-        state.flywheelTargetVelocity = angularVelocity;
-        // (REAL_ROT / SEC) * (MOTOR_ROT / REAL_ROT) = (MOTOR_ROT / SEC)
-        double motorSpeed = angularVelocity.in(RotationsPerSecond) / ShooterConstants.FLYWHEEL_GEAR_RATIO;
-        VelocityDutyCycle velocity = new VelocityDutyCycle(motorSpeed);
-        m_feederMotor.setControl(velocity);
+    public void setMotor1Velocity(ShooterState state, AngularVelocity target) {
+        state.motor2TargetVelocity = target;
+        double motorRps = target.in(RotationsPerSecond) / ShooterConstants.INDEXER_GEAR_RATIO;
+        m_indexerMotor.setControl(new VelocityDutyCycle(motorRps));
+    }
+    
+    @Override
+    public void setMotor2Velocity(ShooterState state, AngularVelocity target) {
+        state.motor2TargetVelocity = target;
+        double motorRps = target.in(RotationsPerSecond) / ShooterConstants.INDEXER_GEAR_RATIO;
+        m_indexerMotor.setControl(new VelocityDutyCycle(motorRps));
     }
 
     @Override
-    public void setFeederVelocity(ShooterState state, LinearVelocity linearVelocity) {
-        state.feederTargetVelocity = linearVelocity;
-        // (IN / SEC) * (ROT / IN) = (ROT / SEC)
-        double motorSpeed = linearVelocity.in(InchesPerSecond) / ShooterConstants.FEEDER_INCHES_PER_ROT;
-        VelocityDutyCycle velRequest = new VelocityDutyCycle(motorSpeed);
-        m_feederMotor.setControl(velRequest);
+    public void setIndexerVelocity(ShooterState state, AngularVelocity target) {
+        state.indexerTargetVelocity = target;
+        double motorRps = target.in(RotationsPerSecond) / ShooterConstants.INDEXER_GEAR_RATIO;
+        m_indexerMotor.setControl(new VelocityDutyCycle(motorRps));
     }
 
     @Override
     public void updateInputs(ShooterState state) {
-        // state.shooterAngle = m_angleMotor.getPosition().getValue().times(ShooterConstants.ANGLE_MOTOR_GEAR_RATIO);
-        // state.angleMotorCurrent = m_angleMotor.getStatorCurrent(false).getValue();
 
-        // state.shooterPitch = m_pitchMotor.getPosition().getValue().times(ShooterConstants.PITCH_MOTOR_GEAR_RATIO);
-        // state.pitchMotorCurrent = m_pitchMotor.getStatorCurrent().getValue();
+        state.motorVelocity = m_shooter1Motor.getVelocity().getValue();
+        state.motorVelocity = m_shooter2Motor.getVelocity().getValue();
+        state.motorVelocity = m_indexerMotor.getVelocity().getValue();
 
-        state.flywheelVelocity = m_flywheelMotor.getVelocity().getValue();
-        state.flywheelMotorCurrent = m_flywheelMotor.getStatorCurrent().getValue();
-
-        state.feederVelocity = InchesPerSecond.of(m_feederMotor.getVelocity().getValue().in(RotationsPerSecond) * ShooterConstants.FEEDER_INCHES_PER_ROT);
-        state.feederMotorCurrent = m_feederMotor.getStatorCurrent().getValue();
+        state.motorLinearVelocity = InchesPerSecond.of(m_shooter1Motor.getVelocity().getValue().in(RotationsPerSecond) * ShooterConstants.FEEDER_INCHES_PER_ROT);
+        state.motor1Current = m_shooter1Motor.getStatorCurrent().getValue();
     }
     
 }

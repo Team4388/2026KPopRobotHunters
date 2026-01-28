@@ -11,6 +11,7 @@ import com.ctre.phoenix6.controls.VelocityDutyCycle;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.wpilibj.motorcontrol.Talon;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc4388.utility.configurable.ConfigurableDouble;
@@ -19,7 +20,7 @@ public class TestRobot extends SubsystemBase {
 
     // TalonFX m_intakeMotor;
     // TalonFX m_armMotor;
-    TalonFX m_intakeMotor;
+    // TalonFX m_storageMotor;
     TalonFX m_outerShooter;
     TalonFX m_innerShooter;
 
@@ -50,19 +51,19 @@ public class TestRobot extends SubsystemBase {
     public TestRobot(
         // TalonFX intakeMotor,
         // TalonFX armMotor,
-        TalonFX intakeMotor,
+        // TalonFX storageMotor,
         TalonFX outerShooter,
         TalonFX innerShooter
     ) {
         // m_intakeMotor = intakeMotor;
         // m_armMotor = armMotor;
-        m_intakeMotor = intakeMotor;
+        // m_storageMotor = storageMotor;
         m_outerShooter = outerShooter;
         m_innerShooter = innerShooter;
 
         // m_intakeMotor.getConfigurator().apply(INTAKE_MOTOR_CONFIG);
         // m_armMotor.getConfigurator().apply(ARM_MOTOR_CONFIG);
-        m_intakeMotor.getConfigurator().apply(INTAKE_MOTOR_CONFIG);
+        // m_storageMotor.getConfigurator().apply(STORAGE_MOTOR_CONFIG);
         m_outerShooter.getConfigurator().apply(OUTER_MOTOR_CONFIG);
         m_innerShooter.getConfigurator().apply(INNER_MOTOR_CONFIG);
 
@@ -94,17 +95,16 @@ public class TestRobot extends SubsystemBase {
     //                 .withDutyCycleNeutralDeadband(0.04) // TODO: Figure out what this means
     // );
 
-    public static final TalonFXConfiguration INTAKE_MOTOR_CONFIG = new TalonFXConfiguration()
-        .withCurrentLimits(
-            new CurrentLimitsConfigs()
-                .withStatorCurrentLimit(40) // TODO: tune???
-                .withStatorCurrentLimitEnable(true) // TODO: Figure out what this means
-            ).withMotorOutput(
-                new MotorOutputConfigs()
-                    .withNeutralMode(NeutralModeValue.Coast) // Must be coast because this is spinny spinny
-                    .withDutyCycleNeutralDeadband(0.04) // TODO: Figure out what this means
-    );
-
+    // public static final TalonFXConfiguration STORAGE_MOTOR_CONFIG = new TalonFXConfiguration()
+    //     .withCurrentLimits(
+    //         new CurrentLimitsConfigs()
+    //             .withStatorCurrentLimit(40) // TODO: tune???
+    //             .withStatorCurrentLimitEnable(true) // TODO: Figure out what this means
+    //         ).withMotorOutput(
+    //             new MotorOutputConfigs()
+    //                 .withNeutralMode(NeutralModeValue.Coast) // Must be coast because this is spinny spinny
+    //                 .withDutyCycleNeutralDeadband(0.04) // TODO: Figure out what this means
+    // );
     public static final TalonFXConfiguration OUTER_MOTOR_CONFIG = new TalonFXConfiguration()
         .withCurrentLimits(
             new CurrentLimitsConfigs()
