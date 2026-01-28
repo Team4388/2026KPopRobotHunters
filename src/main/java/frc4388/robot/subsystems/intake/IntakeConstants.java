@@ -1,29 +1,21 @@
-package frc4388.robot.subsystems.shooter;
+package frc4388.robot.subsystems.intake;
 
-import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.*;
 
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
-import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.units.measure.Angle;
 import frc4388.utility.status.CanDevice;
 
-public class ShooterConstants {
+public class IntakeConstants {
     // Motor conversions
-    
+    // public static final double ANGLE_MOTOR_GEAR_RATIO = 1.;
+    public static final double PITCH_MOTOR_GEAR_RATIO = 1.;
+    public static final double FLYWHEEL_GEAR_RATIO = 1.;
     public static final double FEEDER_INCHES_PER_ROT = 1.;
-    public static final double SHOOTERMOTOR1_GEAR_RATIO = 1.;
-    public static final double SHOOTERMOTOR2_GEAR_RATIO = 1.;
-    public static final double INDEXER_GEAR_RATIO = 1.;
-
-    public static Slot0Configs SHOOTER_PID = new Slot0Configs()
-        .withKV(0.0)
-        .withKP(0.0)
-        .withKI(0.0)
-        .withKD(0.0);
 
     // Limits
 
@@ -52,7 +44,7 @@ public class ShooterConstants {
         public static final CanDevice FLYWHEEK_CAN_DEVICE = new CanDevice("Flywheel", 22);
     }
 
-    public static final TalonFXConfiguration SHOOTER1_MOTOR_CONFIG = new TalonFXConfiguration()
+    public static final TalonFXConfiguration PITCH_MOTOR_CONFIG = new TalonFXConfiguration()
         .withCurrentLimits(
             new CurrentLimitsConfigs()
                 .withStatorCurrentLimit(40) // TODO: tune???
@@ -62,7 +54,7 @@ public class ShooterConstants {
                     .withNeutralMode(NeutralModeValue.Brake) // Must be break because this has to be accurate
                     .withDutyCycleNeutralDeadband(0.04) // TODO: Figure out what this means
     );
-    public static final TalonFXConfiguration SHOOTER2_MOTOR_CONFIG = new TalonFXConfiguration()
+    public static final TalonFXConfiguration FLYWHEEL_MOTOR_CONFIG = new TalonFXConfiguration()
         .withCurrentLimits(
             new CurrentLimitsConfigs()
                 .withStatorCurrentLimit(40) // TODO: tune???
@@ -72,7 +64,7 @@ public class ShooterConstants {
                     .withNeutralMode(NeutralModeValue.Coast) // Must be coast because this is spinny spinny
                     .withDutyCycleNeutralDeadband(0.04) // TODO: Figure out what this means
     );
-    public static final TalonFXConfiguration INDEXER_MOTOR_CONFIG = new TalonFXConfiguration()
+    public static final TalonFXConfiguration FEEDER_MOTOR_CONFIG = new TalonFXConfiguration()
         .withCurrentLimits(
             new CurrentLimitsConfigs()
                 .withStatorCurrentLimit(40) // TODO: tune???
