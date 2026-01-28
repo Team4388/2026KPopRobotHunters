@@ -12,7 +12,7 @@ import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc4388.utility.configurable.ConfigurableDouble;
 
-public class ShooterReal extends SubsystemBase implements ShooterIO {
+public class ShooterReal implements ShooterIO {
 
     TalonFX m_shooter1Motor;
     TalonFX m_shooter2Motor;
@@ -30,7 +30,10 @@ public class ShooterReal extends SubsystemBase implements ShooterIO {
         m_shooter1Motor= shooter1Motor;
         m_shooter2Motor= shooter2Motor;
         m_indexerMotor = indexerMotor;
-        
+        m_shooter1Motor.getConfigurator().apply(ShooterConstants.SHOOTER_PID);
+        m_shooter2Motor.getConfigurator().apply(ShooterConstants.SHOOTER_PID);
+        m_indexerMotor.getConfigurator().apply(ShooterConstants.SHOOTER_PID);
+
         
         m_shooter1Motor.getConfigurator().apply(ShooterConstants.SHOOTER1_MOTOR_CONFIG);
         m_shooter2Motor.getConfigurator().apply(ShooterConstants.SHOOTER2_MOTOR_CONFIG);
@@ -47,24 +50,9 @@ public class ShooterReal extends SubsystemBase implements ShooterIO {
         }
     }
 
-    public static Slot0Configs SHOOTER_PID;
-
-    static {
-        SHOOTER_PID = new Slot0Configs();
-        SHOOTER_PID.kV = 0.0;
-        SHOOTER_PID.kP = 0.0;
-        SHOOTER_PID.kI = 0.0;
-        SHOOTER_PID.kD = 0.0;
-    }
 
 
-    ConfigurableDouble kV = new ConfigurableDouble("Shooter kV", 0.12);
-    ConfigurableDouble kP = new ConfigurableDouble("Shooter kP", 0.11);
-    ConfigurableDouble kI = new ConfigurableDouble("Shooter kI", 0.48);
-    ConfigurableDouble kD = new ConfigurableDouble("Shooter kD", 0.01);
-
-
-    
+   
 
     // // TODO: Test
     // @Override
@@ -96,32 +84,15 @@ public class ShooterReal extends SubsystemBase implements ShooterIO {
     //     m_pitchMotor.setControl(posRequest);
     // }
     
-     @Override
-    public void periodic() {
-        
-        SHOOTER_PID = new Slot0Configs();
-        SHOOTER_PID.kV = kV.get();
-        SHOOTER_PID.kP = kP.get();
-        SHOOTER_PID.kI = kI.get();
-        SHOOTER_PID.kD = kD.get();
-
-        m_shooter1Motor.getConfigurator().apply(SHOOTER_PID);
-        m_shooter2Motor.getConfigurator().apply(SHOOTER_PID);
-    }
-
 
     @Override
     public void setMotor1Velocity(ShooterState state, AngularVelocity target) {
+        state.motor1TargetVelocity = target;
         state.motor2TargetVelocity = target;
+
         double motorRps = target.in(RotationsPerSecond) / ShooterConstants.INDEXER_GEAR_RATIO;
-        m_indexerMotor.setControl(new VelocityDutyCycle(motorRps));
-    }
-    
-    @Override
-    public void setMotor2Velocity(ShooterState state, AngularVelocity target) {
-        state.motor2TargetVelocity = target;
-        double motorRps = target.in(RotationsPerSecond) / ShooterConstants.INDEXER_GEAR_RATIO;
-        m_indexerMotor.setControl(new VelocityDutyCycle(motorRps));
+        m_shooter1Motor.setControl(new VelocityDutyCycle(motorRps));
+        m_shooter2Motor.setControl(new VelocityDutyCycle(motorRps));
     }
 
     @Override
@@ -134,12 +105,15 @@ public class ShooterReal extends SubsystemBase implements ShooterIO {
     @Override
     public void updateInputs(ShooterState state) {
 
-        state.motorVelocity = m_shooter1Motor.getVelocity().getValue();
-        state.motorVelocity = m_shooter2Motor.getVelocity().getValue();
-        state.motorVelocity = m_indexerMotor.getVelocity().getValue();
+        state.motor1Velocity = m_shooter1Motor.getVelocity().getValue();
+        state.motor2Velocity = m_shooter2Motor.getVelocity().getValue();
+        state.indexerVelocity = m_indexerMotor.getVelocity().getValue();
 
         state.motorLinearVelocity = InchesPerSecond.of(m_shooter1Motor.getVelocity().getValue().in(RotationsPerSecond) * ShooterConstants.FEEDER_INCHES_PER_ROT);
+        
         state.motor1Current = m_shooter1Motor.getStatorCurrent().getValue();
+        state.motor2Current = m_shooter2Motor.getStatorCurrent().getValue();
+        state.indexerCurrent = m_indexerMotor.getStatorCurrent().getValue();
     }
     
 }

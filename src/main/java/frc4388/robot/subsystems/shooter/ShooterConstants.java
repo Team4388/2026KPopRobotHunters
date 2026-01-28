@@ -4,6 +4,7 @@ import static edu.wpi.first.units.Units.Degrees;
 
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
+import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
@@ -12,13 +13,17 @@ import frc4388.utility.status.CanDevice;
 
 public class ShooterConstants {
     // Motor conversions
-    // public static final double ANGLE_MOTOR_GEAR_RATIO = 1.;
-    public static final double PITCH_MOTOR_GEAR_RATIO = 1.;
-    public static final double FLYWHEEL_GEAR_RATIO = 1.;
+    
     public static final double FEEDER_INCHES_PER_ROT = 1.;
     public static final double SHOOTERMOTOR1_GEAR_RATIO = 1.;
     public static final double SHOOTERMOTOR2_GEAR_RATIO = 1.;
     public static final double INDEXER_GEAR_RATIO = 1.;
+
+    public static Slot0Configs SHOOTER_PID = new Slot0Configs()
+        .withKV(0.0)
+        .withKP(0.0)
+        .withKI(0.0)
+        .withKD(0.0);
 
     // Limits
 
