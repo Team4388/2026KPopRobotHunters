@@ -20,6 +20,13 @@ public class IntakeConstants {
     public static final double ARM_MOTOR_GEAR_RATIO = 1.;
     public static final double ROLLER_MOTOR_GEAR_RATIO = 1.;
 
+
+    //IDs
+
+
+    public static final CanDevice ARM_ID   = new CanDevice("SHOOTER 1", 20);
+    public static final CanDevice ROLLER_ID   = new CanDevice("SHOOTER 2", 21);
+        
     // Limits
 
     // 0 is the forward angle on the robot.

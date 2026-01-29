@@ -48,9 +48,10 @@ public class ShooterConstants {
     //                 .withDutyCycleNeutralDeadband(0.04) // TODO: Figure out what this means
     // );
 
-    public static final class IDs {
-        public static final CanDevice FLYWHEEK_CAN_DEVICE = new CanDevice("Flywheel", 22);
-    }
+        public static final CanDevice SHOOTER1_ID   = new CanDevice("SHOOTER 1", 22);
+        public static final CanDevice SHOOTER2_ID   = new CanDevice("SHOOTER 2", 23);
+        public static final CanDevice INDEXER_ID = new CanDevice("INDEXER",24);
+        
 
     public static final TalonFXConfiguration SHOOTER1_MOTOR_CONFIG = new TalonFXConfiguration()
         .withCurrentLimits(

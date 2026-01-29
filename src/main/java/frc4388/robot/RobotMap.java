@@ -20,6 +20,12 @@ import edu.wpi.first.wpilibj.DigitalInput;
 //import frc4388.robot.constants.Constants.ElevatorConstants;
 import frc4388.robot.constants.Constants.SimConstants;
 import frc4388.robot.constants.Constants.VisionConstants;
+import frc4388.robot.subsystems.intake.IntakeConstants;
+import frc4388.robot.subsystems.intake.IntakeIO;
+import frc4388.robot.subsystems.intake.IntakeReal;
+import frc4388.robot.subsystems.shooter.ShooterConstants;
+import frc4388.robot.subsystems.shooter.ShooterIO;
+import frc4388.robot.subsystems.shooter.ShooterReal;
 // import frc4388.robot.subsystems.elevator.ElevatorIO;
 // import frc4388.robot.subsystems.elevator.ElevatorReal;
 import frc4388.robot.subsystems.swerve.SwerveDriveConstants;
@@ -56,7 +62,8 @@ public class RobotMap {
     public final SwerveIO swerveDrivetrain;
 
     // /* Elevator Subsystem */
-    // public final ElevatorIO elevatorIO;
+    public final ShooterIO shooterIO;
+    public final IntakeIO intakeIO;
 
     public RobotMap(SimConstants.Mode mode) {
         switch (mode) {
@@ -84,25 +91,33 @@ public class RobotMap {
 
                 swerveDrivetrain = new SwerveReal(swerveDrivetrainReal);
 
-                // Configure elevator
+                // Configure Shooter
 
-                // TalonFX elevator = new TalonFX(ElevatorConstants.ELEVATOR_ID.id);
-                // TalonFX endeffector = new TalonFX(ElevatorConstants.ENDEFFECTOR_ID.id);
+                TalonFX shooter1 = new TalonFX(ShooterConstants.SHOOTER1_ID.id);
+                TalonFX shooter2 = new TalonFX(ShooterConstants.SHOOTER2_ID.id);
+                TalonFX indexer = new TalonFX(ShooterConstants.INDEXER_ID.id);
                 
+                //Configure Intake
+                TalonFX arm = new TalonFX(IntakeConstants.ARM_ID.id);
+                TalonFX roller = new TalonFX(IntakeConstants.ROLLER_ID.id);
 
                 // DigitalInput basinLimitSwitch = new DigitalInput(ElevatorConstants.BASIN_LIMIT_SWITCH);
                 // DigitalInput endeffectorLimitSwitch = new DigitalInput(ElevatorConstants.ENDEFFECTOR_LIMIT_SWITCH);
                 // DigitalInput IRIntakeBeam = new DigitalInput(ElevatorConstants.INTAKE_LIMIT_SWITCH);
 
-                // elevatorIO = new ElevatorReal(elevator, endeffector, basinLimitSwitch, endeffectorLimitSwitch, IRIntakeBeam);
+                shooterIO = new ShooterReal(shooter1, shooter2, indexer);
 
-
+                intakeIO = new IntakeReal(arm, roller);
 
                 // Fault
                 FaultPidgeon2.addDevice(swerveDrivetrainReal.getPigeon2(), "Gyro");
 
-                // FaultTalonFX.addDevice(elevator, "Elevator");
-                // FaultTalonFX.addDevice(endeffector, "Endeffector");
+                
+                FaultTalonFX.addDevice(shooter1, "Shooter1");
+                FaultTalonFX.addDevice(shooter2, "Shooter2");
+                FaultTalonFX.addDevice(indexer, "Indexer");
+                FaultTalonFX.addDevice(arm, "Arm");
+                FaultTalonFX.addDevice(roller, "Roller");
                 
                 FaultTalonFX.addDevice(swerveDrivetrainReal.getModule(0).getDriveMotor(), "Module 0 Drive");
                 FaultTalonFX.addDevice(swerveDrivetrainReal.getModule(0).getSteerMotor(), "Module 0 Steer");
@@ -123,10 +138,9 @@ public class RobotMap {
             default:
                 leftCamera = new VisionIO() {};
                 rightCamera = new VisionIO() {};
-                // reefLidar = new LidarIO() {};
-                // reverseLidar = new LidarIO() {};
                 swerveDrivetrain = new SwerveIO() {};
-                // elevatorIO = new ElevatorIO() {};
+                intakeIO = new IntakeIO() {};
+                shooterIO = new ShooterIO() {};
                 break;
         }
     }
