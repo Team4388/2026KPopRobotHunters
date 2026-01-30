@@ -30,6 +30,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 // Autos
 import frc4388.utility.controller.VirtualController;
 import frc4388.utility.controller.XboxController;
+import frc4388.utility.structs.LEDPatterns;
 import frc4388.robot.commands.MoveForTimeCommand;
 import frc4388.robot.commands.alignment.RotTo45;
 import frc4388.robot.commands.MoveUntilSuply;
@@ -40,6 +41,7 @@ import frc4388.robot.commands.MoveUntilSuply;
 import frc4388.robot.commands.wait.waitSupplier;
 import frc4388.robot.constants.Constants;
 import frc4388.robot.constants.Constants.AutoConstants;
+import frc4388.robot.constants.Constants.LEDConstants;
 import frc4388.robot.constants.Constants.OIConstants;
 import frc4388.robot.constants.Constants.SimConstants.Mode;
 
@@ -63,10 +65,10 @@ public class RobotContainer {
     public final RobotMap m_robotMap = new RobotMap(Mode.REAL);
     
     /* Subsystems */
-    public final LED m_robotLED = new LED();
+    public final LED m_robotLED = new LED(LEDConstants.LED_SPARK_ID);
     public final Vision m_vision = new Vision();
     // public final Elevator m_robotElevator = new Elevator(m_robotMap.elevatorIO, m_robotLED);
-    public final SwerveDrive m_robotSwerveDrive = new SwerveDrive(m_robotMap.swerveDrivetrain, m_vision);
+    // public final SwerveDrive m_robotSwerveDrive = new SwerveDrive(m_robotMap.swerveDrivetrain, m_vision);
     // public final SwerveDrive m_robotSwerveDrive = new SwerveDrive(m_robotMap.swerveDrivetrain);
 
     // public final LiDAR reefLidar = new LiDAR(m_robotMap.reefLidar, "Reef");
@@ -81,11 +83,11 @@ public class RobotContainer {
     // public List<Subsystem> subsystems = new ArrayList<>();
 
     // ! Teleop Commands
-    public void stop() {
-        new InstantCommand(()->{}, m_robotSwerveDrive).schedule();
-        m_robotSwerveDrive.stopModules();
-        Constants.AutoConstants.Y_OFFSET_TRIM.set(0);
-    }
+    // public void stop() {
+    //     new InstantCommand(()->{}, m_robotSwerveDrive).schedule();
+    //     m_robotSwerveDrive.stopModules();
+    //     Constants.AutoConstants.Y_OFFSET_TRIM.set(0);
+    // }
 
     // ! /*  Autos */
     private SendableChooser<String> autoChooser;
@@ -96,9 +98,9 @@ public class RobotContainer {
         
         configureButtonBindings();
         
-        DeferredBlock.addBlock(() -> { // Called on first robot enable
-            m_robotSwerveDrive.resetGyro();
-        }, false);
+        // DeferredBlock.addBlock(() -> { // Called on first robot enable
+        //     m_robotSwerveDrive.resetGyro();
+        // }, false);
         DeferredBlock.addBlock(() -> { // Called on every robot enable
             TimesNegativeOne.update();
         }, true);
@@ -106,27 +108,27 @@ public class RobotContainer {
 
         DriverStation.silenceJoystickConnectionWarning(true);
 
-        m_robotSwerveDrive.setDefaultCommand(new RunCommand(() -> {
+        // m_robotSwerveDrive.setDefaultCommand(new RunCommand(() -> {
 
-            // IF the driver is holding the aim button, aim the robot towards the hub
-            if(m_driverXbox.getRightTriggerAxis() > 0.5) {
-                // Aim 
-                Translation2d shootTarget = new Translation2d();
-                // new Rotation2()
-                Rotation2d ang = m_robotSwerveDrive.getPose2d().getTranslation().minus(shootTarget).getAngle();
-                m_robotSwerveDrive.driveFieldAngle(
-                    getDeadbandedDriverController().getLeft(),
-                    ang);
-            } else {
-                // Drive normally
-                m_robotSwerveDrive.driveWithInput(
-                    getDeadbandedDriverController().getLeft(),
-                    getDeadbandedDriverController().getRight(),true);
-            }
+        //     // IF the driver is holding the aim button, aim the robot towards the hub
+        //     if(m_driverXbox.getRightTriggerAxis() > 0.5) {
+        //         // Aim 
+        //         Translation2d shootTarget = new Translation2d();
+        //         // new Rotation2()
+        //         Rotation2d ang = m_robotSwerveDrive.getPose2d().getTranslation().minus(shootTarget).getAngle();
+        //         m_robotSwerveDrive.driveFieldAngle(
+        //             getDeadbandedDriverController().getLeft(),
+        //             ang);
+        //     } else {
+        //         // Drive normally
+        //         m_robotSwerveDrive.driveWithInput(
+        //             getDeadbandedDriverController().getLeft(),
+        //             getDeadbandedDriverController().getRight(),true);
+        //     }
 
-        }, m_robotSwerveDrive)
-        .withName("SwerveDrive DefaultCommand"));
-        m_robotSwerveDrive.setToSlow();
+        // }, m_robotSwerveDrive)
+        // .withName("SwerveDrive DefaultCommand"));
+        // m_robotSwerveDrive.setToSlow();
 
     }
     
@@ -142,28 +144,38 @@ public class RobotContainer {
     private void configureButtonBindings() {
         
 
+        // new JoystickButton(getDeadbandedDriverController(), XboxController.A_BUTTON)
+        //     .onTrue(new InstantCommand(() -> m_robotSwerveDrive.resetGyro()));
+
+
         new JoystickButton(getDeadbandedDriverController(), XboxController.A_BUTTON)
-            .onTrue(new InstantCommand(() -> m_robotSwerveDrive.resetGyro()));
+            .onTrue(new InstantCommand(() -> m_robotLED.setMode(LEDPatterns.C1C2_GRADIENT)));
 
-            
-        // new JoystickButton(getDeadbandedDriverController(), XboxController.X_BUTTON)
-        //     .onTrue(new RotTo45(m_robotSwerveDrive));
-
-            
         new JoystickButton(getDeadbandedDriverController(), XboxController.B_BUTTON)
-            .onTrue(new InstantCommand(() -> {m_robotSwerveDrive.softStop();}, m_robotSwerveDrive)); 
+            .onTrue(new InstantCommand(() -> m_robotLED.setMode(LEDPatterns.OCEAN_RAINBOW)));
 
-        new JoystickButton(getDeadbandedDriverController(), XboxController.RIGHT_BUMPER_BUTTON)
-            .onTrue(new InstantCommand(()  -> m_robotSwerveDrive.shiftUp()));
-        
-        new JoystickButton(getDeadbandedDriverController(), XboxController.LEFT_BUMPER_BUTTON)
-            .onTrue(new InstantCommand(() -> m_robotSwerveDrive.shiftDown()));
+        new JoystickButton(getDeadbandedDriverController(), XboxController.Y_BUTTON)
+            .onTrue(new InstantCommand(() -> m_robotLED.setMode(LEDPatterns.RAINBOW_RAINBOW)));
 
-        new JoystickButton(getDeadbandedDriverController(), XboxController.START_BUTTON)
-            .onTrue(new InstantCommand(()  -> m_robotSwerveDrive.activateLuigiMode()));
-        
         new JoystickButton(getDeadbandedDriverController(), XboxController.BACK_BUTTON)
-            .onTrue(new InstantCommand(()  -> m_robotSwerveDrive.deactivateLuigiMode()));
+            .onTrue(new InstantCommand(() -> m_robotLED.setTo5V()));
+
+            
+        // new JoystickButton(getDeadbandedDriverController(), XboxController.B_BUTTON)
+        //     .onTrue(new InstantCommand(() -> {m_robotSwerveDrive.softStop();}, m_robotSwerveDrive)); 
+
+        // new JoystickButton(getDeadbandedDriverController(), XboxController.RIGHT_BUMPER_BUTTON)
+        //     .onTrue(new InstantCommand(()  -> m_robotSwerveDrive.shiftUp()));
+        
+        // new JoystickButton(getDeadbandedDriverController(), XboxController.LEFT_BUMPER_BUTTON)
+        //     .onTrue(new InstantCommand(() -> m_robotSwerveDrive.shiftDown()));
+
+        // new JoystickButton(getDeadbandedDriverController(), XboxController.START_BUTTON)
+        //     .onTrue(new InstantCommand(()  -> m_robotSwerveDrive.activateLuigiMode()));
+        
+
+        // new JoystickButton(getDeadbandedDriverController(), XboxController.BACK_BUTTON)
+        //     .onTrue(new InstantCommand(()  -> m_robotSwerveDrive.deactivateLuigiMode()));
     }
 
     /**
@@ -214,17 +226,17 @@ public class RobotContainer {
         }
 
         autoChooser.onChange((filename) -> {
-            autoChooserUpdated = true;
-            if (filename.equals("Taxi")) {
-                autoCommand = new SequentialCommandGroup(
-                    new MoveForTimeCommand(m_robotSwerveDrive, 
-                        new Translation2d(0, -1), 
-                        new Translation2d(), 1000, true
-                ), new InstantCommand(()-> {m_robotSwerveDrive.softStop();} , m_robotSwerveDrive));
-            } else {
-                autoCommand = new PathPlannerAuto(filename);
-            }
-            System.out.println("Robot Auto Changed " + filename);
+            // autoChooserUpdated = true;
+            // if (filename.equals("Taxi")) {
+            //     autoCommand = new SequentialCommandGroup(
+            //         new MoveForTimeCommand(m_robotSwerveDrive, 
+            //             new Translation2d(0, -1), 
+            //             new Translation2d(), 1000, true
+            //     ), new InstantCommand(()-> {m_robotSwerveDrive.softStop();} , m_robotSwerveDrive));
+            // } else {
+            //     autoCommand = new PathPlannerAuto(filename);
+            // }
+            // System.out.println("Robot Auto Changed " + filename);
         });
         // SmartDashboard.putData(autoChooser);
 

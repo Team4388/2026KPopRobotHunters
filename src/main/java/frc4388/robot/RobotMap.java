@@ -53,7 +53,7 @@ public class RobotMap {
     // public final Spark LEDController = new Spark(LEDConstants.LED_SPARK_ID);
     
     /* Swreve Drive Subsystem */
-    public final SwerveIO swerveDrivetrain;
+    // public final SwerveIO swerveDrivetrain;
 
     // /* Elevator Subsystem */
     // public final ElevatorIO elevatorIO;
@@ -76,13 +76,13 @@ public class RobotMap {
                 // reverseLidar = new LidarReal(LiDARConstants.REVERSE_LIDAR_DIO_CHANNEL);
 
                 // Configure swerve drive train
-                SwerveDrivetrain<TalonFX, TalonFX, CANcoder> swerveDrivetrainReal = new SwerveDrivetrain<TalonFX, TalonFX, CANcoder> (TalonFX::new, TalonFX::new, CANcoder::new, 
-                    SwerveDriveConstants.DrivetrainConstants, 
-                    SwerveDriveConstants.FRONT_LEFT, SwerveDriveConstants.FRONT_RIGHT,
-                    SwerveDriveConstants.BACK_LEFT, SwerveDriveConstants.BACK_RIGHT
-                );
+                // SwerveDrivetrain<TalonFX, TalonFX, CANcoder> swerveDrivetrainReal = new SwerveDrivetrain<TalonFX, TalonFX, CANcoder> (TalonFX::new, TalonFX::new, CANcoder::new, 
+                //     SwerveDriveConstants.DrivetrainConstants, 
+                //     SwerveDriveConstants.FRONT_LEFT, SwerveDriveConstants.FRONT_RIGHT,
+                //     SwerveDriveConstants.BACK_LEFT, SwerveDriveConstants.BACK_RIGHT
+                // );
 
-                swerveDrivetrain = new SwerveReal(swerveDrivetrainReal);
+                // swerveDrivetrain = new SwerveReal(swerveDrivetrainReal);
 
                 // Configure elevator
 
@@ -99,23 +99,23 @@ public class RobotMap {
 
 
                 // Fault
-                FaultPidgeon2.addDevice(swerveDrivetrainReal.getPigeon2(), "Gyro");
+                // FaultPidgeon2.addDevice(swerveDrivetrainReal.getPigeon2(), "Gyro");
 
-                // FaultTalonFX.addDevice(elevator, "Elevator");
-                // FaultTalonFX.addDevice(endeffector, "Endeffector");
+                // // FaultTalonFX.addDevice(elevator, "Elevator");
+                // // FaultTalonFX.addDevice(endeffector, "Endeffector");
                 
-                FaultTalonFX.addDevice(swerveDrivetrainReal.getModule(0).getDriveMotor(), "Module 0 Drive");
-                FaultTalonFX.addDevice(swerveDrivetrainReal.getModule(0).getSteerMotor(), "Module 0 Steer");
-                FaultCANCoder.addDevice(swerveDrivetrainReal.getModule(0).getEncoder(), "Module 0 CANCoder");
-                FaultTalonFX.addDevice(swerveDrivetrainReal.getModule(1).getDriveMotor(), "Module 1 Drive");
-                FaultTalonFX.addDevice(swerveDrivetrainReal.getModule(1).getSteerMotor(), "Module 1 Steer");
-                FaultCANCoder.addDevice(swerveDrivetrainReal.getModule(1).getEncoder(), "Module 1 CANCoder");
-                FaultTalonFX.addDevice(swerveDrivetrainReal.getModule(2).getDriveMotor(), "Module 2 Drive");
-                FaultTalonFX.addDevice(swerveDrivetrainReal.getModule(2).getSteerMotor(), "Module 2 Steer");
-                FaultCANCoder.addDevice(swerveDrivetrainReal.getModule(2).getEncoder(), "Module 2 CANCoder");
-                FaultTalonFX.addDevice(swerveDrivetrainReal.getModule(3).getDriveMotor(), "Module 3 Drive");
-                FaultTalonFX.addDevice(swerveDrivetrainReal.getModule(3).getSteerMotor(), "Module 3 Steer");
-                FaultCANCoder.addDevice(swerveDrivetrainReal.getModule(3).getEncoder(), "Module 3 CANCoder");
+                // FaultTalonFX.addDevice(swerveDrivetrainReal.getModule(0).getDriveMotor(), "Module 0 Drive");
+                // FaultTalonFX.addDevice(swerveDrivetrainReal.getModule(0).getSteerMotor(), "Module 0 Steer");
+                // FaultCANCoder.addDevice(swerveDrivetrainReal.getModule(0).getEncoder(), "Module 0 CANCoder");
+                // FaultTalonFX.addDevice(swerveDrivetrainReal.getModule(1).getDriveMotor(), "Module 1 Drive");
+                // FaultTalonFX.addDevice(swerveDrivetrainReal.getModule(1).getSteerMotor(), "Module 1 Steer");
+                // FaultCANCoder.addDevice(swerveDrivetrainReal.getModule(1).getEncoder(), "Module 1 CANCoder");
+                // FaultTalonFX.addDevice(swerveDrivetrainReal.getModule(2).getDriveMotor(), "Module 2 Drive");
+                // FaultTalonFX.addDevice(swerveDrivetrainReal.getModule(2).getSteerMotor(), "Module 2 Steer");
+                // FaultCANCoder.addDevice(swerveDrivetrainReal.getModule(2).getEncoder(), "Module 2 CANCoder");
+                // FaultTalonFX.addDevice(swerveDrivetrainReal.getModule(3).getDriveMotor(), "Module 3 Drive");
+                // FaultTalonFX.addDevice(swerveDrivetrainReal.getModule(3).getSteerMotor(), "Module 3 Steer");
+                // FaultCANCoder.addDevice(swerveDrivetrainReal.getModule(3).getEncoder(), "Module 3 CANCoder");
 
                 break;
             // case SIM:
@@ -125,7 +125,7 @@ public class RobotMap {
                 // rightCamera = new VisionIO() {};
                 // reefLidar = new LidarIO() {};
                 // reverseLidar = new LidarIO() {};
-                swerveDrivetrain = new SwerveIO() {};
+                // swerveDrivetrain = new SwerveIO() {};
                 // elevatorIO = new ElevatorIO() {};
                 break;
         }
