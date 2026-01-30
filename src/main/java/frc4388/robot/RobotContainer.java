@@ -19,18 +19,25 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 // Commands
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc4388.robot.commands.MoveForTimeCommand;
+import frc4388.robot.commands.MoveUntilSuply;
 import frc4388.robot.constants.Constants;
+import frc4388.robot.constants.Constants.AutoConstants;
 import frc4388.robot.constants.Constants.OIConstants;
 import frc4388.robot.constants.Constants.SimConstants.Mode;
 import frc4388.robot.constants.FieldConstants;
 // Subsystems
 import frc4388.robot.subsystems.LED;
+import frc4388.robot.subsystems.shooter.Shooter;
 import frc4388.robot.subsystems.swerve.SwerveDrive;
 import frc4388.robot.subsystems.vision.Vision;
 import frc4388.utility.DeferredBlock;
@@ -39,6 +46,7 @@ import frc4388.utility.controller.DeadbandedXboxController;
 // Autos
 import frc4388.utility.controller.VirtualController;
 import frc4388.utility.controller.XboxController;
+import frc4388.utility.structs.LEDPatterns;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -55,8 +63,8 @@ public class RobotContainer {
     /* Subsystems */
     public final LED m_robotLED = new LED();
     public final Vision m_vision = new Vision(m_robotMap.rightCamera, m_robotMap.leftCamera);
-    // public final Elevator m_robotElevator = new Elevator(m_robotMap.elevatorIO, m_robotLED);
     public final SwerveDrive m_robotSwerveDrive = new SwerveDrive(m_robotMap.swerveDrivetrain, m_vision);
+    private Boolean operatorManualMode = false;
     // public final SwerveDrive m_robotSwerveDrive = new SwerveDrive(m_robotMap.swerveDrivetrain);
 
     // public final LiDAR reefLidar = new LiDAR(m_robotMap.reefLidar, "Reef");
@@ -80,6 +88,10 @@ public class RobotContainer {
     // ! /*  Autos */
     private SendableChooser<String> autoChooser;
     private Command autoCommand;
+
+    private Command RobotShoot = new SequentialCommandGroup(
+        new InstantCommand(() -> m_robotLED.setMode(LEDPatterns.PARTY_TWINKLES), m_robotLED)
+    );
 
     public RobotContainer() {
         
@@ -138,6 +150,8 @@ public class RobotContainer {
         // new JoystickButton(getDeadbandedDriverController(), XboxController.X_BUTTON)
         //     .onTrue(new RotTo45(m_robotSwerveDrive));
 
+        new Trigger(() -> getDeadbandedDriverController().getRightTriggerAxis() >= 0.8 && !operatorManualMode)
+            .onTrue(RobotShoot);
             
         new JoystickButton(getDeadbandedDriverController(), XboxController.B_BUTTON)
             .onTrue(new InstantCommand(() -> {m_robotSwerveDrive.softStop();}, m_robotSwerveDrive)); 
@@ -152,8 +166,11 @@ public class RobotContainer {
             .onTrue(new InstantCommand(()  -> m_robotSwerveDrive.activateLuigiMode()));
         
         new JoystickButton(getDeadbandedDriverController(), XboxController.BACK_BUTTON)
-            .onTrue(new InstantCommand(()  -> m_robotSwerveDrive.deactivateLuigiMode()));
-    }
+            .onTrue(new InstantCommand(()  -> m_robotSwerveDrive.activateLuigiMode()));
+
+   }
+
+//.onTrue(new InstantCommand(()  -> m_robotLED.setMode(LEDPatterns.SOLID_PINK_HOT)));
 
     /**
      * Use this to pass the autonomous command to the main {@link Robot} class.

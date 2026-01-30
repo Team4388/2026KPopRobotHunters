@@ -34,6 +34,7 @@ public class Intake extends SubsystemBase {
         switch (mode) {
             case Up:
                 io.setArmAngle(state, IntakeConstants.ARM_LIMIT_UPPER);
+                io.setRollerVelocity(state, IntakeConstants.ROLLER_STOP);
                 break;
             case Down:
                 io.setArmAngle(state, IntakeConstants.ARM_LIMIT_LOWER);

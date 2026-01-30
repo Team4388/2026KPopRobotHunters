@@ -33,7 +33,9 @@ public class IntakeConstants {
     // negative is left, positive is right
     public static final Angle ARM_LIMIT_LOWER = Degrees.of(-180);
     public static final Angle ARM_LIMIT_UPPER = Degrees.of(180);
-    public static final AngularVelocity ROLLER_MAX_VELOCITY = RotationsPerSecond.of(0.0);
+    public static final AngularVelocity ROLLER_MAX_VELOCITY = RotationsPerSecond.of(4.0);
+    public static final AngularVelocity ROLLER_STOP = RotationsPerSecond.of(0.0);
+
 
     public static final Slot0Configs ARM_PID = new Slot0Configs()
         .withKP(2.0)

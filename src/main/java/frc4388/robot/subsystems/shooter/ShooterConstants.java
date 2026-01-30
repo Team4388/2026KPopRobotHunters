@@ -1,6 +1,7 @@
 package frc4388.robot.subsystems.shooter;
 
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.RotationsPerSecond;
 
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
@@ -9,6 +10,7 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.AngularVelocity;
 import frc4388.utility.status.CanDevice;
 
 public class ShooterConstants {
@@ -18,6 +20,15 @@ public class ShooterConstants {
     public static final double SHOOTERMOTOR1_GEAR_RATIO = 1.;
     public static final double SHOOTERMOTOR2_GEAR_RATIO = 1.;
     public static final double INDEXER_GEAR_RATIO = 1.;
+
+    public static final AngularVelocity SHOOTER_RESTING_VELOCITY = RotationsPerSecond.of(0.0);
+    public static final AngularVelocity SHOOTER_ACTIVE_VELOCITY = RotationsPerSecond.of(0.0);
+    public static final AngularVelocity SHOOTER_INACTIVE_VELOCITY = RotationsPerSecond.of(0.0);
+    public static final AngularVelocity INDEXER_ACTIVE_VELOCITY = RotationsPerSecond.of(0.0);
+    public static final AngularVelocity INDEXER_INACTIVE_VELOCITY = RotationsPerSecond.of(0.0);
+
+
+
 
     public static Slot0Configs SHOOTER_PID = new Slot0Configs()
         .withKV(0.0)

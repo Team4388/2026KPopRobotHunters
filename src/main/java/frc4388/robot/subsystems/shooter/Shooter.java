@@ -1,7 +1,5 @@
 package frc4388.robot.subsystems.shooter;
 
-import static edu.wpi.first.units.Units.Rotation;
-
 import java.util.function.Supplier;
 
 import org.littletonrobotics.junction.Logger;
@@ -9,13 +7,15 @@ import org.littletonrobotics.junction.Logger;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc4388.utility.status.FaultReporter;
+import frc4388.robot.subsystems.intake.IntakeConstants;
+import frc4388.robot.subsystems.shooter.ShooterIO.ShooterState;
 
 public class Shooter extends SubsystemBase {
     ShooterIO io;
     ShooterStateAutoLogged state = new ShooterStateAutoLogged();
 
     Supplier<Pose2d> m_swervePoseSupplier;
+
 
     public Shooter(
         ShooterIO io,
@@ -33,11 +33,42 @@ public class Shooter extends SubsystemBase {
         
     }
 
+    
+    public enum ShooterMode {
+        //Shooter is at speed it fires balls
+        Active,
+        //Shooter is at a resting velocity
+        Resting,
+        //Shooter is inactive (Off)
+        Inactive,
+    }
+
+    public void setMode(ShooterMode mode) {
+        switch (mode) {
+            case Active:
+                io.setMotor1Velocity(state, ShooterConstants.SHOOTER_ACTIVE_VELOCITY);
+                io.setMotor2Velocity(state, ShooterConstants.SHOOTER_ACTIVE_VELOCITY);
+                io.setIndexerVelocity(state, ShooterConstants.INDEXER_ACTIVE_VELOCITY);
+                break;
+            case Resting:
+                io.setMotor1Velocity(state, ShooterConstants.SHOOTER_RESTING_VELOCITY);
+                io.setMotor2Velocity(state, ShooterConstants.SHOOTER_RESTING_VELOCITY);
+                io.setIndexerVelocity(state, ShooterConstants.INDEXER_INACTIVE_VELOCITY);
+                break;
+            case Inactive:
+                io.setMotor1Velocity(state, ShooterConstants.SHOOTER_RESTING_VELOCITY);
+                io.setMotor2Velocity(state, ShooterConstants.SHOOTER_RESTING_VELOCITY);
+                io.setIndexerVelocity(state, ShooterConstants.INDEXER_INACTIVE_VELOCITY);
+                break;
+        }
+    }
+
     // Calculate what should be done based off of the position of the robot
     // TODO: Implement field zones
     public FieldZone getTarget(Pose2d position) {
         return FieldZone.InShootZone;
     }
+
 
     @Override
     public void periodic() {
