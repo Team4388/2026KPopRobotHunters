@@ -42,6 +42,7 @@ import frc4388.robot.subsystems.swerve.SwerveDrive;
 import frc4388.robot.subsystems.vision.Vision;
 import frc4388.utility.DeferredBlock;
 import frc4388.utility.compute.TimesNegativeOne;
+import frc4388.utility.configurable.ConfigurableString;
 import frc4388.utility.controller.DeadbandedXboxController;
 // Autos
 import frc4388.utility.controller.VirtualController;
@@ -62,6 +63,8 @@ public class RobotContainer {
     
     /* Subsystems */
     public final LED m_robotLED = new LED();
+    //Testing of Colors
+    
     public final Vision m_vision = new Vision(m_robotMap.rightCamera, m_robotMap.leftCamera);
     public final SwerveDrive m_robotSwerveDrive = new SwerveDrive(m_robotMap.swerveDrivetrain, m_vision);
     private Boolean operatorManualMode = false;
@@ -90,7 +93,12 @@ public class RobotContainer {
     private Command autoCommand;
 
     private Command RobotShoot = new SequentialCommandGroup(
-        new InstantCommand(() -> m_robotLED.setMode(LEDPatterns.PARTY_TWINKLES), m_robotLED)
+        new InstantCommand(() -> System.out.println(m_robotLED.getMode())),
+        new InstantCommand(() -> m_robotLED.setMode(LEDPatterns.PARTY_TWINKLES), m_robotLED),
+        new InstantCommand(() -> System.out.println(m_robotLED.getMode())),
+        new WaitCommand(5),
+        new InstantCommand(() -> m_robotLED.setMode(LEDPatterns.SOLID_RED), m_robotLED),
+        new InstantCommand(() -> System.out.println(m_robotLED.getMode()))
     );
 
     public RobotContainer() {

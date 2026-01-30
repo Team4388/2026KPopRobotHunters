@@ -7,8 +7,6 @@
 
 package frc4388.robot.constants;
 
-import com.ctre.phoenix6.configs.Slot0Configs;
-
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.Matrix;
@@ -21,7 +19,6 @@ import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotBase;
 import frc4388.utility.compute.Trim;
-import frc4388.utility.status.CanDevice;
 import frc4388.utility.structs.Gains;
 import frc4388.utility.structs.LEDPatterns;
 
@@ -91,6 +88,7 @@ public final class Constants {
         public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(0.5, 0.5, 4);
         public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.1, 0.1, 1);
     }
+   
 
     public static final class LEDConstants {
         public static final int LED_SPARK_ID = 9;
