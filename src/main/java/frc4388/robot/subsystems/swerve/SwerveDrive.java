@@ -264,6 +264,7 @@ public class SwerveDrive extends SubsystemBase implements Queryable {
     public void driveFieldAngle(Translation2d leftStick, Rotation2d heading) {
         if (leftStick.getNorm() < 0.05) // if no imput and the swerve drive is still going:
             stopModules(); // stop the swerve
+        
 
         leftStick = leftStick.rotateBy(TimesNegativeOne.ForwardOffset);
         leftStick = TimesNegativeOne.invert(leftStick, TimesNegativeOne.XAxis, TimesNegativeOne.YAxis);
@@ -284,6 +285,18 @@ public class SwerveDrive extends SubsystemBase implements Queryable {
         io.setControl(ctrl);
         // SmartDashboard.putBoolean("drift correction", true);
     }
+
+    
+    public void driveIntake(Translation2d leftStick, Rotation2d heading, boolean invert){
+        if (invert){
+            Translation2d stick = new Translation2d(-leftStick.getX(), -leftStick.getY());
+            driveFieldAngle(stick, heading);
+
+        } else{
+            driveFieldAngle(leftStick, heading);
+        }
+    }
+
 
     // Drive with the robot facing towards a specific position
     public void driveFacingPosition(Translation2d leftStick, Translation2d fieldPos) {
