@@ -287,14 +287,21 @@ public class SwerveDrive extends SubsystemBase implements Queryable {
     }
 
     
-    public void driveIntake(Translation2d leftStick, Rotation2d heading, boolean invert){
-        if (invert){
-            Translation2d stick = new Translation2d(-leftStick.getX(), -leftStick.getY());
-            driveFieldAngle(stick, heading);
+    public void driveIntake(Translation2d leftStick){
+        // if (invert){
+        //     Translation2d stick = new Translation2d(-leftStick.getX(), -leftStick.getY());
+        //     driveFieldAngle(stick, heading);
 
-        } else{
-            driveFieldAngle(leftStick, heading);
-        }
+        // } else{
+        //     driveFieldAngle(leftStick, heading);
+        // }
+        double speed = leftStick.getNorm();
+
+        Rotation2d heading = leftStick.getAngle();
+
+    // Only drive forward in robot direction (no strafe)
+        Translation2d forwardOnly = new Translation2d(speed, 0.0);
+        driveFieldAngle(forwardOnly, heading);
     }
 
 
