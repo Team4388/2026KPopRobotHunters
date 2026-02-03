@@ -46,8 +46,8 @@ public class RobotMap {
     // private Pigeon2 m_pigeon2 = new Pigeon2(SwerveDriveConstants.IDs.DRIVE_PIGEON.id);
     // public RobotGyro gyro = new RobotGyro(m_pigeon2);
 
-    public final VisionIO leftCamera;
-    public final VisionIO rightCamera;
+    // public final VisionIO leftCamera;
+    // public final VisionIO rightCamera;
 
     // public final LiDAR lidar = new 
 
@@ -62,21 +62,21 @@ public class RobotMap {
     public final SwerveIO swerveDrivetrain;
 
     // /* Elevator Subsystem */
-    public final ShooterIO shooterIO;
-    public final IntakeIO intakeIO;
+    // public final ShooterIO shooterIO;
+    // public final IntakeIO intakeIO;
 
     public RobotMap(SimConstants.Mode mode) {
         switch (mode) {
             case REAL:
                 // Configure cameras
-                PhotonCamera leftCameraReal = new PhotonCamera(VisionConstants.LEFT_CAMERA_NAME);
-                PhotonCamera rightCameraReal = new PhotonCamera(VisionConstants.RIGHT_CAMERA_NAME);
+                // PhotonCamera leftCameraReal = new PhotonCamera(VisionConstants.LEFT_CAMERA_NAME);
+                // PhotonCamera rightCameraReal = new PhotonCamera(VisionConstants.RIGHT_CAMERA_NAME);
 
-                leftCamera =  new VisionReal(leftCameraReal, VisionConstants.RIGHT_CAMERA_POS);                ;
-                rightCamera = new VisionReal(rightCameraReal, VisionConstants.LEFT_CAMERA_POS);
+                // leftCamera =  new VisionReal(leftCameraReal, VisionConstants.RIGHT_CAMERA_POS);                ;
+                // rightCamera = new VisionReal(rightCameraReal, VisionConstants.LEFT_CAMERA_POS);
 
-                FaultPhotonCamera.addDevice(leftCameraReal, "Left Camera");
-                FaultPhotonCamera.addDevice(rightCameraReal , "Right Camera");
+                // FaultPhotonCamera.addDevice(leftCameraReal, "Left Camera");
+                // FaultPhotonCamera.addDevice(rightCameraReal , "Right Camera");
 
                 // // Configure LiDAR
                 // reefLidar = new LidarReal(LiDARConstants.REEF_LIDAR_DIO_CHANNEL);
@@ -98,16 +98,16 @@ public class RobotMap {
                 TalonFX indexer = new TalonFX(ShooterConstants.INDEXER_ID.id);
                 
                 //Configure Intake
-                TalonFX arm = new TalonFX(IntakeConstants.ARM_ID.id);
-                TalonFX roller = new TalonFX(IntakeConstants.ROLLER_ID.id);
+                // TalonFX arm = new TalonFX(IntakeConstants.ARM_ID.id);
+                // TalonFX roller = new TalonFX(IntakeConstants.ROLLER_ID.id);
 
                 // DigitalInput basinLimitSwitch = new DigitalInput(ElevatorConstants.BASIN_LIMIT_SWITCH);
                 // DigitalInput endeffectorLimitSwitch = new DigitalInput(ElevatorConstants.ENDEFFECTOR_LIMIT_SWITCH);
                 // DigitalInput IRIntakeBeam = new DigitalInput(ElevatorConstants.INTAKE_LIMIT_SWITCH);
 
-                shooterIO = new ShooterReal(shooter1, shooter2, indexer);
+                // shooterIO = new ShooterReal(shooter1, shooter2, indexer);
 
-                intakeIO = new IntakeReal(arm, roller);
+                // intakeIO = new IntakeReal(arm, roller);
 
                 // Fault
                 FaultPidgeon2.addDevice(swerveDrivetrainReal.getPigeon2(), "Gyro");
@@ -116,8 +116,8 @@ public class RobotMap {
                 FaultTalonFX.addDevice(shooter1, "Shooter1");
                 FaultTalonFX.addDevice(shooter2, "Shooter2");
                 FaultTalonFX.addDevice(indexer, "Indexer");
-                FaultTalonFX.addDevice(arm, "Arm");
-                FaultTalonFX.addDevice(roller, "Roller");
+                // FaultTalonFX.addDevice(arm, "Arm");
+                // FaultTalonFX.addDevice(roller, "Roller");
                 
                 FaultTalonFX.addDevice(swerveDrivetrainReal.getModule(0).getDriveMotor(), "Module 0 Drive");
                 FaultTalonFX.addDevice(swerveDrivetrainReal.getModule(0).getSteerMotor(), "Module 0 Steer");
@@ -136,11 +136,11 @@ public class RobotMap {
             // case SIM:
             //     break;
             default:
-                leftCamera = new VisionIO() {};
-                rightCamera = new VisionIO() {};
+                // leftCamera = new VisionIO() {};
+                // rightCamera = new VisionIO() {};
                 swerveDrivetrain = new SwerveIO() {};
-                intakeIO = new IntakeIO() {};
-                shooterIO = new ShooterIO() {};
+                // intakeIO = new IntakeIO() {};
+                // shooterIO = new ShooterIO() {};
                 break;
         }
     }

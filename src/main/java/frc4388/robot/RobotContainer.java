@@ -11,6 +11,7 @@ import java.io.File;
 
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
@@ -19,30 +20,23 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 // Commands
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc4388.robot.commands.MoveForTimeCommand;
-import frc4388.robot.commands.MoveUntilSuply;
 import frc4388.robot.constants.Constants;
-import frc4388.robot.constants.Constants.AutoConstants;
 import frc4388.robot.constants.Constants.OIConstants;
 import frc4388.robot.constants.Constants.SimConstants.Mode;
 import frc4388.robot.constants.FieldConstants;
 // Subsystems
 import frc4388.robot.subsystems.LED;
-import frc4388.robot.subsystems.shooter.Shooter;
 import frc4388.robot.subsystems.swerve.SwerveDrive;
 import frc4388.robot.subsystems.vision.Vision;
 import frc4388.utility.DeferredBlock;
 import frc4388.utility.compute.TimesNegativeOne;
-import frc4388.utility.configurable.ConfigurableString;
 import frc4388.utility.controller.DeadbandedXboxController;
 // Autos
 import frc4388.utility.controller.VirtualController;
@@ -65,7 +59,7 @@ public class RobotContainer {
     public final LED m_robotLED = new LED();
     //Testing of Colors
     
-    public final Vision m_vision = new Vision(m_robotMap.rightCamera, m_robotMap.leftCamera);
+    public final Vision m_vision = new Vision();
     public final SwerveDrive m_robotSwerveDrive = new SwerveDrive(m_robotMap.swerveDrivetrain, m_vision);
     private Boolean operatorManualMode = false;
     // public final SwerveDrive m_robotSwerveDrive = new SwerveDrive(m_robotMap.swerveDrivetrain);
@@ -116,19 +110,10 @@ public class RobotContainer {
         DriverStation.silenceJoystickConnectionWarning(true);
 
         m_robotSwerveDrive.setDefaultCommand(new RunCommand(() -> {
-
-            // IF the driver is holding the aim button, aim the robot towards the hub
-            if(m_driverXbox.getRightTriggerAxis() > 0.5) {
-                // Aim 
-                m_robotSwerveDrive.driveFacingPosition(
-                    getDeadbandedDriverController().getLeft(),
-                    FieldConstants.BLUE_HUB_POS);
-            } else {
-                // Drive normally
-                m_robotSwerveDrive.driveWithInput(
-                    getDeadbandedDriverController().getLeft(),
-                    getDeadbandedDriverController().getRight(),true);
-            }
+            // Drive normally
+            m_robotSwerveDrive.driveWithInput(
+                getDeadbandedDriverController().getLeft(),
+                getDeadbandedDriverController().getRight(),true);
 
         }, m_robotSwerveDrive)
         .withName("SwerveDrive DefaultCommand"));
@@ -170,12 +155,46 @@ public class RobotContainer {
         new JoystickButton(getDeadbandedDriverController(), XboxController.LEFT_BUMPER_BUTTON)
             .onTrue(new InstantCommand(() -> m_robotSwerveDrive.shiftDown()));
 
+       
+
         new JoystickButton(getDeadbandedDriverController(), XboxController.START_BUTTON)
             .onTrue(new InstantCommand(()  -> m_robotSwerveDrive.activateLuigiMode()));
         
         new JoystickButton(getDeadbandedDriverController(), XboxController.BACK_BUTTON)
             .onTrue(new InstantCommand(()  -> m_robotSwerveDrive.activateLuigiMode()));
 
+        // IF the driver is holding the aim button, aim the robot towards the hub
+        new Trigger(() -> getDeadbandedDriverController().getRightTriggerAxis() >= 0.5)
+            .whileTrue(new RunCommand(
+                () -> {
+                m_robotSwerveDrive.driveFacingPosition(
+                    getDeadbandedDriverController().getLeft(),
+                    FieldConstants.BLUE_HUB_POS);
+                }, m_robotSwerveDrive))
+            .onFalse(new InstantCommand(() -> m_robotSwerveDrive.softStop(), m_robotSwerveDrive));
+
+
+        // IF the driver is holding the aim button, aim the robot towards the hub
+        new Trigger(() -> getDeadbandedDriverController().getLeftTriggerAxis() >= 0.5)
+            .whileTrue(new RunCommand(
+                () -> {
+                    m_robotSwerveDrive.driveIntake(
+                        getDeadbandedDriverController().getLeft()
+                    );
+                }, m_robotSwerveDrive))
+            .onFalse(new InstantCommand(() -> m_robotSwerveDrive.softStop(), m_robotSwerveDrive));
+
+        // D-PAD fine alignment
+        new Trigger(() -> getDeadbandedDriverController().getPOV() != -1)
+            .whileTrue(new RunCommand(
+                () -> m_robotSwerveDrive.driveFine(
+                    new Translation2d(
+                        1, 
+                        Rotation2d.fromDegrees(getDeadbandedDriverController().getPOV())
+                    ), 
+                    getDeadbandedDriverController().getRight(), 0.15
+                ), m_robotSwerveDrive))
+            .onFalse(new InstantCommand(() -> m_robotSwerveDrive.softStop(), m_robotSwerveDrive));
    }
 
 //.onTrue(new InstantCommand(()  -> m_robotLED.setMode(LEDPatterns.SOLID_PINK_HOT)));
