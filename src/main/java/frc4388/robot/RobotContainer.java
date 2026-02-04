@@ -179,7 +179,8 @@ public class RobotContainer {
             .whileTrue(new RunCommand(
                 () -> {
                     m_robotSwerveDrive.driveIntake(
-                        getDeadbandedDriverController().getLeft()
+                        getDeadbandedDriverController().getLeft(),
+                        false
                     );
                 }, m_robotSwerveDrive))
             .onFalse(new InstantCommand(() -> m_robotSwerveDrive.softStop(), m_robotSwerveDrive));

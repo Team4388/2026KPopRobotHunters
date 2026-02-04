@@ -288,7 +288,7 @@ public class SwerveDrive extends SubsystemBase implements Queryable {
 
     
     
-    public void driveIntake(Translation2d leftStick){
+    public void driveIntake(Translation2d leftStick, boolean invertRotation){
         // if (invert){
         //     Translation2d stick = new Translation2d(-leftStick.getX(), -leftStick.getY());
         //     driveFieldAngle(stick, heading);
@@ -298,11 +298,22 @@ public class SwerveDrive extends SubsystemBase implements Queryable {
         // }
         double speed = leftStick.getNorm();
 
-        Rotation2d heading = leftStick.getAngle();
+        if(speed < 0.3) {
+            driveWithInput(leftStick, new Translation2d(), true);
+        } else {
 
-    // Only drive forward in robot direction (no strafe)
-        Translation2d forwardOnly = new Translation2d(speed, 0.0);
-        driveFieldAngle(forwardOnly, heading);
+
+
+            Rotation2d heading = new Rotation2d(leftStick.getX(), -leftStick.getY());//.r otateBy(Rotation2d.fromDegrees(90));
+
+            // if (invertRotation){
+                heading = heading.rotateBy(Rotation2d.fromDegrees(270));
+            // }
+
+        // Only drive forward in robot direction (no strafe)
+            // Translation2d forwardOnly = new Translation2d(speed, 0.0);
+            driveFieldAngle(leftStick, heading);
+        }
     }
 
 
