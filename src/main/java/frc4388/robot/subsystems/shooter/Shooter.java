@@ -14,15 +14,15 @@ public class Shooter extends SubsystemBase {
     ShooterIO io;
     ShooterStateAutoLogged state = new ShooterStateAutoLogged();
 
-    Supplier<Pose2d> m_swervePoseSupplier;
+    // Supplier<Pose2d> m_swervePoseSupplier;
 
 
     public Shooter(
-        ShooterIO io,
-        Supplier<Pose2d> swervePoseSupplier
+        ShooterIO io
+        // Supplier<Pose2d> swervePoseSupplier
     ) {
         this.io = io;
-        this.m_swervePoseSupplier = swervePoseSupplier;
+        // this.m_swervePoseSupplier = swervePoseSupplier;
     }
 
     public enum FieldZone {
@@ -80,8 +80,8 @@ public class Shooter extends SubsystemBase {
 
         Logger.processInputs("Shooter", state);
 
-        Pose2d pose = m_swervePoseSupplier.get();
-        Angle robotRot = pose.getRotation().getMeasure();
+        // Pose2d pose = m_swervePoseSupplier.get();
+        // Angle robotRot = pose.getRotation().getMeasure();
 
         io.updateInputs(state);
 

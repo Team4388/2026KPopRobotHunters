@@ -33,6 +33,8 @@ import frc4388.robot.constants.Constants.SimConstants.Mode;
 import frc4388.robot.constants.FieldConstants;
 // Subsystems
 import frc4388.robot.subsystems.LED;
+import frc4388.robot.subsystems.intake.Intake;
+import frc4388.robot.subsystems.shooter.Shooter;
 import frc4388.robot.subsystems.swerve.SwerveDrive;
 import frc4388.robot.subsystems.vision.Vision;
 import frc4388.utility.DeferredBlock;
@@ -58,9 +60,10 @@ public class RobotContainer {
     /* Subsystems */
     public final LED m_robotLED = new LED();
     //Testing of Colors
-    
     public final Vision m_vision = new Vision();
     public final SwerveDrive m_robotSwerveDrive = new SwerveDrive(m_robotMap.swerveDrivetrain, m_vision);
+    public final Intake m_robotIntake = new Intake(m_robotMap.intakeIO);
+    public final Shooter m_robotShooter = new Shooter(m_robotMap.shooterIO);
     private Boolean operatorManualMode = false;
     // public final SwerveDrive m_robotSwerveDrive = new SwerveDrive(m_robotMap.swerveDrivetrain);
 
@@ -86,13 +89,21 @@ public class RobotContainer {
     private SendableChooser<String> autoChooser;
     private Command autoCommand;
 
+    // private Command RobotShoot = new SequentialCommandGroup(
+    //     new InstantCommand(() -> System.out.println(m_robotLED.getMode())),
+    //     new InstantCommand(() -> m_robotLED.setMode(LEDPatterns.PARTY_TWINKLES), m_robotLED),
+    //     new InstantCommand(() -> System.out.println(m_robotLED.getMode())),
+    //     new WaitCommand(5),
+    //     new InstantCommand(() -> m_robotLED.setMode(LEDPatterns.SOLID_RED), m_robotLED),
+    //     new InstantCommand(() -> System.out.println(m_robotLED.getMode()))
+    // );
+
     private Command RobotShoot = new SequentialCommandGroup(
-        new InstantCommand(() -> System.out.println(m_robotLED.getMode())),
-        new InstantCommand(() -> m_robotLED.setMode(LEDPatterns.PARTY_TWINKLES), m_robotLED),
-        new InstantCommand(() -> System.out.println(m_robotLED.getMode())),
-        new WaitCommand(5),
-        new InstantCommand(() -> m_robotLED.setMode(LEDPatterns.SOLID_RED), m_robotLED),
-        new InstantCommand(() -> System.out.println(m_robotLED.getMode()))
+        new InstantCommand(() -> m_robotShooter.setMode(Shooter.ShooterMode.Active), m_robotShooter)
+    );
+
+    private Command RobotIntake = new SequentialCommandGroup(
+        new InstantCommand(() -> m_robotIntake.setMode(Intake.IntakeMode.Down), m_robotIntake)
     );
 
     public RobotContainer() {
@@ -144,7 +155,12 @@ public class RobotContainer {
         //     .onTrue(new RotTo45(m_robotSwerveDrive));
 
         new Trigger(() -> getDeadbandedDriverController().getRightTriggerAxis() >= 0.8 && !operatorManualMode)
-            .onTrue(RobotShoot);
+            .onTrue(RobotShoot)
+            .onFalse(new InstantCommand(() -> m_robotShooter.setMode(Shooter.ShooterMode.Resting), m_robotShooter));
+
+        new Trigger(() -> getDeadbandedDriverController().getLeftTriggerAxis() >= 0.8 && !operatorManualMode)
+            .onTrue(RobotIntake)
+            .onFalse(new InstantCommand(() -> m_robotIntake.setMode(Intake.IntakeMode.Up), m_robotShooter));
             
         new JoystickButton(getDeadbandedDriverController(), XboxController.B_BUTTON)
             .onTrue(new InstantCommand(() -> {m_robotSwerveDrive.softStop();}, m_robotSwerveDrive)); 
@@ -157,11 +173,11 @@ public class RobotContainer {
 
        
 
-        new JoystickButton(getDeadbandedDriverController(), XboxController.START_BUTTON)
-            .onTrue(new InstantCommand(()  -> m_robotSwerveDrive.activateLuigiMode()));
+        // new JoystickButton(getDeadbandedDriverController(), XboxController.START_BUTTON)
+        //     .onTrue(new InstantCommand(()  -> m_robotSwerveDrive.activateLuigiMode()));
         
-        new JoystickButton(getDeadbandedDriverController(), XboxController.BACK_BUTTON)
-            .onTrue(new InstantCommand(()  -> m_robotSwerveDrive.activateLuigiMode()));
+        // new JoystickButton(getDeadbandedDriverController(), XboxController.BACK_BUTTON)
+        //     .onTrue(new InstantCommand(()  -> m_robotSwerveDrive.activateLuigiMode()));
 
         // IF the driver is holding the aim button, aim the robot towards the hub
         new Trigger(() -> getDeadbandedDriverController().getRightTriggerAxis() >= 0.5)

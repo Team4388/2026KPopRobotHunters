@@ -22,9 +22,10 @@ public class ShooterConstants {
     public static final double INDEXER_GEAR_RATIO = 1.;
 
     public static final AngularVelocity SHOOTER_RESTING_VELOCITY = RotationsPerSecond.of(0.0);
-    public static final AngularVelocity SHOOTER_ACTIVE_VELOCITY = RotationsPerSecond.of(0.0);
+    
+    public static final AngularVelocity SHOOTER_ACTIVE_VELOCITY = RotationsPerSecond.of(4.0);
     public static final AngularVelocity SHOOTER_INACTIVE_VELOCITY = RotationsPerSecond.of(0.0);
-    public static final AngularVelocity INDEXER_ACTIVE_VELOCITY = RotationsPerSecond.of(0.0);
+    public static final AngularVelocity INDEXER_ACTIVE_VELOCITY = RotationsPerSecond.of(4.0);
     public static final AngularVelocity INDEXER_INACTIVE_VELOCITY = RotationsPerSecond.of(0.0);
 
 
@@ -58,6 +59,7 @@ public class ShooterConstants {
     //                 .withNeutralMode(NeutralModeValue.Brake) // Must be break because this has to be accurate
     //                 .withDutyCycleNeutralDeadband(0.04) // TODO: Figure out what this means
     // );
+
 
         public static final CanDevice SHOOTER1_ID   = new CanDevice("SHOOTER 1", 22);
         public static final CanDevice SHOOTER2_ID   = new CanDevice("SHOOTER 2", 23);

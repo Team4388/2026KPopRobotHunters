@@ -61,9 +61,9 @@ public class RobotMap {
     /* Swreve Drive Subsystem */
     public final SwerveIO swerveDrivetrain;
 
-    // /* Elevator Subsystem */
-    // public final ShooterIO shooterIO;
-    // public final IntakeIO intakeIO;
+    // /* Shooter and Intake Subsystem */
+    public final ShooterIO shooterIO;
+    public final IntakeIO intakeIO;
 
     public RobotMap(SimConstants.Mode mode) {
         switch (mode) {
@@ -91,23 +91,23 @@ public class RobotMap {
 
                 swerveDrivetrain = new SwerveReal(swerveDrivetrainReal);
 
-                // Configure Shooter
+                // Configure Shooter 22,23,24
 
                 TalonFX shooter1 = new TalonFX(ShooterConstants.SHOOTER1_ID.id);
                 TalonFX shooter2 = new TalonFX(ShooterConstants.SHOOTER2_ID.id);
                 TalonFX indexer = new TalonFX(ShooterConstants.INDEXER_ID.id);
                 
-                //Configure Intake
-                // TalonFX arm = new TalonFX(IntakeConstants.ARM_ID.id);
-                // TalonFX roller = new TalonFX(IntakeConstants.ROLLER_ID.id);
+                //Configure Intake 20,21
+                TalonFX arm = new TalonFX(IntakeConstants.ARM_ID.id);
+                TalonFX roller = new TalonFX(IntakeConstants.ROLLER_ID.id);
 
                 // DigitalInput basinLimitSwitch = new DigitalInput(ElevatorConstants.BASIN_LIMIT_SWITCH);
                 // DigitalInput endeffectorLimitSwitch = new DigitalInput(ElevatorConstants.ENDEFFECTOR_LIMIT_SWITCH);
                 // DigitalInput IRIntakeBeam = new DigitalInput(ElevatorConstants.INTAKE_LIMIT_SWITCH);
 
-                // shooterIO = new ShooterReal(shooter1, shooter2, indexer);
+                shooterIO = new ShooterReal(shooter1, shooter2, indexer);
 
-                // intakeIO = new IntakeReal(arm, roller);
+                intakeIO = new IntakeReal(arm, roller);
 
                 // Fault
                 FaultPidgeon2.addDevice(swerveDrivetrainReal.getPigeon2(), "Gyro");
@@ -116,8 +116,8 @@ public class RobotMap {
                 FaultTalonFX.addDevice(shooter1, "Shooter1");
                 FaultTalonFX.addDevice(shooter2, "Shooter2");
                 FaultTalonFX.addDevice(indexer, "Indexer");
-                // FaultTalonFX.addDevice(arm, "Arm");
-                // FaultTalonFX.addDevice(roller, "Roller");
+                FaultTalonFX.addDevice(arm, "Arm");
+                FaultTalonFX.addDevice(roller, "Roller");
                 
                 FaultTalonFX.addDevice(swerveDrivetrainReal.getModule(0).getDriveMotor(), "Module 0 Drive");
                 FaultTalonFX.addDevice(swerveDrivetrainReal.getModule(0).getSteerMotor(), "Module 0 Steer");
@@ -139,8 +139,8 @@ public class RobotMap {
                 // leftCamera = new VisionIO() {};
                 // rightCamera = new VisionIO() {};
                 swerveDrivetrain = new SwerveIO() {};
-                // intakeIO = new IntakeIO() {};
-                // shooterIO = new ShooterIO() {};
+                intakeIO = new IntakeIO() {};
+                shooterIO = new ShooterIO() {};
                 break;
         }
     }

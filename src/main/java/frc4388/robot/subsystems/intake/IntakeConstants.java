@@ -23,7 +23,6 @@ public class IntakeConstants {
 
     //IDs
 
-
     public static final CanDevice ARM_ID   = new CanDevice("SHOOTER 1", 20);
     public static final CanDevice ROLLER_ID   = new CanDevice("SHOOTER 2", 21);
         
@@ -31,8 +30,11 @@ public class IntakeConstants {
 
     // 0 is the forward angle on the robot.
     // negative is left, positive is right
-    public static final Angle ARM_LIMIT_LOWER = Degrees.of(-180);
-    public static final Angle ARM_LIMIT_UPPER = Degrees.of(180);
+
+    //when testing the negative output of 10% made the robot put the intake up
+
+    public static final Angle ARM_LIMIT_LOWER = Degrees.of(90);
+    public static final Angle ARM_LIMIT_UPPER = Degrees.of(-90);
     public static final AngularVelocity ROLLER_MAX_VELOCITY = RotationsPerSecond.of(4.0);
     public static final AngularVelocity ROLLER_STOP = RotationsPerSecond.of(0.0);
 
