@@ -23,9 +23,9 @@ public class ShooterConstants {
 
     public static final AngularVelocity SHOOTER_RESTING_VELOCITY = RotationsPerSecond.of(0.0);
     
-    public static final AngularVelocity SHOOTER_ACTIVE_VELOCITY = RotationsPerSecond.of(4.0);
+    public static final AngularVelocity SHOOTER_ACTIVE_VELOCITY = RotationsPerSecond.of(-15);
     public static final AngularVelocity SHOOTER_INACTIVE_VELOCITY = RotationsPerSecond.of(0.0);
-    public static final AngularVelocity INDEXER_ACTIVE_VELOCITY = RotationsPerSecond.of(4.0);
+    public static final AngularVelocity INDEXER_ACTIVE_VELOCITY = RotationsPerSecond.of(0);
     public static final AngularVelocity INDEXER_INACTIVE_VELOCITY = RotationsPerSecond.of(0.0);
 
 
