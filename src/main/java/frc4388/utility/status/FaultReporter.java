@@ -85,13 +85,12 @@ public class FaultReporter {
             }
         }
 
-        
         // CAN header
         System.out.println(CAN_HEADER);
 
-        CANBus canBus = new CANBus(Constants.CANBUS_NAME);
+        // CANBus canBus = new CANBus();
         
-        CANBusStatus canInfo = canBus.getStatus();
+        CANBusStatus canInfo = Constants.RIO_CANBUS.getStatus();
         
         System.out.println("CANInfo BusOffCount     - " + canInfo.BusOffCount);
         System.out.println("CANInfo BusUtilization  - " + canInfo.BusUtilization);

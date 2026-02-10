@@ -12,6 +12,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
+import frc4388.utility.configurable.ConfigurableDouble;
 import frc4388.utility.status.CanDevice;
 
 public class IntakeConstants {
@@ -33,21 +34,28 @@ public class IntakeConstants {
 
     //when testing the negative output of 10% made the robot put the intake up
 
-    public static final Angle ARM_LIMIT_LOWER = Degrees.of(90);
-    public static final Angle ARM_LIMIT_UPPER = Degrees.of(-90);
-    public static final AngularVelocity ROLLER_MAX_VELOCITY = RotationsPerSecond.of(4.0);
-    public static final AngularVelocity ROLLER_STOP = RotationsPerSecond.of(0.0);
+    // public static final Angle ARM_LIMIT_LOWER = Degrees.of(90);
+    // public static final Angle ARM_LIMIT_UPPER = Degrees.of(-90);
+
+    public static final ConfigurableDouble ARM_LIMIT_RETRACTED = new ConfigurableDouble("Arm angle retracted", 0);
+    public static final ConfigurableDouble ARM_LIMIT_EXTENDED = new ConfigurableDouble("Arm angle extended", 0.25);
+    
+    public static final ConfigurableDouble ROLLER_ACTIVE = new ConfigurableDouble("Rolelr Active", 10);
+    // public static final ConfigurableDouble ROLL = new ConfigurableDouble("Arm angle extended", 0.25);
+
+    // public static final AngularVelocity ROLLER_MAX_VELOCITY = RotationsPerSecond.of(4.0);
+    // public static final AngularVelocity ROLLER_STOP = RotationsPerSecond.of(0.0);
 
 
     public static final Slot0Configs ARM_PID = new Slot0Configs()
-        .withKP(2.0)
+        .withKP(0.2)
         .withKI(0.0)
-        .withKD(10.0);
+        .withKD(0.0);
 
     public static final Slot0Configs ROLLER_PID = new Slot0Configs()
-        .withKP(2.0)
+        .withKP(0.2)
         .withKI(0.0)
-        .withKD(10.0);
+        .withKD(0.0);
 
     // 0 is paralell to the ground, 90 is directly up
     // public static final Angle PITCH_LIMIT_UPPER = Degrees.of(90);

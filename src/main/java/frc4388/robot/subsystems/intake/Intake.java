@@ -1,6 +1,9 @@
 package frc4388.robot.subsystems.intake;
 
 import static edu.wpi.first.units.Units.Rotation;
+import static edu.wpi.first.units.Units.Rotations;
+import static edu.wpi.first.units.Units.RotationsPerSecond;
+import static edu.wpi.first.units.Units.RotationsPerSecondPerSecond;
 
 import java.util.function.Supplier;
 
@@ -12,7 +15,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc4388.utility.status.FaultReporter;
 
 public class Intake extends SubsystemBase {
-    IntakeIO io;
+    public IntakeIO io;
     IntakeStateAutoLogged state = new IntakeStateAutoLogged();
 
     Supplier<Pose2d> m_swervePoseSupplier;
@@ -26,19 +29,19 @@ public class Intake extends SubsystemBase {
     }
 
     public enum IntakeMode {
-        Up,
-        Down,
+        Extended,
+        Retracted,
     }
 
     public void setMode(IntakeMode mode) {
         switch (mode) {
-            case Up:
-                io.setArmAngle(state, IntakeConstants.ARM_LIMIT_UPPER);
-                io.setRollerVelocity(state, IntakeConstants.ROLLER_STOP);
+            case Extended:
+                io.setArmAngle(state, Rotations.of(IntakeConstants.ARM_LIMIT_EXTENDED.get()));
+                io.setRollerVelocity(state, RotationsPerSecond.of(IntakeConstants.ROLLER_ACTIVE.get()));
                 break;
-            case Down:
-                io.setArmAngle(state, IntakeConstants.ARM_LIMIT_LOWER);
-                io.setRollerVelocity(state, IntakeConstants.ROLLER_MAX_VELOCITY);
+            case Retracted:
+                io.setArmAngle(state, Rotations.of(IntakeConstants.ARM_LIMIT_RETRACTED.get()));
+                io.setRollerVelocity(state, RotationsPerSecond.of(0));
                 break;
         }
     }

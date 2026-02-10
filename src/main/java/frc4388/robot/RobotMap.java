@@ -11,6 +11,8 @@ import com.ctre.phoenix6.hardware.TalonFX;
 
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.swerve.SwerveDrivetrain;
+
+import frc4388.robot.constants.Constants;
 //import frc4388.robot.constants.Constants.ElevatorConstants;
 import frc4388.robot.constants.Constants.SimConstants;
 import frc4388.robot.subsystems.intake.IntakeConstants;
@@ -82,22 +84,21 @@ public class RobotMap {
                 swerveDrivetrain = new SwerveReal(swerveDrivetrainReal);
 
                 // Configure Shooter 22,23,24
-
-                // TalonFX shooter1 = new TalonFX(ShooterConstants.SHOOTER1_ID.id);
-                // TalonFX shooter2 = new TalonFX(ShooterConstants.SHOOTER2_ID.id);
-                // TalonFX indexer = new TalonFX(ShooterConstants.INDEXER_ID.id);
+                TalonFX shooter1 = new TalonFX(ShooterConstants.SHOOTER1_ID.id, Constants.RIO_CANBUS);
+                TalonFX shooter2 = new TalonFX(ShooterConstants.SHOOTER2_ID.id, Constants.RIO_CANBUS);
+                TalonFX indexer = new TalonFX(ShooterConstants.INDEXER_ID.id, Constants.RIO_CANBUS);
                 
                 //Configure Intake 20,21
-                TalonFX arm = new TalonFX(IntakeConstants.ARM_ID.id);
-                TalonFX roller = new TalonFX(IntakeConstants.ROLLER_ID.id);
+                TalonFX arm = new TalonFX(IntakeConstants.ARM_ID.id, Constants.RIO_CANBUS);
+                TalonFX roller = new TalonFX(IntakeConstants.ROLLER_ID.id, Constants.RIO_CANBUS);
 
                 // DigitalInput basinLimitSwitch = new DigitalInput(ElevatorConstants.BASIN_LIMIT_SWITCH);
                 // DigitalInput endeffectorLimitSwitch = new DigitalInput(ElevatorConstants.ENDEFFECTOR_LIMIT_SWITCH);
                 // DigitalInput IRIntakeBeam = new DigitalInput(ElevatorConstants.INTAKE_LIMIT_SWITCH);
 
 
-                shooterIO = new ShooterIO() {};
-                // shooterIO = new ShooterReal(shooter1, shooter2, indexer);
+                // shooterIO = new ShooterIO() {};
+                shooterIO = new ShooterReal(shooter1, shooter2, indexer);
 
                 intakeIO = new IntakeReal(arm, roller);
 
@@ -105,9 +106,9 @@ public class RobotMap {
                 FaultPidgeon2.addDevice(swerveDrivetrainReal.getPigeon2(), "Gyro");
 
                 
-                // FaultTalonFX.addDevice(shooter1, "Shooter1");
-                // FaultTalonFX.addDevice(shooter2, "Shooter2");
-                // FaultTalonFX.addDevice(indexer, "Indexer");
+                FaultTalonFX.addDevice(shooter1, "Shooter1");
+                FaultTalonFX.addDevice(shooter2, "Shooter2");
+                FaultTalonFX.addDevice(indexer, "Indexer");
                 FaultTalonFX.addDevice(arm, "Arm");
                 FaultTalonFX.addDevice(roller, "Roller");
                 

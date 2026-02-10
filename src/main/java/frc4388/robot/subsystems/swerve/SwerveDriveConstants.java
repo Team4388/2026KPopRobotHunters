@@ -22,6 +22,7 @@ import com.ctre.phoenix6.swerve.SwerveModuleConstantsFactory;
 
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.Angle;
+import frc4388.robot.constants.Constants;
 import frc4388.utility.configurable.ConfigurableDouble;
 //import edu.wpi.first.units.measure.measure.Distance;
 import frc4388.utility.status.CanDevice;
@@ -31,7 +32,6 @@ import frc4388.utility.structs.Gains;
 // No mans land
 // Beware, there be dragons.
 public final class SwerveDriveConstants {
-    public static final String CANBUS_NAME = "drivetrain";
     public static final double MAX_ROT_SPEED        = Math.PI * 2;
     public static final double AUTO_MAX_ROT_SPEED = 1.5;
     public static final double MIN_ROT_SPEED        = 1.0;
@@ -209,7 +209,7 @@ public final class SwerveDriveConstants {
     }
 
     public static final SwerveDrivetrainConstants DrivetrainConstants = new SwerveDrivetrainConstants()
-        .withPigeon2Id(IDs.DRIVE_PIGEON.id).withCANBusName(CANBUS_NAME);
+        .withPigeon2Id(IDs.DRIVE_PIGEON.id).withCANBusName(Constants.CANIVORE_CANBUS.getName());
 
     private static final SwerveModuleConstantsFactory<TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration> ConstantCreator =
         new SwerveModuleConstantsFactory<TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration>() // holy verbosity batman.

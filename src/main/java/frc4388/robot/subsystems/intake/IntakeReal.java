@@ -95,6 +95,10 @@ public class IntakeReal implements IntakeIO {
 
         state.rollerVelocity = m_rollerMotor.getVelocity().getValue();
         state.rollerMotorCurrent = m_rollerMotor.getStatorCurrent().getValue();
+    }
+
+    @Override 
+    public void updateGains() {
 
         IntakeConstants.ARM_PID.kP = arm_kP.get();
         IntakeConstants.ARM_PID.kI = arm_kI.get();

@@ -1,5 +1,9 @@
 package frc4388.robot.subsystems.shooter;
 
+import static edu.wpi.first.units.Units.Rotation;
+import static edu.wpi.first.units.Units.Rotations;
+import static edu.wpi.first.units.Units.RotationsPerSecond;
+
 import java.util.function.Supplier;
 
 import org.littletonrobotics.junction.Logger;
@@ -11,7 +15,7 @@ import frc4388.robot.subsystems.intake.IntakeConstants;
 import frc4388.robot.subsystems.shooter.ShooterIO.ShooterState;
 
 public class Shooter extends SubsystemBase {
-    ShooterIO io;
+    public ShooterIO io;
     ShooterStateAutoLogged state = new ShooterStateAutoLogged();
 
     // Supplier<Pose2d> m_swervePoseSupplier;
@@ -46,19 +50,19 @@ public class Shooter extends SubsystemBase {
     public void setMode(ShooterMode mode) {
         switch (mode) {
             case Active:
-                io.setMotor1Velocity(state, ShooterConstants.SHOOTER_ACTIVE_VELOCITY);
-                io.setMotor2Velocity(state, ShooterConstants.SHOOTER_ACTIVE_VELOCITY);
-                io.setIndexerVelocity(state, ShooterConstants.INDEXER_ACTIVE_VELOCITY);
+                io.setShooterVelocity(state, RotationsPerSecond.of(ShooterConstants.SHOOTER_ACTIVE_VELOCITY.get()));
+                // io.setMotor2Velocity(state, ShooterConstants.SHOOTER_ACTIVE_VELOCITY);
+                io.setIndexerVelocity(state, RotationsPerSecond.of(ShooterConstants.INDEXER_ACTIVE_VELOCITY.get()));
                 break;
             case Resting:
-                io.setMotor1Velocity(state, ShooterConstants.SHOOTER_RESTING_VELOCITY);
-                io.setMotor2Velocity(state, ShooterConstants.SHOOTER_RESTING_VELOCITY);
-                io.setIndexerVelocity(state, ShooterConstants.INDEXER_INACTIVE_VELOCITY);
+                io.setShooterVelocity(state, RotationsPerSecond.of(ShooterConstants.SHOOTER_RESTING_VELOCITY.get()));
+                // io.setMotor2Velocity(state, ShooterConstants.SHOOTER_RESTING_VELOCITY);
+                io.setIndexerVelocity(state, RotationsPerSecond.of(ShooterConstants.INDEXER_INACTIVE_VELOCITY.get()));
                 break;
             case Inactive:
-                io.setMotor1Velocity(state, ShooterConstants.SHOOTER_RESTING_VELOCITY);
-                io.setMotor2Velocity(state, ShooterConstants.SHOOTER_RESTING_VELOCITY);
-                io.setIndexerVelocity(state, ShooterConstants.INDEXER_INACTIVE_VELOCITY);
+                io.setShooterVelocity(state, RotationsPerSecond.of(ShooterConstants.SHOOTER_RESTING_VELOCITY.get()));
+                // io.setMotor2Velocity(state, ShooterConstants.SHOOTER_RESTING_VELOCITY);
+                io.setIndexerVelocity(state, RotationsPerSecond.of(ShooterConstants.INDEXER_INACTIVE_VELOCITY.get()));
                 break;
         }
     }

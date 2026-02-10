@@ -7,6 +7,8 @@
 
 package frc4388.robot.constants;
 
+import com.ctre.phoenix6.CANBus;
+
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.Matrix;
@@ -31,7 +33,8 @@ import frc4388.utility.structs.LEDPatterns;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-    public static final String CANBUS_NAME = "rio";
+    public static final CANBus RIO_CANBUS = CANBus.roboRIO();
+    public static final CANBus CANIVORE_CANBUS = new CANBus("drivetrain");
 
     // public static final class LiDARConstants {
     //     public static final int REEF_LIDAR_DIO_CHANNEL = 7;

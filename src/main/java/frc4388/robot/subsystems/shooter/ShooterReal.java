@@ -8,12 +8,15 @@ import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
+import frc4388.robot.subsystems.intake.IntakeConstants;
+import frc4388.utility.configurable.ConfigurableDouble;
 
 public class ShooterReal implements ShooterIO {
 
     TalonFX m_shooter1Motor;
     TalonFX m_shooter2Motor;
     TalonFX m_indexerMotor;
+
     VelocityDutyCycle shooter1Velocity = new VelocityDutyCycle(0);
     VelocityDutyCycle shooter2Velocity = new VelocityDutyCycle(0);
     VelocityDutyCycle m_indexerVelocity = new VelocityDutyCycle(0);
@@ -27,14 +30,18 @@ public class ShooterReal implements ShooterIO {
         m_shooter1Motor = shooter1Motor;
         m_shooter2Motor = shooter2Motor;
         m_indexerMotor  = indexerMotor;
+
         m_shooter1Motor.getConfigurator().apply(ShooterConstants.SHOOTER_PID);
         m_shooter2Motor.getConfigurator().apply(ShooterConstants.SHOOTER_PID);
         m_indexerMotor.getConfigurator().apply(ShooterConstants.SHOOTER_PID);
 
-        
         m_shooter1Motor.getConfigurator().apply(ShooterConstants.SHOOTER1_MOTOR_CONFIG);
         m_shooter2Motor.getConfigurator().apply(ShooterConstants.SHOOTER2_MOTOR_CONFIG);
         m_indexerMotor.getConfigurator().apply(ShooterConstants.INDEXER_MOTOR_CONFIG);
+
+        shooter1Velocity.Slot = 0;
+        shooter2Velocity.Slot = 0;
+        m_indexerVelocity.Slot = 0;
     }
 
     private Angle clampAng(Angle x, Angle min, Angle max){
@@ -83,34 +90,60 @@ public class ShooterReal implements ShooterIO {
     
 
     @Override
-    public void setMotor1Velocity(ShooterState state, AngularVelocity target) {
+    public void setShooterVelocity(ShooterState state, AngularVelocity target) {
         state.motor1TargetVelocity = target;
         state.motor2TargetVelocity = target;
 
-        double motorRps = target.in(RotationsPerSecond) / ShooterConstants.INDEXER_GEAR_RATIO;
-        m_shooter1Motor.setControl(new VelocityDutyCycle(motorRps));
-        m_shooter2Motor.setControl(new VelocityDutyCycle(motorRps));
+        AngularVelocity motorRps = target.div(ShooterConstants.INDEXER_GEAR_RATIO);
+
+        m_shooter1Motor.setControl(shooter1Velocity.withVelocity(motorRps));
+        m_shooter2Motor.setControl(shooter2Velocity.withVelocity(motorRps));
     }
 
     @Override
     public void setIndexerVelocity(ShooterState state, AngularVelocity target) {
         state.indexerTargetVelocity = target;
-        double motorRps = target.in(RotationsPerSecond) / ShooterConstants.INDEXER_GEAR_RATIO;
-        m_indexerMotor.setControl(new VelocityDutyCycle(motorRps));
+        AngularVelocity motorRps = target.div(ShooterConstants.INDEXER_GEAR_RATIO);
+        m_indexerMotor.setControl(m_indexerVelocity.withVelocity(motorRps));
     }
+
+    
+    ConfigurableDouble indexer_kP = new ConfigurableDouble("Indexer KP", 0.2);
+    ConfigurableDouble indexer_kI = new ConfigurableDouble("Indexer KP", 0);
+    ConfigurableDouble indexer_kD = new ConfigurableDouble("Indexer KP", 0);
+    
+    ConfigurableDouble shooter_kP = new ConfigurableDouble("Shooter KP", 0.2);
+    ConfigurableDouble shooter_kI = new ConfigurableDouble("Shooter KI", 0);
+    ConfigurableDouble shooter_kD = new ConfigurableDouble("Shooter KD", 0);
 
     @Override
     public void updateInputs(ShooterState state) {
 
-        state.motor1Velocity = m_shooter1Motor.getVelocity().getValue();
-        state.motor2Velocity = m_shooter2Motor.getVelocity().getValue();
-        state.indexerVelocity = m_indexerMotor.getVelocity().getValue();
+        state.motor1Velocity = m_shooter1Motor.getVelocity().getValue().times(ShooterConstants.SHOOTERMOTOR1_GEAR_RATIO);
+        state.motor2Velocity = m_shooter2Motor.getVelocity().getValue().times(ShooterConstants.SHOOTERMOTOR2_GEAR_RATIO);
+        state.indexerVelocity = m_indexerMotor.getVelocity().getValue().times(ShooterConstants.INDEXER_GEAR_RATIO);
 
-        state.motorLinearVelocity = InchesPerSecond.of(m_shooter1Motor.getVelocity().getValue().in(RotationsPerSecond) * ShooterConstants.FEEDER_INCHES_PER_ROT);
+        // state.motorLinearVelocity = InchesPerSecond.of(m_shooter1Motor.getVelocity().getValue().in(RotationsPerSecond) * ShooterConstants.FEEDER_INCHES_PER_ROT);
         
         state.motor1Current = m_shooter1Motor.getStatorCurrent().getValue();
         state.motor2Current = m_shooter2Motor.getStatorCurrent().getValue();
         state.indexerCurrent = m_indexerMotor.getStatorCurrent().getValue();
+
+    }
+    
+    @Override 
+    public void updateGains() {
+        // TEMPORARY PIDs
+        ShooterConstants.SHOOTER_PID.kP = shooter_kP.get();
+        ShooterConstants.SHOOTER_PID.kI = shooter_kI.get();
+        ShooterConstants.SHOOTER_PID.kD = shooter_kD.get();
+        m_shooter1Motor.getConfigurator().apply(ShooterConstants.SHOOTER_PID);
+        m_shooter2Motor.getConfigurator().apply(ShooterConstants.SHOOTER_PID);
+
+        ShooterConstants.INDEXER_PID.kP = indexer_kP.get();
+        ShooterConstants.INDEXER_PID.kI = indexer_kI.get();
+        ShooterConstants.INDEXER_PID.kD = indexer_kD.get();
+        m_indexerMotor.getConfigurator().apply(ShooterConstants.INDEXER_PID);
     }
     
 }

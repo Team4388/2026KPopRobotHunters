@@ -11,6 +11,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
+import frc4388.utility.configurable.ConfigurableDouble;
 import frc4388.utility.status.CanDevice;
 
 public class ShooterConstants {
@@ -20,18 +21,28 @@ public class ShooterConstants {
     public static final double SHOOTERMOTOR1_GEAR_RATIO = 1.;
     public static final double SHOOTERMOTOR2_GEAR_RATIO = 1.;
     public static final double INDEXER_GEAR_RATIO = 1.;
-
-    public static final AngularVelocity SHOOTER_RESTING_VELOCITY = RotationsPerSecond.of(0.0);
     
-    public static final AngularVelocity SHOOTER_ACTIVE_VELOCITY = RotationsPerSecond.of(-15);
-    public static final AngularVelocity SHOOTER_INACTIVE_VELOCITY = RotationsPerSecond.of(0.0);
-    public static final AngularVelocity INDEXER_ACTIVE_VELOCITY = RotationsPerSecond.of(0);
-    public static final AngularVelocity INDEXER_INACTIVE_VELOCITY = RotationsPerSecond.of(0.0);
+    // public static final AngularVelocity SHOOTER_ACTIVE_VELOCITY = RotationsPerSecond.of(30);
+    // public static final AngularVelocity SHOOTER_RESTING_VELOCITY = RotationsPerSecond.of(15);
+    // public static final AngularVelocity SHOOTER_INACTIVE_VELOCITY = RotationsPerSecond.of(0.0);
 
+    // public static final AngularVelocity INDEXER_ACTIVE_VELOCITY = RotationsPerSecond.of(10);
+    // public static final AngularVelocity INDEXER_INACTIVE_VELOCITY = RotationsPerSecond.of(0.0);
 
-
+    public static final ConfigurableDouble SHOOTER_ACTIVE_VELOCITY = new ConfigurableDouble("Shooter Active Velocity", 30);
+    public static final ConfigurableDouble SHOOTER_RESTING_VELOCITY = new ConfigurableDouble("Shooter Resting Velocity", 15);
+    public static final ConfigurableDouble SHOOTER_INACTIVE_VELOCITY = new ConfigurableDouble("Shooter Inactive Velocity", 0);
+    
+    public static final ConfigurableDouble INDEXER_ACTIVE_VELOCITY = new ConfigurableDouble("Shooter Active Velocity", 10);
+    public static final ConfigurableDouble INDEXER_INACTIVE_VELOCITY = new ConfigurableDouble("Shooter Inactive Velocity", 0);
 
     public static Slot0Configs SHOOTER_PID = new Slot0Configs()
+        .withKV(0.0)
+        .withKP(0.0)
+        .withKI(0.0)
+        .withKD(0.0);
+
+    public static Slot0Configs INDEXER_PID = new Slot0Configs()
         .withKV(0.0)
         .withKP(0.0)
         .withKI(0.0)
@@ -45,8 +56,8 @@ public class ShooterConstants {
     // public static final Angle ANGLE_LIMIT_RIGHT = Degrees.of(180);
 
     // 0 is paralell to the ground, 90 is directly up
-    public static final Angle PITCH_LIMIT_UPPER = Degrees.of(90);
-    public static final Angle PITCH_LIMIT_LOWER = Degrees.of(0);
+    // public static final Angle PITCH_LIMIT_UPPER = Degrees.of(90);
+    // public static final Angle PITCH_LIMIT_LOWER = Degrees.of(0);
     
     // Motor configs
     // public static final TalonFXConfiguration ANGLE_MOTOR_CONFIG = new TalonFXConfiguration()
@@ -61,10 +72,10 @@ public class ShooterConstants {
     // );
 
 
-        public static final CanDevice SHOOTER1_ID   = new CanDevice("SHOOTER 1", 22);
-        public static final CanDevice SHOOTER2_ID   = new CanDevice("SHOOTER 2", 23);
-        public static final CanDevice INDEXER_ID = new CanDevice("INDEXER",24);
-        
+    public static final CanDevice SHOOTER1_ID = new CanDevice("SHOOTER 1", 22);
+    public static final CanDevice SHOOTER2_ID = new CanDevice("SHOOTER 2", 23);
+    public static final CanDevice INDEXER_ID  = new CanDevice("INDEXER",24);
+    
 
     public static final TalonFXConfiguration SHOOTER1_MOTOR_CONFIG = new TalonFXConfiguration()
         .withCurrentLimits(
@@ -73,7 +84,7 @@ public class ShooterConstants {
                 .withStatorCurrentLimitEnable(true)
             ).withMotorOutput(
                 new MotorOutputConfigs()
-                    .withNeutralMode(NeutralModeValue.Brake) // Must be break because this has to be accurate
+                    .withNeutralMode(NeutralModeValue.Coast) // Must be coast because this is spinny spinny
                     .withDutyCycleNeutralDeadband(0.04) // TODO: Figure out what this means
     );
     public static final TalonFXConfiguration SHOOTER2_MOTOR_CONFIG = new TalonFXConfiguration()
@@ -86,6 +97,7 @@ public class ShooterConstants {
                     .withNeutralMode(NeutralModeValue.Coast) // Must be coast because this is spinny spinny
                     .withDutyCycleNeutralDeadband(0.04) // TODO: Figure out what this means
     );
+
     public static final TalonFXConfiguration INDEXER_MOTOR_CONFIG = new TalonFXConfiguration()
         .withCurrentLimits(
             new CurrentLimitsConfigs()

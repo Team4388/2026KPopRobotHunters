@@ -39,4 +39,5 @@ public interface IntakeIO {
     public default void setRollerVelocity(IntakeState state, AngularVelocity angularVelocity) {}
 
     public default void updateInputs(IntakeState state) {}
+    public default void updateGains() {}
 }
