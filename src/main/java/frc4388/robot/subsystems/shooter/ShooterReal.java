@@ -3,14 +3,11 @@ package frc4388.robot.subsystems.shooter;
 import static edu.wpi.first.units.Units.InchesPerSecond;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 
-import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.controls.VelocityDutyCycle;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc4388.utility.configurable.ConfigurableDouble;
 
 public class ShooterReal implements ShooterIO {
 
@@ -27,9 +24,9 @@ public class ShooterReal implements ShooterIO {
          TalonFX shooter2Motor,
          TalonFX indexerMotor
     ) {
-        m_shooter1Motor= shooter1Motor;
-        m_shooter2Motor= shooter2Motor;
-        m_indexerMotor = indexerMotor;
+        m_shooter1Motor = shooter1Motor;
+        m_shooter2Motor = shooter2Motor;
+        m_indexerMotor  = indexerMotor;
         m_shooter1Motor.getConfigurator().apply(ShooterConstants.SHOOTER_PID);
         m_shooter2Motor.getConfigurator().apply(ShooterConstants.SHOOTER_PID);
         m_indexerMotor.getConfigurator().apply(ShooterConstants.SHOOTER_PID);

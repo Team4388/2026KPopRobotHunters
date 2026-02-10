@@ -9,17 +9,10 @@ package frc4388.robot;
 
 import com.ctre.phoenix6.hardware.TalonFX;
 
-import org.photonvision.PhotonCamera;
-import org.photonvision.simulation.PhotonCameraSim;
-import org.photonvision.simulation.SimCameraProperties;
-
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.swerve.SwerveDrivetrain;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.DigitalInput;
 //import frc4388.robot.constants.Constants.ElevatorConstants;
 import frc4388.robot.constants.Constants.SimConstants;
-import frc4388.robot.constants.Constants.VisionConstants;
 import frc4388.robot.subsystems.intake.IntakeConstants;
 import frc4388.robot.subsystems.intake.IntakeIO;
 import frc4388.robot.subsystems.intake.IntakeReal;
@@ -31,10 +24,7 @@ import frc4388.robot.subsystems.shooter.ShooterReal;
 import frc4388.robot.subsystems.swerve.SwerveDriveConstants;
 import frc4388.robot.subsystems.swerve.SwerveIO;
 import frc4388.robot.subsystems.swerve.SwerveReal;
-import frc4388.robot.subsystems.vision.VisionIO;
-import frc4388.robot.subsystems.vision.VisionReal;
 import frc4388.utility.status.FaultCANCoder;
-import frc4388.utility.status.FaultPhotonCamera;
 import frc4388.utility.status.FaultPidgeon2;
 import frc4388.utility.status.FaultTalonFX;
 
@@ -93,9 +83,9 @@ public class RobotMap {
 
                 // Configure Shooter 22,23,24
 
-                TalonFX shooter1 = new TalonFX(ShooterConstants.SHOOTER1_ID.id);
-                TalonFX shooter2 = new TalonFX(ShooterConstants.SHOOTER2_ID.id);
-                TalonFX indexer = new TalonFX(ShooterConstants.INDEXER_ID.id);
+                // TalonFX shooter1 = new TalonFX(ShooterConstants.SHOOTER1_ID.id);
+                // TalonFX shooter2 = new TalonFX(ShooterConstants.SHOOTER2_ID.id);
+                // TalonFX indexer = new TalonFX(ShooterConstants.INDEXER_ID.id);
                 
                 //Configure Intake 20,21
                 TalonFX arm = new TalonFX(IntakeConstants.ARM_ID.id);
@@ -105,7 +95,9 @@ public class RobotMap {
                 // DigitalInput endeffectorLimitSwitch = new DigitalInput(ElevatorConstants.ENDEFFECTOR_LIMIT_SWITCH);
                 // DigitalInput IRIntakeBeam = new DigitalInput(ElevatorConstants.INTAKE_LIMIT_SWITCH);
 
-                shooterIO = new ShooterReal(shooter1, shooter2, indexer);
+
+                shooterIO = new ShooterIO() {};
+                // shooterIO = new ShooterReal(shooter1, shooter2, indexer);
 
                 intakeIO = new IntakeReal(arm, roller);
 
@@ -113,9 +105,9 @@ public class RobotMap {
                 FaultPidgeon2.addDevice(swerveDrivetrainReal.getPigeon2(), "Gyro");
 
                 
-                FaultTalonFX.addDevice(shooter1, "Shooter1");
-                FaultTalonFX.addDevice(shooter2, "Shooter2");
-                FaultTalonFX.addDevice(indexer, "Indexer");
+                // FaultTalonFX.addDevice(shooter1, "Shooter1");
+                // FaultTalonFX.addDevice(shooter2, "Shooter2");
+                // FaultTalonFX.addDevice(indexer, "Indexer");
                 FaultTalonFX.addDevice(arm, "Arm");
                 FaultTalonFX.addDevice(roller, "Roller");
                 

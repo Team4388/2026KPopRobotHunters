@@ -17,14 +17,14 @@ import frc4388.utility.status.CanDevice;
 public class IntakeConstants {
     // Motor conversions
 
-    public static final double ARM_MOTOR_GEAR_RATIO = 1.;
-    public static final double ROLLER_MOTOR_GEAR_RATIO = 1.;
+    public static final double ARM_MOTOR_GEAR_RATIO = 1/100;
+    public static final double ROLLER_MOTOR_GEAR_RATIO = 1/3;
 
 
     //IDs
 
-    public static final CanDevice ARM_ID   = new CanDevice("SHOOTER 1", 20);
-    public static final CanDevice ROLLER_ID   = new CanDevice("SHOOTER 2", 21);
+    public static final CanDevice ARM_ID   = new CanDevice("ARM", 20);
+    public static final CanDevice ROLLER_ID   = new CanDevice("INTAKE_ROLLER", 21);
         
     // Limits
 
@@ -44,7 +44,7 @@ public class IntakeConstants {
         .withKI(0.0)
         .withKD(10.0);
 
-    public static final Slot1Configs ROLLER_PID = new Slot1Configs()
+    public static final Slot0Configs ROLLER_PID = new Slot0Configs()
         .withKP(2.0)
         .withKI(0.0)
         .withKD(10.0);
@@ -65,19 +65,6 @@ public class IntakeConstants {
                     .withDutyCycleNeutralDeadband(0.04) // TODO: Figure out what this means
     );
 
-    public static final class IDs {
-        public static final CanDevice FLYWHEEK_CAN_DEVICE = new CanDevice("Flywheel", 22);
-    }
-    // public static final TalonFXConfiguration ARM_MOTOR_CONFIG = new TalonFXConfiguration()
-    //     .withCurrentLimits(
-    //         new CurrentLimitsConfigs()
-    //             .withStatorCurrentLimit(40) // TODO: tune???
-    //             .withStatorCurrentLimitEnable(true) // TODO: Figure out what this means
-    //         ).withMotorOutput(
-    //             new MotorOutputConfigs()
-    //                 .withNeutralMode(NeutralModeValue.Brake) // Brake so it stop
-    //                 .withDutyCycleNeutralDeadband(0.04) // TODO: Figure out what this means
-    // );
     public static final TalonFXConfiguration ROLLER_MOTOR_CONFIG = new TalonFXConfiguration()
         .withCurrentLimits(
             new CurrentLimitsConfigs()

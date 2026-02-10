@@ -33,11 +33,11 @@ public class Intake extends SubsystemBase {
     public void setMode(IntakeMode mode) {
         switch (mode) {
             case Up:
-                // io.setArmAngle(state, IntakeConstants.ARM_LIMIT_UPPER);
+                io.setArmAngle(state, IntakeConstants.ARM_LIMIT_UPPER);
                 io.setRollerVelocity(state, IntakeConstants.ROLLER_STOP);
                 break;
             case Down:
-                // io.setArmAngle(state, IntakeConstants.ARM_LIMIT_LOWER);
+                io.setArmAngle(state, IntakeConstants.ARM_LIMIT_LOWER);
                 io.setRollerVelocity(state, IntakeConstants.ROLLER_MAX_VELOCITY);
                 break;
         }
@@ -60,16 +60,10 @@ public class Intake extends SubsystemBase {
 
     @Override
     public void periodic() {
-        
-        
-
         // FaultReporter.register(this); // TODO Implement fault reporter
 
 
         Logger.processInputs("Intake", state);
-
-        Pose2d pose = m_swervePoseSupplier.get();
-        Angle robotRot = pose.getRotation().getMeasure();
 
         io.updateInputs(state);
 
