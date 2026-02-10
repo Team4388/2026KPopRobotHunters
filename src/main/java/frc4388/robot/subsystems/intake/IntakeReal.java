@@ -58,6 +58,12 @@ public class IntakeReal implements IntakeIO {
     @Override
     public void setRollerVelocity(IntakeState state, AngularVelocity angularVelocity) {
         state.rollerTargetVelocity = angularVelocity;
+
+        if(angularVelocity.baseUnitMagnitude() == 0) {
+            m_rollerMotor.set(0);
+            return;
+        }
+
         // (REAL_ROT / SEC) * (MOTOR_ROT / REAL_ROT) = (MOTOR_ROT / SEC)
         AngularVelocity motorSpeed = angularVelocity.div(IntakeConstants.ROLLER_MOTOR_GEAR_RATIO);
 
@@ -80,14 +86,6 @@ public class IntakeReal implements IntakeIO {
         m_armMotor.setControl(armPosition.withPosition(motorAngle));
     }
 
-    ConfigurableDouble arm_kP = new ConfigurableDouble("ARM KP", 0.2);
-    ConfigurableDouble arm_kI = new ConfigurableDouble("ARM KP", 0);
-    ConfigurableDouble arm_kD = new ConfigurableDouble("ARM KP", 0);
-    
-    ConfigurableDouble roller_kP = new ConfigurableDouble("Roller KP", 0.2);
-    ConfigurableDouble roller_kI = new ConfigurableDouble("Roller KI", 0);
-    ConfigurableDouble roller_kD = new ConfigurableDouble("Roller KD", 0);
-
     @Override
     public void updateInputs(IntakeState state) {
         state.armAngle = m_armMotor.getPosition().getValue().times(IntakeConstants.ARM_MOTOR_GEAR_RATIO);
@@ -100,14 +98,14 @@ public class IntakeReal implements IntakeIO {
     @Override 
     public void updateGains() {
 
-        IntakeConstants.ARM_PID.kP = arm_kP.get();
-        IntakeConstants.ARM_PID.kI = arm_kI.get();
-        IntakeConstants.ARM_PID.kD = arm_kD.get();
+        IntakeConstants.ARM_PID.kP = IntakeConstants.arm_kP.get();
+        IntakeConstants.ARM_PID.kI = IntakeConstants.arm_kI.get();
+        IntakeConstants.ARM_PID.kD = IntakeConstants.arm_kD.get();
         m_armMotor.getConfigurator().apply(IntakeConstants.ARM_MOTOR_CONFIG);
 
-        IntakeConstants.ROLLER_PID.kP = roller_kP.get();
-        IntakeConstants.ROLLER_PID.kI = roller_kI.get();
-        IntakeConstants.ROLLER_PID.kD = roller_kD.get();
+        IntakeConstants.ROLLER_PID.kP = IntakeConstants.roller_kP.get();
+        IntakeConstants.ROLLER_PID.kI = IntakeConstants.roller_kI.get();
+        IntakeConstants.ROLLER_PID.kD = IntakeConstants.roller_kD.get();
         m_rollerMotor.getConfigurator().apply(IntakeConstants.ROLLER_MOTOR_CONFIG);
     }
 }

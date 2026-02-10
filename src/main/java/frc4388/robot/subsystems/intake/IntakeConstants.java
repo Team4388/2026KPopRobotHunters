@@ -57,6 +57,15 @@ public class IntakeConstants {
         .withKI(0.0)
         .withKD(0.0);
 
+    public static ConfigurableDouble arm_kP = new ConfigurableDouble("ARM KP", 0.2);
+    public static ConfigurableDouble arm_kI = new ConfigurableDouble("ARM KP", 0);
+    public static ConfigurableDouble arm_kD = new ConfigurableDouble("ARM KP", 0);
+    
+    public static ConfigurableDouble roller_kP = new ConfigurableDouble("Roller KP", 0.2);
+    public static ConfigurableDouble roller_kI = new ConfigurableDouble("Roller KI", 0);
+    public static ConfigurableDouble roller_kD = new ConfigurableDouble("Roller KD", 0);
+
+
     // 0 is paralell to the ground, 90 is directly up
     // public static final Angle PITCH_LIMIT_UPPER = Degrees.of(90);
     // public static final Angle PITCH_LIMIT_LOWER = Degrees.of(0);

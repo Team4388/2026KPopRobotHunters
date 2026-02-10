@@ -31,10 +31,10 @@ public class ShooterConstants {
 
     public static final ConfigurableDouble SHOOTER_ACTIVE_VELOCITY = new ConfigurableDouble("Shooter Active Velocity", 30);
     public static final ConfigurableDouble SHOOTER_RESTING_VELOCITY = new ConfigurableDouble("Shooter Resting Velocity", 15);
-    public static final ConfigurableDouble SHOOTER_INACTIVE_VELOCITY = new ConfigurableDouble("Shooter Inactive Velocity", 0);
+    // public static final ConfigurableDouble SHOOTER_INACTIVE_VELOCITY = new ConfigurableDouble("Shooter Inactive Velocity", 0);
     
     public static final ConfigurableDouble INDEXER_ACTIVE_VELOCITY = new ConfigurableDouble("Shooter Active Velocity", 10);
-    public static final ConfigurableDouble INDEXER_INACTIVE_VELOCITY = new ConfigurableDouble("Shooter Inactive Velocity", 0);
+    // public static final ConfigurableDouble INDEXER_INACTIVE_VELOCITY = new ConfigurableDouble("Shooter Inactive Velocity", 0);
 
     public static Slot0Configs SHOOTER_PID = new Slot0Configs()
         .withKV(0.0)
@@ -47,6 +47,15 @@ public class ShooterConstants {
         .withKP(0.0)
         .withKI(0.0)
         .withKD(0.0);
+    
+    
+    public static ConfigurableDouble indexer_kP = new ConfigurableDouble("Indexer KP", 0.2);
+    public static ConfigurableDouble indexer_kI = new ConfigurableDouble("Indexer KP", 0);
+    public static ConfigurableDouble indexer_kD = new ConfigurableDouble("Indexer KP", 0);
+    
+    public static ConfigurableDouble shooter_kP = new ConfigurableDouble("Shooter KP", 0.2);
+    public static ConfigurableDouble shooter_kI = new ConfigurableDouble("Shooter KI", 0);
+    public static ConfigurableDouble shooter_kD = new ConfigurableDouble("Shooter KD", 0);
 
     // Limits
 

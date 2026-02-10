@@ -94,6 +94,12 @@ public class ShooterReal implements ShooterIO {
         state.motor1TargetVelocity = target;
         state.motor2TargetVelocity = target;
 
+        if(target.baseUnitMagnitude() == 0) {
+            m_shooter1Motor.set(0);
+            m_shooter2Motor.set(0);
+            return;
+        }
+
         AngularVelocity motorRps = target.div(ShooterConstants.INDEXER_GEAR_RATIO);
 
         m_shooter1Motor.setControl(shooter1Velocity.withVelocity(motorRps));
@@ -107,14 +113,6 @@ public class ShooterReal implements ShooterIO {
         m_indexerMotor.setControl(m_indexerVelocity.withVelocity(motorRps));
     }
 
-    
-    ConfigurableDouble indexer_kP = new ConfigurableDouble("Indexer KP", 0.2);
-    ConfigurableDouble indexer_kI = new ConfigurableDouble("Indexer KP", 0);
-    ConfigurableDouble indexer_kD = new ConfigurableDouble("Indexer KP", 0);
-    
-    ConfigurableDouble shooter_kP = new ConfigurableDouble("Shooter KP", 0.2);
-    ConfigurableDouble shooter_kI = new ConfigurableDouble("Shooter KI", 0);
-    ConfigurableDouble shooter_kD = new ConfigurableDouble("Shooter KD", 0);
 
     @Override
     public void updateInputs(ShooterState state) {
@@ -130,19 +128,19 @@ public class ShooterReal implements ShooterIO {
         state.indexerCurrent = m_indexerMotor.getStatorCurrent().getValue();
 
     }
-    
+
     @Override 
     public void updateGains() {
         // TEMPORARY PIDs
-        ShooterConstants.SHOOTER_PID.kP = shooter_kP.get();
-        ShooterConstants.SHOOTER_PID.kI = shooter_kI.get();
-        ShooterConstants.SHOOTER_PID.kD = shooter_kD.get();
+        ShooterConstants.SHOOTER_PID.kP = ShooterConstants.shooter_kP.get();
+        ShooterConstants.SHOOTER_PID.kI = ShooterConstants.shooter_kI.get();
+        ShooterConstants.SHOOTER_PID.kD = ShooterConstants.shooter_kD.get();
         m_shooter1Motor.getConfigurator().apply(ShooterConstants.SHOOTER_PID);
         m_shooter2Motor.getConfigurator().apply(ShooterConstants.SHOOTER_PID);
 
-        ShooterConstants.INDEXER_PID.kP = indexer_kP.get();
-        ShooterConstants.INDEXER_PID.kI = indexer_kI.get();
-        ShooterConstants.INDEXER_PID.kD = indexer_kD.get();
+        ShooterConstants.INDEXER_PID.kP = ShooterConstants.indexer_kP.get();
+        ShooterConstants.INDEXER_PID.kI = ShooterConstants.indexer_kI.get();
+        ShooterConstants.INDEXER_PID.kD = ShooterConstants.indexer_kD.get();
         m_indexerMotor.getConfigurator().apply(ShooterConstants.INDEXER_PID);
     }
     

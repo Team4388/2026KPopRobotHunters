@@ -1,18 +1,11 @@
 package frc4388.robot.subsystems.shooter;
 
-import static edu.wpi.first.units.Units.Rotation;
-import static edu.wpi.first.units.Units.Rotations;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
-
-import java.util.function.Supplier;
 
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc4388.robot.subsystems.intake.IntakeConstants;
-import frc4388.robot.subsystems.shooter.ShooterIO.ShooterState;
 
 public class Shooter extends SubsystemBase {
     public ShooterIO io;
@@ -47,6 +40,7 @@ public class Shooter extends SubsystemBase {
         Inactive,
     }
 
+
     public void setMode(ShooterMode mode) {
         switch (mode) {
             case Active:
@@ -57,12 +51,12 @@ public class Shooter extends SubsystemBase {
             case Resting:
                 io.setShooterVelocity(state, RotationsPerSecond.of(ShooterConstants.SHOOTER_RESTING_VELOCITY.get()));
                 // io.setMotor2Velocity(state, ShooterConstants.SHOOTER_RESTING_VELOCITY);
-                io.setIndexerVelocity(state, RotationsPerSecond.of(ShooterConstants.INDEXER_INACTIVE_VELOCITY.get()));
+                io.setIndexerVelocity(state, RotationsPerSecond.of(0));
                 break;
             case Inactive:
                 io.setShooterVelocity(state, RotationsPerSecond.of(ShooterConstants.SHOOTER_RESTING_VELOCITY.get()));
                 // io.setMotor2Velocity(state, ShooterConstants.SHOOTER_RESTING_VELOCITY);
-                io.setIndexerVelocity(state, RotationsPerSecond.of(ShooterConstants.INDEXER_INACTIVE_VELOCITY.get()));
+                io.setIndexerVelocity(state, RotationsPerSecond.of(0));
                 break;
         }
     }
