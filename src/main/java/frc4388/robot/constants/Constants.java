@@ -96,7 +96,7 @@ public final class Constants {
     public static final class LEDConstants {
         public static final int LED_SPARK_ID = 9;
 
-        public static final LEDPatterns DEFAULT_PATTERN = LEDPatterns.FOREST_WAVES;
+        public static final LEDPatterns DEFAULT_PATTERN = LEDPatterns.SOLID_RED_ORANGE;
 
         // LED color for when the intake is out
         public static final LEDPatterns INTAKE_OUT = LEDPatterns.SOLID_RED;
