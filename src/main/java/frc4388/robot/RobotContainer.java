@@ -65,7 +65,7 @@ public class RobotContainer {
     public final Vision m_vision = new Vision();
     public final SwerveDrive m_robotSwerveDrive = new SwerveDrive(m_robotMap.swerveDrivetrain, m_vision);
     public final Intake m_robotIntake = new Intake(m_robotMap.intakeIO);
-    public final Shooter m_robotShooter = new Shooter(m_robotMap.shooterIO);
+    public final Shooter m_robotShooter = new Shooter(m_robotMap.shooterIO, m_robotSwerveDrive, m_robotIntake, m_robotLED);
     private Boolean operatorManualMode = false;
     // public final SwerveDrive m_robotSwerveDrive = new SwerveDrive(m_robotMap.swerveDrivetrain);
 
@@ -175,15 +175,15 @@ public class RobotContainer {
 
        
         
-        new JoystickButton(getDeadbandedDriverController(), XboxController.Y_BUTTON)
-            .onTrue(new InstantCommand(() -> {m_robotShooter.setMode(ShooterMode.Active);}, m_robotShooter)); 
-        new JoystickButton(getDeadbandedDriverController(), XboxController.B_BUTTON)
-            .onTrue(new InstantCommand(() -> {m_robotShooter.setMode(ShooterMode.Inactive);}, m_robotShooter)); 
+        // new JoystickButton(getDeadbandedDriverController(), XboxController.Y_BUTTON)
+        //     .onTrue(new InstantCommand(() -> {m_robotShooter.setMode(ShooterMode.Active);}, m_robotShooter)); 
+        // new JoystickButton(getDeadbandedDriverController(), XboxController.B_BUTTON)
+        //     .onTrue(new InstantCommand(() -> {m_robotShooter.setMode(ShooterMode.Inactive);}, m_robotShooter)); 
             
-        new JoystickButton(getDeadbandedDriverController(), XboxController.X_BUTTON)
-            .onTrue(new InstantCommand(() -> {m_robotIntake.setMode(IntakeMode.Extended);}, m_robotIntake)); 
-        new JoystickButton(getDeadbandedDriverController(), XboxController.A_BUTTON)
-            .onTrue(new InstantCommand(() -> {m_robotIntake.setMode(IntakeMode.Retracted);}, m_robotIntake)); 
+        // new JoystickButton(getDeadbandedDriverController(), XboxController.X_BUTTON)
+        //     .onTrue(new InstantCommand(() -> {;}, m_robotIntake)); 
+        // new JoystickButton(getDeadbandedDriverController(), XboxController.A_BUTTON)
+        //     .onTrue(new InstantCommand(() -> {m_robotIntake.setMode(IntakeMode.Retracted);}, m_robotIntake)); 
 
 
 
@@ -196,18 +196,7 @@ public class RobotContainer {
                 m_robotShooter.io.updateGains();
             }));
 
-        // IF the driver is holding the aim button, aim the robot towards the hub
-        new Trigger(() -> getDeadbandedDriverController().getRightTriggerAxis() >= 0.5)
-            .whileTrue(new RunCommand(
-                () -> {
-                m_robotSwerveDrive.driveFacingPosition(
-                    getDeadbandedDriverController().getLeft(),
-                    FieldConstants.BLUE_HUB_POS);
-                }, m_robotSwerveDrive))
-            .onFalse(new InstantCommand(() -> m_robotSwerveDrive.softStop(), m_robotSwerveDrive));
-
-
-        // IF the driver is holding the aim button, aim the robot towards the hub
+        // IF the driver is holding the left trigger, intake driving
         new Trigger(() -> getDeadbandedDriverController().getLeftTriggerAxis() >= 0.5)
             .whileTrue(new RunCommand(
                 () -> {
@@ -216,7 +205,35 @@ public class RobotContainer {
                         false
                     );
                 }, m_robotSwerveDrive))
-            .onFalse(new InstantCommand(() -> m_robotSwerveDrive.softStop(), m_robotSwerveDrive));
+            // .onFalse(new InstantCommand(() -> , m_robotSwerveDrive));
+
+            
+            .onTrue(new InstantCommand(() -> {
+                m_robotIntake.setMode(IntakeMode.Extended);
+            }))
+            .onFalse(new InstantCommand(() -> {
+                m_robotIntake.setMode(IntakeMode.Retracted);
+                m_robotSwerveDrive.softStop();
+            }, m_robotSwerveDrive));
+
+        // IF the driver is holding the aim button, aim the robot towards the hub and shooter ready
+        new Trigger(() -> getDeadbandedDriverController().getRightTriggerAxis() >= 0.5)
+            .whileTrue(new RunCommand(
+                () -> {
+                m_robotSwerveDrive.driveFacingPosition(
+                    getDeadbandedDriverController().getLeft(),
+                    FieldConstants.BLUE_HUB_POS);
+                }, m_robotSwerveDrive)
+            )
+            .onTrue(new InstantCommand(() -> {
+                // When Right trigger is pressed, 
+                m_robotIntake.setMode(IntakeMode.Extended);
+            }))
+            .onFalse(new InstantCommand(() -> {
+                m_robotIntake.setMode(IntakeMode.Retracted);
+                m_robotSwerveDrive.softStop();
+            }, m_robotSwerveDrive));
+
 
         // D-PAD fine alignment
         new Trigger(() -> getDeadbandedDriverController().getPOV() != -1)

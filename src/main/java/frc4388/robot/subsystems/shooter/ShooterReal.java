@@ -43,52 +43,7 @@ public class ShooterReal implements ShooterIO {
         shooter2Velocity.Slot = 0;
         m_indexerVelocity.Slot = 0;
     }
-
-    private Angle clampAng(Angle x, Angle min, Angle max){
-        if(x.gt(max)) {
-            return max;
-        }else if(x.lt(min)) {
-            return min;
-        }else{
-            return x;
-        }
-    }
-
-
-
-   
-
-    // // TODO: Test
-    // @Override
-    // public void setShooterAngle(ShooterState state, Angle angle) {
-    //     state.shooterTargetAngle = angle;
-    //     // Assume that the angle is always accurate, because I think we will use a shaft encoder
-    //     // Assume that 0 degrees = forwards. Might need an offset here
-
-    //     Angle boundedAngle = clampAng(angle, ShooterConstants.ANGLE_LIMIT_LEFT, ShooterConstants.ANGLE_LIMIT_RIGHT);
-    //     // (REAL_ROT) * (MOTOR_ROT / REAL_ROT) = MOTOR_ROT
-    //     double motorTargetAngle = boundedAngle.in(Rotations) / ShooterConstants.ANGLE_MOTOR_GEAR_RATIO;
-    //     PositionDutyCycle posRequest = new PositionDutyCycle(motorTargetAngle);
-    //     m_angleMotor.setControl(posRequest);
-    // }
-
-
-    // TODO: Test
-    // @Override
-    // public void setShooterPitch(ShooterState state, Angle angle) {
-    //     state.shooterTargetPitch = angle;
-    //     // TODO: Test
-    //     // This assumes that the 0 is paralell to the ground. Might need an offset here
-
-
-    //     Angle boundedAngle = clampAng(angle, ShooterConstants.PITCH_LIMIT_UPPER, ShooterConstants.PITCH_LIMIT_LOWER);
-    //     // (REAL_ROT) * (MOTOR_ROT / REAL_ROT) = MOTOR_ROT
-    //     double motorTargetAngle = boundedAngle.in(Rotations) / ShooterConstants.PITCH_MOTOR_GEAR_RATIO;
-    //     PositionDutyCycle posRequest = new PositionDutyCycle(motorTargetAngle);
-    //     m_pitchMotor.setControl(posRequest);
-    // }
     
-
     @Override
     public void setShooterVelocity(ShooterState state, AngularVelocity target) {
         state.motor1TargetVelocity = target;

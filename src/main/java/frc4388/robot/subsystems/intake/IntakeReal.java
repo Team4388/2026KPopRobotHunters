@@ -78,6 +78,7 @@ public class IntakeReal implements IntakeIO {
         // Assume that the angle is always accurate, because I think we will use a shaft encoder
         // Assume that 0 degrees = forwards. Might need an offset here
 
+        // angle = clampAng(angle, IntakeConstants.ARM_LIMIT_RETRACTED, IntakeConstants.ARM_LIMIT_EXTENDED);
 
         // (REAL_ROT) * (MOTOR_ROT / REAL_ROT) = MOTOR_ROT
         Angle motorAngle = angle.times(IntakeConstants.ARM_MOTOR_GEAR_RATIO);

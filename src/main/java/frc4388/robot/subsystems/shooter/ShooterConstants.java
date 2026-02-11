@@ -33,8 +33,21 @@ public class    ShooterConstants {
     public static final ConfigurableDouble SHOOTER_RESTING_VELOCITY = new ConfigurableDouble("Shooter Resting Velocity", 15);
     // public static final ConfigurableDouble SHOOTER_INACTIVE_VELOCITY = new ConfigurableDouble("Shooter Inactive Velocity", 0);
     
-    public static final ConfigurableDouble INDEXER_ACTIVE_VELOCITY = new ConfigurableDouble("Indexer Active Velocity", 10);
-    // public static final ConfigurableDouble INDEXER_INACTIVE_VELOCITY = new ConfigurableDouble("Shooter Inactive Velocity", 0);
+    public static final ConfigurableDouble INDEXER_FORWARD_VELOCITY = new ConfigurableDouble("Indexer FWD Velocity", 10);
+    public static final ConfigurableDouble INDEXER_REVERSE_VELOCITY = new ConfigurableDouble("Indexer reverse Velocity", 10);
+
+    // Tolerances
+    public static final ConfigurableDouble ROBOT_MIN_HUB = new ConfigurableDouble("Shoot min dist", 1);
+    public static final ConfigurableDouble ROBOT_MAX_HUB = new ConfigurableDouble("Shoot max dist", 1);
+
+    public static final ConfigurableDouble ROBOT_ANG_TOLERANCE = new ConfigurableDouble("Shoot Ang  tolerance", 1);
+
+    public static final ConfigurableDouble ROBOT_SPEED_TOLERANCE = new ConfigurableDouble("Shoot speed tolerance", 1);
+    public static final ConfigurableDouble ROBOT_ANG_SPEED_TOLERANCE = new ConfigurableDouble("Shoot Ang speed tolerance", 1);
+
+    public static final ConfigurableDouble SHOOT_SPEED_TOLERANCE = new ConfigurableDouble("Shooter speed tolerance", 1);
+
+    
 
     public static Slot0Configs SHOOTER_PID = new Slot0Configs()
         .withKV(0.0)

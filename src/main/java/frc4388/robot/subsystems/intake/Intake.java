@@ -39,6 +39,10 @@ public class Intake extends SubsystemBase {
         this.mode = mode;
     }
 
+    public IntakeMode getMode() {
+        return mode;
+    }
+
 
     // public enum FieldZone {
     //     // The robot should aim at the hub
