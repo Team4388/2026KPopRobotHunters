@@ -100,7 +100,7 @@ public class ShooterReal implements ShooterIO {
             return;
         }
 
-        AngularVelocity motorRps = target.div(ShooterConstants.INDEXER_GEAR_RATIO);
+        AngularVelocity motorRps = target.times(ShooterConstants.INDEXER_GEAR_RATIO);
 
         m_shooter1Motor.setControl(shooter1Velocity.withVelocity(motorRps));
         m_shooter2Motor.setControl(shooter2Velocity.withVelocity(motorRps));
@@ -109,7 +109,13 @@ public class ShooterReal implements ShooterIO {
     @Override
     public void setIndexerVelocity(ShooterState state, AngularVelocity target) {
         state.indexerTargetVelocity = target;
-        AngularVelocity motorRps = target.div(ShooterConstants.INDEXER_GEAR_RATIO);
+
+        if(target.baseUnitMagnitude() == 0) {
+            m_indexerMotor.set(0);
+            return;
+        }
+
+        AngularVelocity motorRps = target.times(ShooterConstants.INDEXER_GEAR_RATIO);
         m_indexerMotor.setControl(m_indexerVelocity.withVelocity(motorRps));
     }
 
@@ -117,9 +123,9 @@ public class ShooterReal implements ShooterIO {
     @Override
     public void updateInputs(ShooterState state) {
 
-        state.motor1Velocity = m_shooter1Motor.getVelocity().getValue().times(ShooterConstants.SHOOTERMOTOR1_GEAR_RATIO);
-        state.motor2Velocity = m_shooter2Motor.getVelocity().getValue().times(ShooterConstants.SHOOTERMOTOR2_GEAR_RATIO);
-        state.indexerVelocity = m_indexerMotor.getVelocity().getValue().times(ShooterConstants.INDEXER_GEAR_RATIO);
+        state.motor1Velocity = m_shooter1Motor.getVelocity().getValue().div(ShooterConstants.SHOOTERMOTOR1_GEAR_RATIO);
+        state.motor2Velocity = m_shooter2Motor.getVelocity().getValue().div(ShooterConstants.SHOOTERMOTOR2_GEAR_RATIO);
+        state.indexerVelocity = m_indexerMotor.getVelocity().getValue().div(ShooterConstants.INDEXER_GEAR_RATIO);
 
         // state.motorLinearVelocity = InchesPerSecond.of(m_shooter1Motor.getVelocity().getValue().in(RotationsPerSecond) * ShooterConstants.FEEDER_INCHES_PER_ROT);
         

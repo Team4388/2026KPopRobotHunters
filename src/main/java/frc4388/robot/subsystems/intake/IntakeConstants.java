@@ -18,8 +18,8 @@ import frc4388.utility.status.CanDevice;
 public class IntakeConstants {
     // Motor conversions
 
-    public static final double ARM_MOTOR_GEAR_RATIO = 1/100;
-    public static final double ROLLER_MOTOR_GEAR_RATIO = 1/3;
+    public static final double ARM_MOTOR_GEAR_RATIO = 100;
+    public static final double ROLLER_MOTOR_GEAR_RATIO = 3;
 
 
     //IDs
@@ -37,8 +37,8 @@ public class IntakeConstants {
     // public static final Angle ARM_LIMIT_LOWER = Degrees.of(90);
     // public static final Angle ARM_LIMIT_UPPER = Degrees.of(-90);
 
-    public static final ConfigurableDouble ARM_LIMIT_RETRACTED = new ConfigurableDouble("Arm angle retracted", 0);
-    public static final ConfigurableDouble ARM_LIMIT_EXTENDED = new ConfigurableDouble("Arm angle extended", 0.25);
+    public static final ConfigurableDouble ARM_LIMIT_RETRACTED = new ConfigurableDouble("Arm angle retracted", -0.3);
+    public static final ConfigurableDouble ARM_LIMIT_EXTENDED = new ConfigurableDouble("Arm angle extended", 0);
     
     public static final ConfigurableDouble ROLLER_ACTIVE = new ConfigurableDouble("Rolelr Active", 10);
     // public static final ConfigurableDouble ROLL = new ConfigurableDouble("Arm angle extended", 0.25);
@@ -58,8 +58,8 @@ public class IntakeConstants {
         .withKD(0.0);
 
     public static ConfigurableDouble arm_kP = new ConfigurableDouble("ARM KP", 0.2);
-    public static ConfigurableDouble arm_kI = new ConfigurableDouble("ARM KP", 0);
-    public static ConfigurableDouble arm_kD = new ConfigurableDouble("ARM KP", 0);
+    public static ConfigurableDouble arm_kI = new ConfigurableDouble("ARM KI", 0);
+    public static ConfigurableDouble arm_kD = new ConfigurableDouble("ARM KD", 0);
     
     public static ConfigurableDouble roller_kP = new ConfigurableDouble("Roller KP", 0.2);
     public static ConfigurableDouble roller_kI = new ConfigurableDouble("Roller KI", 0);

@@ -40,25 +40,10 @@ public class Shooter extends SubsystemBase {
         Inactive,
     }
 
+    private ShooterMode mode = ShooterMode.Inactive;
 
     public void setMode(ShooterMode mode) {
-        switch (mode) {
-            case Active:
-                io.setShooterVelocity(state, RotationsPerSecond.of(ShooterConstants.SHOOTER_ACTIVE_VELOCITY.get()));
-                // io.setMotor2Velocity(state, ShooterConstants.SHOOTER_ACTIVE_VELOCITY);
-                io.setIndexerVelocity(state, RotationsPerSecond.of(ShooterConstants.INDEXER_ACTIVE_VELOCITY.get()));
-                break;
-            case Resting:
-                io.setShooterVelocity(state, RotationsPerSecond.of(ShooterConstants.SHOOTER_RESTING_VELOCITY.get()));
-                // io.setMotor2Velocity(state, ShooterConstants.SHOOTER_RESTING_VELOCITY);
-                io.setIndexerVelocity(state, RotationsPerSecond.of(0));
-                break;
-            case Inactive:
-                io.setShooterVelocity(state, RotationsPerSecond.of(ShooterConstants.SHOOTER_RESTING_VELOCITY.get()));
-                // io.setMotor2Velocity(state, ShooterConstants.SHOOTER_RESTING_VELOCITY);
-                io.setIndexerVelocity(state, RotationsPerSecond.of(0));
-                break;
-        }
+        this.mode = mode;
     }
 
     // Calculate what should be done based off of the position of the robot
@@ -82,6 +67,24 @@ public class Shooter extends SubsystemBase {
         // Angle robotRot = pose.getRotation().getMeasure();
 
         io.updateInputs(state);
+
+        switch (mode) {
+            case Active:
+                io.setShooterVelocity(state, RotationsPerSecond.of(ShooterConstants.SHOOTER_ACTIVE_VELOCITY.get()));
+                // io.setMotor2Velocity(state, ShooterConstants.SHOOTER_ACTIVE_VELOCITY);
+                io.setIndexerVelocity(state, RotationsPerSecond.of(ShooterConstants.INDEXER_ACTIVE_VELOCITY.get()));
+                break;
+            case Resting:
+                io.setShooterVelocity(state, RotationsPerSecond.of(ShooterConstants.SHOOTER_RESTING_VELOCITY.get()));
+                // io.setMotor2Velocity(state, ShooterConstants.SHOOTER_RESTING_VELOCITY);
+                io.setIndexerVelocity(state, RotationsPerSecond.of(0));
+                break;
+            case Inactive:
+                io.setShooterVelocity(state, RotationsPerSecond.of(0));
+                // io.setMotor2Velocity(state, ShooterConstants.SHOOTER_RESTING_VELOCITY);
+                io.setIndexerVelocity(state, RotationsPerSecond.of(0));
+                break;
+        }
 
     }
 }

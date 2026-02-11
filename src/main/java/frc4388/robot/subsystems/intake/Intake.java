@@ -33,17 +33,10 @@ public class Intake extends SubsystemBase {
         Retracted,
     }
 
+    private IntakeMode mode = IntakeMode.Extended;
+
     public void setMode(IntakeMode mode) {
-        switch (mode) {
-            case Extended:
-                io.setArmAngle(state, Rotations.of(IntakeConstants.ARM_LIMIT_EXTENDED.get()));
-                io.setRollerVelocity(state, RotationsPerSecond.of(IntakeConstants.ROLLER_ACTIVE.get()));
-                break;
-            case Retracted:
-                io.setArmAngle(state, Rotations.of(IntakeConstants.ARM_LIMIT_RETRACTED.get()));
-                io.setRollerVelocity(state, RotationsPerSecond.of(0));
-                break;
-        }
+        this.mode = mode;
     }
 
 
@@ -69,6 +62,17 @@ public class Intake extends SubsystemBase {
         Logger.processInputs("Intake", state);
 
         io.updateInputs(state);
+
+        switch (mode) {
+            case Extended:
+                io.setArmAngle(state, Rotations.of(IntakeConstants.ARM_LIMIT_EXTENDED.get()));
+                io.setRollerVelocity(state, RotationsPerSecond.of(IntakeConstants.ROLLER_ACTIVE.get()));
+                break;
+            case Retracted:
+                io.setArmAngle(state, Rotations.of(IntakeConstants.ARM_LIMIT_RETRACTED.get()));
+                io.setRollerVelocity(state, RotationsPerSecond.of(0));
+                break;
+        }
 
     }
 }

@@ -84,13 +84,13 @@ public class RobotMap {
                 swerveDrivetrain = new SwerveReal(swerveDrivetrainReal);
 
                 // Configure Shooter 22,23,24
-                TalonFX shooter1 = new TalonFX(ShooterConstants.SHOOTER1_ID.id, Constants.RIO_CANBUS);
-                TalonFX shooter2 = new TalonFX(ShooterConstants.SHOOTER2_ID.id, Constants.RIO_CANBUS);
-                TalonFX indexer = new TalonFX(ShooterConstants.INDEXER_ID.id, Constants.RIO_CANBUS);
+                TalonFX shooter1 = new TalonFX(ShooterConstants.SHOOTER1_ID.id, Constants.CANIVORE_CANBUS);
+                TalonFX shooter2 = new TalonFX(ShooterConstants.SHOOTER2_ID.id, Constants.CANIVORE_CANBUS);
+                TalonFX indexer = new TalonFX(ShooterConstants.INDEXER_ID.id, Constants.CANIVORE_CANBUS);
                 
                 //Configure Intake 20,21
-                TalonFX arm = new TalonFX(IntakeConstants.ARM_ID.id, Constants.RIO_CANBUS);
-                TalonFX roller = new TalonFX(IntakeConstants.ROLLER_ID.id, Constants.RIO_CANBUS);
+                TalonFX arm = new TalonFX(IntakeConstants.ARM_ID.id, Constants.CANIVORE_CANBUS);
+                TalonFX roller = new TalonFX(IntakeConstants.ROLLER_ID.id, Constants.CANIVORE_CANBUS);
 
                 // DigitalInput basinLimitSwitch = new DigitalInput(ElevatorConstants.BASIN_LIMIT_SWITCH);
                 // DigitalInput endeffectorLimitSwitch = new DigitalInput(ElevatorConstants.ENDEFFECTOR_LIMIT_SWITCH);

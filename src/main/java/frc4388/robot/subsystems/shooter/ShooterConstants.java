@@ -14,7 +14,7 @@ import edu.wpi.first.units.measure.AngularVelocity;
 import frc4388.utility.configurable.ConfigurableDouble;
 import frc4388.utility.status.CanDevice;
 
-public class ShooterConstants {
+public class    ShooterConstants {
     // Motor conversions
     
     public static final double FEEDER_INCHES_PER_ROT = 1.;
@@ -33,25 +33,25 @@ public class ShooterConstants {
     public static final ConfigurableDouble SHOOTER_RESTING_VELOCITY = new ConfigurableDouble("Shooter Resting Velocity", 15);
     // public static final ConfigurableDouble SHOOTER_INACTIVE_VELOCITY = new ConfigurableDouble("Shooter Inactive Velocity", 0);
     
-    public static final ConfigurableDouble INDEXER_ACTIVE_VELOCITY = new ConfigurableDouble("Shooter Active Velocity", 10);
+    public static final ConfigurableDouble INDEXER_ACTIVE_VELOCITY = new ConfigurableDouble("Indexer Active Velocity", 10);
     // public static final ConfigurableDouble INDEXER_INACTIVE_VELOCITY = new ConfigurableDouble("Shooter Inactive Velocity", 0);
 
     public static Slot0Configs SHOOTER_PID = new Slot0Configs()
         .withKV(0.0)
         .withKP(0.0)
         .withKI(0.0)
-        .withKD(0.0);
+        .withKD(0.2);
 
     public static Slot0Configs INDEXER_PID = new Slot0Configs()
         .withKV(0.0)
         .withKP(0.0)
         .withKI(0.0)
-        .withKD(0.0);
+        .withKD(0.2);
     
     
     public static ConfigurableDouble indexer_kP = new ConfigurableDouble("Indexer KP", 0.2);
-    public static ConfigurableDouble indexer_kI = new ConfigurableDouble("Indexer KP", 0);
-    public static ConfigurableDouble indexer_kD = new ConfigurableDouble("Indexer KP", 0);
+    public static ConfigurableDouble indexer_kI = new ConfigurableDouble("Indexer KI", 0);
+    public static ConfigurableDouble indexer_kD = new ConfigurableDouble("Indexer KD", 0);
     
     public static ConfigurableDouble shooter_kP = new ConfigurableDouble("Shooter KP", 0.2);
     public static ConfigurableDouble shooter_kI = new ConfigurableDouble("Shooter KI", 0);
