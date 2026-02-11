@@ -9,6 +9,7 @@ package frc4388.robot;
 
 import java.io.File;
 
+import com.ctre.phoenix.CANifier.LEDChannel;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -61,7 +62,7 @@ public class RobotContainer {
     public final RobotMap m_robotMap = new RobotMap(Mode.REAL);
     
     /* Subsystems */
-    public final LED m_robotLED = new LED();
+    public final LED m_robotLED = new LED(Constants.LEDConstants.LED_SPARK_ID);
     //Testing of Colors
     public final Vision m_vision = new Vision();
     public final SwerveDrive m_robotSwerveDrive = new SwerveDrive(m_robotMap.swerveDrivetrain, m_vision);

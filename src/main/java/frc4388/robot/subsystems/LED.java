@@ -42,6 +42,7 @@ public class LED extends SubsystemBase implements Queryable {
 
   public void setMode(LEDPatterns pattern){
     this.mode = pattern;
+    setTo5V();
   }
 
   public String getMode(){
