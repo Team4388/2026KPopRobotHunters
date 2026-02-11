@@ -31,21 +31,21 @@ public class    ShooterConstants {
 
     public static final ConfigurableDouble SHOOTER_ACTIVE_VELOCITY = new ConfigurableDouble("Shooter Active Velocity", 30);
     public static final ConfigurableDouble SHOOTER_RESTING_VELOCITY = new ConfigurableDouble("Shooter Resting Velocity", 15);
-    // public static final ConfigurableDouble SHOOTER_INACTIVE_VELOCITY = new ConfigurableDouble("Shooter Inactive Velocity", 0);
     
     public static final ConfigurableDouble INDEXER_FORWARD_VELOCITY = new ConfigurableDouble("Indexer FWD Velocity", 10);
     public static final ConfigurableDouble INDEXER_REVERSE_VELOCITY = new ConfigurableDouble("Indexer reverse Velocity", 10);
 
+
     // Tolerances
-    public static final ConfigurableDouble ROBOT_MIN_HUB = new ConfigurableDouble("Shoot min dist", 1);
-    public static final ConfigurableDouble ROBOT_MAX_HUB = new ConfigurableDouble("Shoot max dist", 1);
+    public static final ConfigurableDouble ROBOT_MIN_HUB = new ConfigurableDouble("Shoot min dist M", 0);
+    public static final ConfigurableDouble ROBOT_MAX_HUB = new ConfigurableDouble("Shoot max dist M", 99);
 
-    public static final ConfigurableDouble ROBOT_ANG_TOLERANCE = new ConfigurableDouble("Shoot Ang  tolerance", 1);
+    public static final ConfigurableDouble ROBOT_ANG_TOLERANCE = new ConfigurableDouble("Ang tolerance DEG", 360);
 
-    public static final ConfigurableDouble ROBOT_SPEED_TOLERANCE = new ConfigurableDouble("Shoot speed tolerance", 1);
-    public static final ConfigurableDouble ROBOT_ANG_SPEED_TOLERANCE = new ConfigurableDouble("Shoot Ang speed tolerance", 1);
+    public static final ConfigurableDouble ROBOT_SPEED_TOLERANCE = new ConfigurableDouble("Speed tolerance MS", 1);
+    public static final ConfigurableDouble ROBOT_ANG_SPEED_TOLERANCE = new ConfigurableDouble("Shoot Ang speed tolerance DEG", 3);
 
-    public static final ConfigurableDouble SHOOT_SPEED_TOLERANCE = new ConfigurableDouble("Shooter speed tolerance", 1);
+    public static final ConfigurableDouble SHOOTER_SPEED_TOLERANCE = new ConfigurableDouble("Shooter speed tolerance RPS", 1); 
 
     
 

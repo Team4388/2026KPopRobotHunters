@@ -1,7 +1,5 @@
 package frc4388.robot.subsystems.climber;
 
-import static edu.wpi.first.units.Units.Rotation;
-
 import java.util.function.Supplier;
 
 import org.littletonrobotics.junction.Logger;
@@ -9,20 +7,19 @@ import org.littletonrobotics.junction.Logger;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc4388.utility.status.FaultReporter;
 
 public class Climber extends SubsystemBase {
     ClimberIO io;
     ClimberStateAutoLogged state = new ClimberStateAutoLogged();
 
-    Supplier<Pose2d> m_swervePoseSupplier;
+    // Supplier<Pose2d> m_swervePoseSupplier;
 
     public Climber(
-        ClimberIO io,
-        Supplier<Pose2d> swervePoseSupplier
+        ClimberIO io
+        // Supplier<Pose2d> swervePoseSupplier
     ) {
         this.io = io;
-        this.m_swervePoseSupplier = swervePoseSupplier;
+        // this.m_swervePoseSupplier = swervePoseSupplier;
     }
 
     // public enum ClimberMode {
@@ -44,19 +41,6 @@ public class Climber extends SubsystemBase {
     // }
 
 
-    // public enum FieldZone {
-    //     // The robot should aim at the hub
-    //     InShootZone,
-    //     // The robot should aim towards the wall
-    //     AimAtWall,
-        
-    // }
-
-    // // Calculate what should be done based off of the position of the robot
-    // // TODO: Implement field zones
-    // public FieldZone getTarget(Pose2d position) {
-    //     return FieldZone.InShootZone;
-    // }
 
     @Override
     public void periodic() {
@@ -67,9 +51,6 @@ public class Climber extends SubsystemBase {
 
 
         Logger.processInputs("Climber", state);
-
-        Pose2d pose = m_swervePoseSupplier.get();
-        Angle robotRot = pose.getRotation().getMeasure();
 
         io.updateInputs(state);
 

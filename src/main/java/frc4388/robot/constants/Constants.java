@@ -98,13 +98,20 @@ public final class Constants {
 
         public static final LEDPatterns DEFAULT_PATTERN = LEDPatterns.FOREST_WAVES;
 
-        public static final LEDPatterns WAITING_PATTERN = LEDPatterns.SOLID_RED;
-        public static final LEDPatterns DOWN_PATTERN = LEDPatterns.SOLID_YELLOW;
-        public static final LEDPatterns READY_PATTERN = LEDPatterns.SOLID_GREEN_DARK;
-        public static final LEDPatterns SCORING_PATTERN = LEDPatterns.RAINBOW_RAINBOW;
+        // LED color for when the intake is out
+        public static final LEDPatterns INTAKE_OUT = LEDPatterns.SOLID_RED;
+        // LED color for when the intake is out, but the driver conditions are bad
+        public static final LEDPatterns INTAKE_OUT_BADPHYS = LEDPatterns.RED_STROBE;
 
-        public static final LEDPatterns RED_PATTERN = LEDPatterns.LAVA_WAVES;
-        public static final LEDPatterns BLUE_PATTERN = LEDPatterns.OCEAN_WAVES;
+        // LED color for when the flywheel speed isn't in tolarance
+        public static final LEDPatterns BAD_FLYWEEL = LEDPatterns.SOLID_GOLD;
+        // LED color for when the flywheel speed isn't in tolarance, but the driver conditions are bad
+        public static final LEDPatterns BAD_FLYWEEL_BADPHYS = LEDPatterns.GOLD_STROBE;
+
+        // Operator ready to shoot
+        public static final LEDPatterns OPREADY = LEDPatterns.SOLID_WHITE;
+        // Operator ready to shoot, but the driver conditions are bad
+        public static final LEDPatterns OPREADY_BADPHYS = LEDPatterns.WHITE_STROBE;
     }
 
     public static final class OIConstants {

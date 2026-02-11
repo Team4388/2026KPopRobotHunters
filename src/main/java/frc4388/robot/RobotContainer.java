@@ -40,6 +40,7 @@ import frc4388.robot.subsystems.shooter.Shooter.ShooterMode;
 import frc4388.robot.subsystems.swerve.SwerveDrive;
 import frc4388.robot.subsystems.vision.Vision;
 import frc4388.utility.DeferredBlock;
+import frc4388.utility.compute.FieldPositions;
 import frc4388.utility.compute.TimesNegativeOne;
 import frc4388.utility.controller.DeadbandedXboxController;
 // Autos
@@ -112,24 +113,29 @@ public class RobotContainer {
         
         configureButtonBindings();
         
-        DeferredBlock.addBlock(() -> { // Called on first robot enable
+        // Called on first robot enable
+        DeferredBlock.addBlock(() -> {
             m_robotSwerveDrive.resetGyro();
         }, false);
-        DeferredBlock.addBlock(() -> { // Called on every robot enable
+
+        // Called on every robot enable
+        DeferredBlock.addBlock(() -> {
             TimesNegativeOne.update();
+            FieldPositions.update();
         }, true);
 
 
         DriverStation.silenceJoystickConnectionWarning(true);
 
+        // Drive normally
         m_robotSwerveDrive.setDefaultCommand(new RunCommand(() -> {
-            // Drive normally
             m_robotSwerveDrive.driveWithInput(
                 getDeadbandedDriverController().getLeft(),
                 getDeadbandedDriverController().getRight(),true);
 
         }, m_robotSwerveDrive)
         .withName("SwerveDrive DefaultCommand"));
+        
         m_robotSwerveDrive.setToSlow();
         
         makeAutoChooser();
@@ -196,6 +202,7 @@ public class RobotContainer {
                 m_robotShooter.io.updateGains();
             }));
 
+            
         // IF the driver is holding the left trigger, intake driving
         new Trigger(() -> getDeadbandedDriverController().getLeftTriggerAxis() >= 0.5)
             .whileTrue(new RunCommand(
@@ -205,9 +212,6 @@ public class RobotContainer {
                         false
                     );
                 }, m_robotSwerveDrive))
-            // .onFalse(new InstantCommand(() -> , m_robotSwerveDrive));
-
-            
             .onTrue(new InstantCommand(() -> {
                 m_robotIntake.setMode(IntakeMode.Extended);
             }))
@@ -222,7 +226,7 @@ public class RobotContainer {
                 () -> {
                 m_robotSwerveDrive.driveFacingPosition(
                     getDeadbandedDriverController().getLeft(),
-                    FieldConstants.BLUE_HUB_POS);
+                    FieldPositions.HUB_POSITION);
                 }, m_robotSwerveDrive)
             )
             .onTrue(new InstantCommand(() -> {
