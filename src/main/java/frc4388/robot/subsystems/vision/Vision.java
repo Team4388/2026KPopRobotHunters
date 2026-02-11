@@ -2,15 +2,11 @@ package frc4388.robot.subsystems.vision;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
 import com.ctre.phoenix6.Utils;
-import com.ctre.phoenix6.hardware.CANcoder;
-import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.swerve.SwerveDrivetrain;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -18,20 +14,22 @@ import frc4388.robot.subsystems.vision.VisionIO.PoseObservation;
 import frc4388.utility.status.FaultReporter;
 import frc4388.utility.status.Queryable;
 import frc4388.utility.status.Status;
+import frc4388.utility.structs.LEDPatterns;
 
-public class Vision extends SubsystemBase implements Queryable {
+public class Vision extends SubsystemBase implements Queryable{
     VisionIO[] io;
     VisionStateAutoLogged[] state;
 
     
     public Pose2d lastVisionPose = new Pose2d();
     public Pose2d lastPhysOdomPose = new Pose2d();
+    public LED m_robotLED;
 
     public Vision(VisionIO... devices) {
         FaultReporter.register(this);
         io = devices;
         state = new VisionStateAutoLogged[io.length];
-
+        m_robotLED = new LED();
         for(int i = 0; i < io.length; i++) {
             state[i] = new VisionStateAutoLogged();
         }
@@ -42,6 +40,11 @@ public class Vision extends SubsystemBase implements Queryable {
         for(int i = 0; i < io.length; i++) {
             io[i].updateInputs(state[i]);
             Logger.processInputs("Vision/Camera" + i , state[i]);
+        }
+        Logger.recordOutput("Vision/isTagDectected", isTag());
+        
+        if (isTag()){
+            m_robotLED.setMode(LEDPatterns.SOLID_GREEN_DARK);
         }
     }
 
@@ -92,4 +95,10 @@ public class Vision extends SubsystemBase implements Queryable {
         // throw new UnsupportedOperationException("Unimplemented method 'diagnosticStatus'");
     }
     
+    // Simple LED helper class for compilation and basic usage; replace with real implementation if available.
+    private static class LED {
+        public void setMode(LEDPatterns mode) {
+            // no-op stub for compilation; integrate with hardware driver as needed
+        }
+    }
 }

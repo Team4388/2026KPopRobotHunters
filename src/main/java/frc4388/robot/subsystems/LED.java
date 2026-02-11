@@ -44,6 +44,10 @@ public class LED extends SubsystemBase implements Queryable {
     this.mode = pattern;
   }
 
+  public String getMode(){
+    return mode.name();
+  }
+
   @Override
   public void periodic() {
     update();

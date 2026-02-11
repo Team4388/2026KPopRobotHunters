@@ -24,19 +24,29 @@ public interface ShooterIO {
         // Angle shooterTargetPitch = Rotations.of(0);
         // Current pitchMotorCurrent = Amps.of(0);
 
-        AngularVelocity flywheelVelocity = RotationsPerSecond.of(0);
-        AngularVelocity flywheelTargetVelocity = RotationsPerSecond.of(0);
-        Current flywheelMotorCurrent = Amps.of(0);
+        AngularVelocity motor1TargetVelocity = RotationsPerSecond.of(0);
+        AngularVelocity motor2TargetVelocity = RotationsPerSecond.of(0);
+        AngularVelocity indexerTargetVelocity = RotationsPerSecond.of(0);
 
-        LinearVelocity feederVelocity = InchesPerSecond.of(0);
-        LinearVelocity feederTargetVelocity = InchesPerSecond.of(0);
-        Current feederMotorCurrent = Amps.of(0);
+        AngularVelocity motor1Velocity = RotationsPerSecond.of(0);
+        AngularVelocity motor2Velocity = RotationsPerSecond.of(0);
+        AngularVelocity indexerVelocity = RotationsPerSecond.of(0);
+        
+        Current motor1Current = Amps.of(0);
+        Current motor2Current = Amps.of(0);
+        Current indexerCurrent = Amps.of(0);
+
+        // LinearVelocity motorLinearVelocity = InchesPerSecond.of(0);
     }
 
     // public default void setShooterAngle(ShooterState state, Angle angle) {}
     // public default void setShooterPitch(ShooterState state, Angle angle) {}
-    public default void setFlywheelVelocity(ShooterState state, AngularVelocity angularVelocity) {}
-    public default void setFeederVelocity(ShooterState state, LinearVelocity linearVelocity) {}
+    public default void setShooterVelocity(ShooterState state, AngularVelocity angularVelocity) {}
+    // public default void setMotor2Velocity(ShooterState state, AngularVelocity angularVelocity) {}
+    public default void setIndexerVelocity(ShooterState state, AngularVelocity linearVelocity) {}
 
     public default void updateInputs(ShooterState state) {}
+
+    
+    public default void updateGains() {}
 }

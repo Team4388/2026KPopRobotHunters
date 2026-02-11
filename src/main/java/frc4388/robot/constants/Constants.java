@@ -7,7 +7,7 @@
 
 package frc4388.robot.constants;
 
-import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.CANBus;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
@@ -21,7 +21,6 @@ import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotBase;
 import frc4388.utility.compute.Trim;
-import frc4388.utility.status.CanDevice;
 import frc4388.utility.structs.Gains;
 import frc4388.utility.structs.LEDPatterns;
 
@@ -34,7 +33,8 @@ import frc4388.utility.structs.LEDPatterns;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-    public static final String CANBUS_NAME = "rio";
+    public static final CANBus RIO_CANBUS = CANBus.roboRIO();
+    public static final CANBus CANIVORE_CANBUS = new CANBus("drivetrain");
 
     // public static final class LiDARConstants {
     //     public static final int REEF_LIDAR_DIO_CHANNEL = 7;
@@ -91,32 +91,27 @@ public final class Constants {
         public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(0.5, 0.5, 4);
         public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.1, 0.1, 1);
     }
-
-    public static final class FieldConstants {
-        public static final AprilTagFieldLayout kTagLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeWelded);
-
-        // Test april tag field layout
-        // public static final AprilTagFieldLayout kTagLayout = new AprilTagFieldLayout(
-        //     Arrays.asList(new AprilTag[] {
-        //         new AprilTag(1, new Pose3d(
-        //             new Translation3d(0.,0.,0.26035), new Rotation3d(0.,0.,0.)
-        //         )),
-        //     }), 100, 100);
-
-    }
+   
 
     public static final class LEDConstants {
         public static final int LED_SPARK_ID = 9;
 
         public static final LEDPatterns DEFAULT_PATTERN = LEDPatterns.SOLID_RED_ORANGE;
 
-        public static final LEDPatterns WAITING_PATTERN = LEDPatterns.SOLID_RED;
-        public static final LEDPatterns DOWN_PATTERN = LEDPatterns.SOLID_YELLOW;
-        public static final LEDPatterns READY_PATTERN = LEDPatterns.SOLID_GREEN_DARK;
-        public static final LEDPatterns SCORING_PATTERN = LEDPatterns.RAINBOW_RAINBOW;
+        // LED color for when the intake is out
+        public static final LEDPatterns INTAKE_OUT = LEDPatterns.SOLID_RED;
+        // LED color for when the intake is out, but the driver conditions are bad
+        public static final LEDPatterns INTAKE_OUT_BADPHYS = LEDPatterns.RED_STROBE;
 
-        public static final LEDPatterns RED_PATTERN = LEDPatterns.LAVA_WAVES;
-        public static final LEDPatterns BLUE_PATTERN = LEDPatterns.OCEAN_WAVES;
+        // LED color for when the flywheel speed isn't in tolarance
+        public static final LEDPatterns BAD_FLYWEEL = LEDPatterns.SOLID_GOLD;
+        // LED color for when the flywheel speed isn't in tolarance, but the driver conditions are bad
+        public static final LEDPatterns BAD_FLYWEEL_BADPHYS = LEDPatterns.GOLD_STROBE;
+
+        // Operator ready to shoot
+        public static final LEDPatterns OPREADY = LEDPatterns.SOLID_WHITE;
+        // Operator ready to shoot, but the driver conditions are bad
+        public static final LEDPatterns OPREADY_BADPHYS = LEDPatterns.WHITE_STROBE;
     }
 
     public static final class OIConstants {

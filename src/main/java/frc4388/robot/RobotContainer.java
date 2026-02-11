@@ -9,19 +9,15 @@ package frc4388.robot;
 
 import java.io.File;
 
+import com.pathplanner.lib.commands.PathPlannerAuto;
+
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import frc4388.utility.DeferredBlock;
-import frc4388.utility.compute.TimesNegativeOne;
-import frc4388.utility.controller.ButtonBox;
-import frc4388.utility.controller.DeadbandedXboxController;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
-
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 // Commands
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -32,25 +28,28 @@ import frc4388.utility.controller.VirtualController;
 import frc4388.utility.controller.XboxController;
 import frc4388.utility.structs.LEDPatterns;
 import frc4388.robot.commands.MoveForTimeCommand;
-import frc4388.robot.commands.alignment.RotTo45;
-import frc4388.robot.commands.MoveUntilSuply;
-// import frc4388.robot.commands.alignment.DriveToReef;
-// import frc4388.robot.commands.wait.waitElevatorRefrence;
-// import frc4388.robot.commands.wait.waitEndefectorRefrence;
-// import frc4388.robot.commands.wait.waitFeedCoral;
-import frc4388.robot.commands.wait.waitSupplier;
 import frc4388.robot.constants.Constants;
 import frc4388.robot.constants.Constants.AutoConstants;
 import frc4388.robot.constants.Constants.LEDConstants;
 import frc4388.robot.constants.Constants.OIConstants;
 import frc4388.robot.constants.Constants.SimConstants.Mode;
-
-import com.pathplanner.lib.commands.PathPlannerAuto;
-
+import frc4388.robot.constants.FieldConstants;
 // Subsystems
 import frc4388.robot.subsystems.LED;
+import frc4388.robot.subsystems.intake.Intake;
+import frc4388.robot.subsystems.intake.Intake.IntakeMode;
+import frc4388.robot.subsystems.shooter.Shooter;
+import frc4388.robot.subsystems.shooter.Shooter.ShooterMode;
 import frc4388.robot.subsystems.swerve.SwerveDrive;
 import frc4388.robot.subsystems.vision.Vision;
+import frc4388.utility.DeferredBlock;
+import frc4388.utility.compute.FieldPositions;
+import frc4388.utility.compute.TimesNegativeOne;
+import frc4388.utility.controller.DeadbandedXboxController;
+// Autos
+import frc4388.utility.controller.VirtualController;
+import frc4388.utility.controller.XboxController;
+import frc4388.utility.structs.LEDPatterns;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -93,6 +92,22 @@ public class RobotContainer {
     private SendableChooser<String> autoChooser;
     private Command autoCommand;
 
+    // private Command RobotShoot = new SequentialCommandGroup(
+    //     new InstantCommand(() -> System.out.println(m_robotLED.getMode())),
+    //     new InstantCommand(() -> m_robotLED.setMode(LEDPatterns.PARTY_TWINKLES), m_robotLED),
+    //     new InstantCommand(() -> System.out.println(m_robotLED.getMode())),
+    //     new WaitCommand(5),
+    //     new InstantCommand(() -> m_robotLED.setMode(LEDPatterns.SOLID_RED), m_robotLED),
+    //     new InstantCommand(() -> System.out.println(m_robotLED.getMode()))
+    // );
+
+    // private Command RobotShoot = new SequentialCommandGroup(
+    //     new InstantCommand(() -> m_robotShooter.setMode(Shooter.ShooterMode.Active), m_robotShooter)
+    // );
+
+    // private Command RobotIntake = new SequentialCommandGroup(
+    //     new InstantCommand(() -> m_robotIntake.setMode(Intake.IntakeMode.Down), m_robotIntake)
+    // );
 
     public RobotContainer() {
         
@@ -103,6 +118,7 @@ public class RobotContainer {
         // }, false);
         DeferredBlock.addBlock(() -> { // Called on every robot enable
             TimesNegativeOne.update();
+            FieldPositions.update();
         }, true);
 
 
@@ -160,6 +176,13 @@ public class RobotContainer {
         new JoystickButton(getDeadbandedDriverController(), XboxController.BACK_BUTTON)
             .onTrue(new InstantCommand(() -> m_robotLED.setTo5V()));
 
+        // new Trigger(() -> getDeadbandedDriverController().getRightTriggerAxis() >= 0.8 && !operatorManualMode)
+        //     .onTrue(RobotShoot)
+        //     .onFalse(new InstantCommand(() -> m_robotShooter.setMode(Shooter.ShooterMode.Resting), m_robotShooter));
+
+        // new Trigger(() -> getDeadbandedDriverController().getLeftTriggerAxis() >= 0.8 && !operatorManualMode)
+        //     .onTrue(RobotIntake)
+        //     .onFalse(new InstantCommand(() -> m_robotIntake.setMode(Intake.IntakeMode.Up), m_robotShooter));
             
         // new JoystickButton(getDeadbandedDriverController(), XboxController.B_BUTTON)
         //     .onTrue(new InstantCommand(() -> {m_robotSwerveDrive.softStop();}, m_robotSwerveDrive)); 
@@ -212,7 +235,7 @@ public class RobotContainer {
             dir = new File("/home/lvuser/deploy/pathplanner/autos/");
         } else {
             // dir = new File("C:\\Users\\Ridgebotics\\Documents\\GitHub\\2025RidgeScape\\src\\main\\deploy\\pathplanner\\autos\\");
-            dir = new File("/home/astatin3/Documents/GitHub/2025RidgeScape/src/main/deploy/pathplanner/autos");
+            dir = new File("C:\\Users\\Ridgebotics\\Documents\\GitHub\\2026KPopRobotHunters\\src\\main\\deploy\\pathplanner\\autos\\");
         }
 
         String[] autos = dir.list();
@@ -238,7 +261,7 @@ public class RobotContainer {
             // }
             // System.out.println("Robot Auto Changed " + filename);
         });
-        // SmartDashboard.putData(autoChooser);
+        SmartDashboard.putData(autoChooser);
 
     }
 

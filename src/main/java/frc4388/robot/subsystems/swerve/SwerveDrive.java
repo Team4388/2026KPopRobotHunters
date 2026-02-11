@@ -10,6 +10,12 @@ import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
 import com.ctre.phoenix6.swerve.SwerveRequest;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.config.PIDConstants;
+import com.pathplanner.lib.config.RobotConfig;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import com.pathplanner.lib.util.PathPlannerLogging;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -19,15 +25,9 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc4388.robot.constants.Constants.AutoConstants;
 import frc4388.robot.subsystems.vision.Vision;
 import frc4388.utility.compute.TimesNegativeOne;
-import frc4388.utility.status.Status;
 import frc4388.utility.status.FaultReporter;
 import frc4388.utility.status.Queryable;
-
-import com.pathplanner.lib.controllers.PPHolonomicDriveController;
-import com.pathplanner.lib.util.PathPlannerLogging;
-import com.pathplanner.lib.config.PIDConstants;
-import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.config.RobotConfig;
+import frc4388.utility.status.Status;
 
 public class SwerveDrive extends SubsystemBase implements Queryable {
     // private SwerveDrivetrain<TalonFX, TalonFX, CANcoder> swerveDriveTrain;
@@ -138,6 +138,15 @@ public class SwerveDrive extends SubsystemBase implements Queryable {
         initalPose2d = pose;
         io.resetPose(pose);
     }
+    // MIRA public void setOdoPose(Pose2d pose) {
+    //     if (pose == null) return;
+    //     io.tareEverything();
+    //     initalPose2d = pose;
+    //     io.resetPose(pose);
+    //     robotKnowsWhereItIs = true;
+    //     rotTarget = pose.getRotation().getDegrees();
+    // }
+
 
     // public void oneModuleTest(SwerveModule module, Translation2d leftStick,
     // Translation2d rightStick){
@@ -251,13 +260,11 @@ public class SwerveDrive extends SubsystemBase implements Queryable {
         io.setControl(ctrl);
     }
 
+    // Drive with a specific velocity and heading
     public void driveFieldAngle(Translation2d leftStick, Rotation2d heading) {
         if (leftStick.getNorm() < 0.05) // if no imput and the swerve drive is still going:
             stopModules(); // stop the swerve
-
-        // if (leftStick.getNorm() < 0.05) // if no imput
-        //     return; // don't bother doing swerve drive math and return early.
-
+        
 
         leftStick = leftStick.rotateBy(TimesNegativeOne.ForwardOffset);
         leftStick = TimesNegativeOne.invert(leftStick, TimesNegativeOne.XAxis, TimesNegativeOne.YAxis);
@@ -268,13 +275,65 @@ public class SwerveDrive extends SubsystemBase implements Queryable {
             .withVelocityY(leftStick.getY() * speedAdjust)
             .withTargetDirection(heading);
         ctrl.HeadingController.setPID(
-            SwerveDriveConstants.PIDConstants.DRIFT_CORRECTION_GAINS.kP,
-            SwerveDriveConstants.PIDConstants.DRIFT_CORRECTION_GAINS.kI,
-            SwerveDriveConstants.PIDConstants.DRIFT_CORRECTION_GAINS.kD
+            SwerveDriveConstants.PIDConstants.AIM_kP.get(),
+            SwerveDriveConstants.PIDConstants.AIM_kI.get(),
+            SwerveDriveConstants.PIDConstants.AIM_kD.get()
+            // SwerveDriveConstants.PIDConstants.AIM_GAINS.kP,
+            // SwerveDriveConstants.PIDConstants.AIM_GAINS.kI,
+            // SwerveDriveConstants.PIDConstants.AIM_GAINS.kD
         );
         io.setControl(ctrl);
         // SmartDashboard.putBoolean("drift correction", true);
-        
+    }
+
+    
+    
+    public void driveIntake(Translation2d leftStick, boolean invertRotation){
+        // if (invert){
+        //     Translation2d stick = new Translation2d(-leftStick.getX(), -leftStick.getY());
+        //     driveFieldAngle(stick, heading);
+
+        // } else{
+        //     driveFieldAngle(leftStick, heading);
+        // }
+        double speed = leftStick.getNorm();
+
+        if(speed < 0.3) {
+            driveWithInput(leftStick, new Translation2d(), true);
+        } else {
+
+
+
+            Rotation2d heading = new Rotation2d(leftStick.getX(), -leftStick.getY());//.r otateBy(Rotation2d.fromDegrees(90));
+
+            // if (invertRotation){
+                heading = heading.rotateBy(Rotation2d.fromDegrees(270));
+            // }
+
+        // Only drive forward in robot direction (no strafe)
+            // Translation2d forwardOnly = new Translation2d(speed, 0.0);
+            driveFieldAngle(leftStick, heading);
+        }
+    }
+
+
+    // Drive with the robot facing towards a specific position
+    public void driveFacingPosition(Translation2d leftStick, Translation2d fieldPos) {
+
+        // Get the current speed of the robot
+        Translation2d robotSpeed = new Translation2d(
+            chassisSpeeds.vxMetersPerSecond, 
+            chassisSpeeds.vyMetersPerSecond
+        );
+
+        // Calculate a point to aim ahead of the actual position.
+        Translation2d fieldPosLead = robotSpeed.times(SwerveDriveConstants.AIM_LEAD_TIME.get()).plus(fieldPos);
+
+        // Calculate the angle between the current position and the lead position
+        Rotation2d ang = fieldPosLead.minus(getPose2d().getTranslation()).getAngle();
+
+
+        driveFieldAngle(leftStick, ang);
     }
 
     public void driveRelativeLockedAngle(Translation2d leftStick, Rotation2d heading) {

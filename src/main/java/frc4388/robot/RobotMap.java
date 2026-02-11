@@ -9,26 +9,24 @@ package frc4388.robot;
 
 import com.ctre.phoenix6.hardware.TalonFX;
 
-import org.photonvision.PhotonCamera;
-import org.photonvision.simulation.PhotonCameraSim;
-import org.photonvision.simulation.SimCameraProperties;
-
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.swerve.SwerveDrivetrain;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.DigitalInput;
+
+import frc4388.robot.constants.Constants;
 //import frc4388.robot.constants.Constants.ElevatorConstants;
 import frc4388.robot.constants.Constants.SimConstants;
-import frc4388.robot.constants.Constants.VisionConstants;
+import frc4388.robot.subsystems.intake.IntakeConstants;
+import frc4388.robot.subsystems.intake.IntakeIO;
+import frc4388.robot.subsystems.intake.IntakeReal;
+import frc4388.robot.subsystems.shooter.ShooterConstants;
+import frc4388.robot.subsystems.shooter.ShooterIO;
+import frc4388.robot.subsystems.shooter.ShooterReal;
 // import frc4388.robot.subsystems.elevator.ElevatorIO;
 // import frc4388.robot.subsystems.elevator.ElevatorReal;
 import frc4388.robot.subsystems.swerve.SwerveDriveConstants;
 import frc4388.robot.subsystems.swerve.SwerveIO;
 import frc4388.robot.subsystems.swerve.SwerveReal;
-import frc4388.robot.subsystems.vision.VisionIO;
-import frc4388.robot.subsystems.vision.VisionReal;
 import frc4388.utility.status.FaultCANCoder;
-import frc4388.utility.status.FaultPhotonCamera;
 import frc4388.utility.status.FaultPidgeon2;
 import frc4388.utility.status.FaultTalonFX;
 
@@ -55,18 +53,19 @@ public class RobotMap {
     /* Swreve Drive Subsystem */
     // public final SwerveIO swerveDrivetrain;
 
-    // /* Elevator Subsystem */
-    // public final ElevatorIO elevatorIO;
+    // /* Shooter and Intake Subsystem */
+    public final ShooterIO shooterIO;
+    public final IntakeIO intakeIO;
 
     public RobotMap(SimConstants.Mode mode) {
         switch (mode) {
             case REAL:
-                // // Configure cameras
+                // Configure cameras
                 // PhotonCamera leftCameraReal = new PhotonCamera(VisionConstants.LEFT_CAMERA_NAME);
                 // PhotonCamera rightCameraReal = new PhotonCamera(VisionConstants.RIGHT_CAMERA_NAME);
 
-                // leftCamera =  new VisionReal(leftCameraReal, VisionConstants.LEFT_CAMERA_POS);                ;
-                // rightCamera = new VisionReal(rightCameraReal, VisionConstants.RIGHT_CAMERA_POS);
+                // leftCamera =  new VisionReal(leftCameraReal, VisionConstants.RIGHT_CAMERA_POS);                ;
+                // rightCamera = new VisionReal(rightCameraReal, VisionConstants.LEFT_CAMERA_POS);
 
                 // FaultPhotonCamera.addDevice(leftCameraReal, "Left Camera");
                 // FaultPhotonCamera.addDevice(rightCameraReal , "Right Camera");
@@ -84,25 +83,34 @@ public class RobotMap {
 
                 // swerveDrivetrain = new SwerveReal(swerveDrivetrainReal);
 
-                // Configure elevator
-
-                // TalonFX elevator = new TalonFX(ElevatorConstants.ELEVATOR_ID.id);
-                // TalonFX endeffector = new TalonFX(ElevatorConstants.ENDEFFECTOR_ID.id);
+                // Configure Shooter 22,23,24
+                TalonFX shooter1 = new TalonFX(ShooterConstants.SHOOTER1_ID.id, Constants.CANIVORE_CANBUS);
+                TalonFX shooter2 = new TalonFX(ShooterConstants.SHOOTER2_ID.id, Constants.CANIVORE_CANBUS);
+                TalonFX indexer = new TalonFX(ShooterConstants.INDEXER_ID.id, Constants.CANIVORE_CANBUS);
                 
+                //Configure Intake 20,21
+                TalonFX arm = new TalonFX(IntakeConstants.ARM_ID.id, Constants.CANIVORE_CANBUS);
+                TalonFX roller = new TalonFX(IntakeConstants.ROLLER_ID.id, Constants.CANIVORE_CANBUS);
 
                 // DigitalInput basinLimitSwitch = new DigitalInput(ElevatorConstants.BASIN_LIMIT_SWITCH);
                 // DigitalInput endeffectorLimitSwitch = new DigitalInput(ElevatorConstants.ENDEFFECTOR_LIMIT_SWITCH);
                 // DigitalInput IRIntakeBeam = new DigitalInput(ElevatorConstants.INTAKE_LIMIT_SWITCH);
 
-                // elevatorIO = new ElevatorReal(elevator, endeffector, basinLimitSwitch, endeffectorLimitSwitch, IRIntakeBeam);
 
+                // shooterIO = new ShooterIO() {};
+                shooterIO = new ShooterReal(shooter1, shooter2, indexer);
 
+                intakeIO = new IntakeReal(arm, roller);
 
                 // Fault
                 // FaultPidgeon2.addDevice(swerveDrivetrainReal.getPigeon2(), "Gyro");
 
-                // // FaultTalonFX.addDevice(elevator, "Elevator");
-                // // FaultTalonFX.addDevice(endeffector, "Endeffector");
+                
+                FaultTalonFX.addDevice(shooter1, "Shooter1");
+                FaultTalonFX.addDevice(shooter2, "Shooter2");
+                FaultTalonFX.addDevice(indexer, "Indexer");
+                FaultTalonFX.addDevice(arm, "Arm");
+                FaultTalonFX.addDevice(roller, "Roller");
                 
                 // FaultTalonFX.addDevice(swerveDrivetrainReal.getModule(0).getDriveMotor(), "Module 0 Drive");
                 // FaultTalonFX.addDevice(swerveDrivetrainReal.getModule(0).getSteerMotor(), "Module 0 Steer");
@@ -123,10 +131,9 @@ public class RobotMap {
             default:
                 // leftCamera = new VisionIO() {};
                 // rightCamera = new VisionIO() {};
-                // reefLidar = new LidarIO() {};
-                // reverseLidar = new LidarIO() {};
-                // swerveDrivetrain = new SwerveIO() {};
-                // elevatorIO = new ElevatorIO() {};
+                swerveDrivetrain = new SwerveIO() {};
+                intakeIO = new IntakeIO() {};
+                shooterIO = new ShooterIO() {};
                 break;
         }
     }
