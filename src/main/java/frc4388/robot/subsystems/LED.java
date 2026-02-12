@@ -41,8 +41,11 @@ public class LED extends SubsystemBase implements Queryable {
   private LEDPatterns mode = LEDConstants.DEFAULT_PATTERN;
 
   public void setMode(LEDPatterns pattern){
+    // Don't stall the main thread every time the setMode function is called
+    if(this.mode != pattern) {
+      setTo5V();
+    }
     this.mode = pattern;
-    setTo5V();
   }
 
   public String getMode(){
@@ -71,7 +74,7 @@ public class LED extends SubsystemBase implements Queryable {
   public void setTo5V() {
     try {
       m_pwm.setPulseTimeMicroseconds(2125);
-      Thread.sleep(10);
+      Thread.sleep(1);
       update();
     } catch (InterruptedException e) {}
   }
