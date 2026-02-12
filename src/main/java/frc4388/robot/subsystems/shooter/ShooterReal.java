@@ -1,15 +1,9 @@
 package frc4388.robot.subsystems.shooter;
 
-import static edu.wpi.first.units.Units.InchesPerSecond;
-import static edu.wpi.first.units.Units.RotationsPerSecond;
-
 import com.ctre.phoenix6.controls.VelocityDutyCycle;
 import com.ctre.phoenix6.hardware.TalonFX;
 
-import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
-import frc4388.robot.subsystems.intake.IntakeConstants;
-import frc4388.utility.configurable.ConfigurableDouble;
 
 public class ShooterReal implements ShooterIO {
 

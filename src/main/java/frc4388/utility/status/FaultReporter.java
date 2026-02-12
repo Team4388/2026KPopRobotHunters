@@ -3,7 +3,6 @@ package frc4388.utility.status;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.CANBus.CANBusStatus;
 
 import frc4388.robot.constants.Constants;

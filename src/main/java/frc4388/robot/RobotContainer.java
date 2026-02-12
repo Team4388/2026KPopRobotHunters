@@ -9,7 +9,6 @@ package frc4388.robot;
 
 import java.io.File;
 
-import com.ctre.phoenix.CANifier.LEDChannel;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -24,20 +23,17 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc4388.robot.commands.MoveForTimeCommand;
 import frc4388.robot.constants.Constants;
 import frc4388.robot.constants.Constants.OIConstants;
 import frc4388.robot.constants.Constants.SimConstants.Mode;
-import frc4388.robot.constants.FieldConstants;
 // Subsystems
 import frc4388.robot.subsystems.LED;
 import frc4388.robot.subsystems.intake.Intake;
 import frc4388.robot.subsystems.intake.Intake.IntakeMode;
 import frc4388.robot.subsystems.shooter.Shooter;
-import frc4388.robot.subsystems.shooter.Shooter.ShooterMode;
 import frc4388.robot.subsystems.swerve.SwerveDrive;
 import frc4388.robot.subsystems.vision.Vision;
 import frc4388.utility.DeferredBlock;
@@ -47,7 +43,6 @@ import frc4388.utility.controller.DeadbandedXboxController;
 // Autos
 import frc4388.utility.controller.VirtualController;
 import frc4388.utility.controller.XboxController;
-import frc4388.utility.structs.LEDPatterns;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -68,12 +63,7 @@ public class RobotContainer {
     public final SwerveDrive m_robotSwerveDrive = new SwerveDrive(m_robotMap.swerveDrivetrain, m_vision);
     public final Intake m_robotIntake = new Intake(m_robotMap.intakeIO);
     public final Shooter m_robotShooter = new Shooter(m_robotMap.shooterIO, m_robotSwerveDrive, m_robotIntake, m_robotLED);
-    private Boolean operatorManualMode = false;
-    // public final SwerveDrive m_robotSwerveDrive = new SwerveDrive(m_robotMap.swerveDrivetrain);
-
-    // public final LiDAR reefLidar = new LiDAR(m_robotMap.reefLidar, "Reef");
-    // public final LiDAR reverseLidar = new LiDAR(m_robotMap.reverseLidar, "Reverse");
-
+    
 
     /* Controllers */
     private final DeadbandedXboxController m_driverXbox   = new DeadbandedXboxController(OIConstants.XBOX_DRIVER_ID);

@@ -1,11 +1,7 @@
 package frc4388.robot.subsystems.climber;
 
-import java.util.function.Supplier;
-
 import org.littletonrobotics.junction.Logger;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Climber extends SubsystemBase {

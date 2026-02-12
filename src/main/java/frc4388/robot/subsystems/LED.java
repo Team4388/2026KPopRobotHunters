@@ -7,11 +7,12 @@
 
 package frc4388.robot.subsystems;
 
+import java.util.concurrent.TimeUnit;
+
 import org.littletonrobotics.junction.AutoLogOutput;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PWM;
-import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc4388.robot.constants.Constants.LEDConstants;
 import frc4388.utility.status.Status;
@@ -43,18 +44,13 @@ public class LED extends SubsystemBase implements Queryable {
   public void setMode(LEDPatterns pattern){
     // Don't stall the main thread every time the setMode function is called
     if(this.mode != pattern) {
+      this.mode = pattern;
       setTo5V();
     }
-    this.mode = pattern;
   }
 
   public String getMode(){
     return mode.name();
-  }
-
-  @Override
-  public void periodic() {
-    update();
   }
 
   public void update() {
@@ -74,7 +70,7 @@ public class LED extends SubsystemBase implements Queryable {
   public void setTo5V() {
     try {
       m_pwm.setPulseTimeMicroseconds(2125);
-      Thread.sleep(1);
+      TimeUnit.MICROSECONDS.sleep(2125*2);// Wait long enough for one pulse to go through
       update();
     } catch (InterruptedException e) {}
   }
