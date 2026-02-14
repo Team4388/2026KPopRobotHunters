@@ -205,9 +205,10 @@ public class RobotContainer {
         new Trigger(() -> getDeadbandedDriverController().getLeftTriggerAxis() >= 0.5)
             .whileTrue(new RunCommand(
                 () -> {
-                    m_robotSwerveDrive.driveIntake(
+                    m_robotSwerveDrive.driveIntakeOrientation(
                         getDeadbandedDriverController().getLeft(),
-                        false
+                        getDeadbandedDriverController().getRight()
+                        
                     );
                 }, m_robotSwerveDrive))
             .onTrue(new InstantCommand(() -> {
