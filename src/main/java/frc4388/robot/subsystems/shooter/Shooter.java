@@ -94,7 +94,7 @@ public class Shooter extends SubsystemBase {
             
             double distanceToHub = robotPose2d.getTranslation().minus(FieldPositions.HUB_POSITION).getNorm();
 
-
+            this.mode = ShooterMode.Shooting;
             // TODO: get if the robot is within the angle of the hub
 
         //     boolean driverError = 
