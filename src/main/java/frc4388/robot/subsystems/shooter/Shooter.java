@@ -61,9 +61,9 @@ public class Shooter extends SubsystemBase {
     private ShooterMode mode = ShooterMode.NotReady;
 
     public void setShooterReady() {
-        // if(this.mode == ShooterMode.NotReady) {
-        this.mode = ShooterMode.Shooting;
-        // }
+        if(this.mode == ShooterMode.NotReady) {
+            this.mode = ShooterMode.Ready;
+        }
     }
     
     public void setShooterNotReady() {
@@ -100,52 +100,53 @@ public class Shooter extends SubsystemBase {
 
             // TODO: get if the robot is within the angle of the hub
 
-        //     boolean driverError = 
-        //         XYSpeed <= ShooterConstants.ROBOT_SPEED_TOLERANCE.get() |
-        //         AngSpeed <= ShooterConstants.ROBOT_ANG_SPEED_TOLERANCE.get() |
-        //         distanceToHub <= ShooterConstants.ROBOT_MIN_HUB.get() | 
-        //         distanceToHub >= ShooterConstants.ROBOT_MAX_HUB.get();
+            boolean driverError = false;
+                // XYSpeed <= ShooterConstants.ROBOT_SPEED_TOLERANCE.get() |
+                // AngSpeed <= ShooterConstants.ROBOT_ANG_SPEED_TOLERANCE.get() |
+                // distanceToHub <= ShooterConstants.ROBOT_MIN_HUB.get() | 
+                // distanceToHub >= ShooterConstants.ROBOT_MAX_HUB.get();
 
-        //     double shooterSpeed = Math.abs(state.motor1Velocity.in(RotationsPerSecond) + state.motor2Velocity.in(RotationsPerSecond)) / 2;
+            double shooterSpeed = Math.abs(state.motor1Velocity.in(RotationsPerSecond) + state.motor2Velocity.in(RotationsPerSecond)) / 2;
+            double shooterSpeedTarget = Math.abs(state.motor1TargetVelocity.in(RotationsPerSecond) + state.motor2TargetVelocity.in(RotationsPerSecond)) / 2;
 
-        //     boolean badShooterVelocity = shooterSpeed < ShooterConstants.SHOOTER_SPEED_TOLERANCE.get();
-        //     boolean intakeBad = m_Intake.getMode() == IntakeMode.Extended;
+            boolean badShooterVelocity = Math.abs(shooterSpeed - shooterSpeedTarget) > ShooterConstants.SHOOTER_SPEED_TOLERANCE.get();
+        //     boolean intakeBad = m_Intake.getMode() == IntxakeMode.Extended;
 
             
-        //     int bitmask = (driverError ? 1 : 0) + (badShooterVelocity ? 2 : 0) + (intakeBad ? 4 : 0);
-        //     switch (bitmask) {
-        //         case 0b000: // No Errors
-        //             m_robotLED.setMode(Constants.LEDConstants.OPREADY);
-        //             break;
-        //         case 0b001: // No op err, yes driver err
-        //             m_robotLED.setMode(Constants.LEDConstants.OPREADY_BADPHYS);
-        //             break;
-        //         case 0b010: // Bad flywheel, no driver err
-        //             m_robotLED.setMode(Constants.LEDConstants.BAD_FLYWEEL);
-        //             break;
-        //         case 0b011: // Bad flywheel, yes driver err
-        //             m_robotLED.setMode(Constants.LEDConstants.BAD_FLYWEEL_BADPHYS);
-        //             break;
-        //         case 0b100: // Bad intake, no driver err
-        //             m_robotLED.setMode(Constants.LEDConstants.INTAKE_OUT);
-        //             break;
-        //         case 0b101: // Bad intake, yes driver err
-        //             m_robotLED.setMode(Constants.LEDConstants.INTAKE_OUT_BADPHYS);
-        //             break;
-        //         case 0b110: // Bad intake and shooter (intake is more important), no driver err
-        //             m_robotLED.setMode(Constants.LEDConstants.INTAKE_OUT);
-        //             break;
-        //         case 0b111: // Bad intake and shooter (intake is more important), yes driver err
-        //             m_robotLED.setMode(Constants.LEDConstants.INTAKE_OUT_BADPHYS);
-        //             break;
-        //     }
+            int bitmask = (driverError ? 1 : 0) + (badShooterVelocity ? 2 : 0);// + (intakeBad ? 4 : 0);
+            switch (bitmask) {
+                case 0b000: // No Errors
+                    m_robotLED.setMode(Constants.LEDConstants.OPREADY);
+                    break;
+                case 0b001: // No op err, yes driver err
+                    m_robotLED.setMode(Constants.LEDConstants.OPREADY_BADPHYS);
+                    break;
+                case 0b010: // Bad flywheel, no driver err
+                    m_robotLED.setMode(Constants.LEDConstants.BAD_FLYWEEL);
+                    break;
+                case 0b011: // Bad flywheel, yes driver err
+                    m_robotLED.setMode(Constants.LEDConstants.BAD_FLYWEEL_BADPHYS);
+                    break;
+                case 0b100: // Bad intake, no driver err
+                    m_robotLED.setMode(Constants.LEDConstants.INTAKE_OUT);
+                    break;
+                case 0b101: // Bad intake, yes driver err
+                    m_robotLED.setMode(Constants.LEDConstants.INTAKE_OUT_BADPHYS);
+                    break;
+                case 0b110: // Bad intake and shooter (intake is more important), no driver err
+                    m_robotLED.setMode(Constants.LEDConstants.INTAKE_OUT);
+                    break;
+                case 0b111: // Bad intake and shooter (intake is more important), yes driver err
+                    m_robotLED.setMode(Constants.LEDConstants.INTAKE_OUT_BADPHYS);
+                    break;
+            }
 
         //     // We set the shooter mode to ready if there are no errors
-        //     mode = (
-        //         bitmask == 0 ?
-        //         ShooterMode.Ready :
-        //         ShooterMode.NotReady
-        //     );
+            mode = (
+                bitmask == 0 ?
+                ShooterMode.Shooting :
+                ShooterMode.Ready
+            );
 
         }
 

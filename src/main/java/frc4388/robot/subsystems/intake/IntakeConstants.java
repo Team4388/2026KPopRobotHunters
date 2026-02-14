@@ -34,7 +34,7 @@ public class IntakeConstants {
     public static final ConfigurableDouble ARM_LIMIT_RETRACTED = new ConfigurableDouble("Arm angle retracted", -0.3*0);
     public static final ConfigurableDouble ARM_LIMIT_EXTENDED = new ConfigurableDouble("Arm angle extended", 0);
     
-    public static final ConfigurableDouble ROLLER_ACTIVE = new ConfigurableDouble("Rolelr Active", 10);
+    public static final ConfigurableDouble ROLLER_ACTIVE = new ConfigurableDouble("Rolelr Active", 30);
     // public static final ConfigurableDouble ROLL = new ConfigurableDouble("Arm angle extended", 0.25);
 
     // public static final AngularVelocity ROLLER_MAX_VELOCITY = RotationsPerSecond.of(4.0);
@@ -51,7 +51,7 @@ public class IntakeConstants {
         .withKI(0.0)
         .withKD(0.0);
 
-    public static ConfigurableDouble arm_kP = new ConfigurableDouble("ARM KP", 0.2);
+    public static ConfigurableDouble arm_kP = new ConfigurableDouble("ARM KP", 0.1);
     public static ConfigurableDouble arm_kI = new ConfigurableDouble("ARM KI", 0);
     public static ConfigurableDouble arm_kD = new ConfigurableDouble("ARM KD", 0);
     

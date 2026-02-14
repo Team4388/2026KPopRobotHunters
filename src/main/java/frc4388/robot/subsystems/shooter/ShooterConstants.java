@@ -12,9 +12,7 @@ import frc4388.utility.status.CanDevice;
 public class    ShooterConstants {
     // Motor conversions
     
-    public static final double FEEDER_INCHES_PER_ROT = 1.;
-    public static final double SHOOTERMOTOR1_GEAR_RATIO = 1.;
-    public static final double SHOOTERMOTOR2_GEAR_RATIO = 1.;
+    public static final double SHOOTERMOTOR_GEAR_RATIO = 1.5;
     public static final double INDEXER_GEAR_RATIO = 1.;
     
     // public static final AngularVelocity SHOOTER_ACTIVE_VELOCITY = RotationsPerSecond.of(30);
@@ -40,15 +38,15 @@ public class    ShooterConstants {
     public static final ConfigurableDouble ROBOT_SPEED_TOLERANCE = new ConfigurableDouble("Speed tolerance MS", 1);
     public static final ConfigurableDouble ROBOT_ANG_SPEED_TOLERANCE = new ConfigurableDouble("Shoot Ang speed tolerance DEG", 3);
 
-    public static final ConfigurableDouble SHOOTER_SPEED_TOLERANCE = new ConfigurableDouble("Shooter speed tolerance RPS", 1); 
+    public static final ConfigurableDouble SHOOTER_SPEED_TOLERANCE = new ConfigurableDouble("Shooter speed tolerance RPS", 5); 
 
     
 
     public static Slot0Configs SHOOTER_PID = new Slot0Configs()
         .withKV(0.0)
         .withKP(0.0)
-        .withKI(0.0)
-        .withKD(0.2);
+        .withKI(0.1)
+        .withKD(0.08);
 
     public static Slot0Configs INDEXER_PID = new Slot0Configs()
         .withKV(0.0)
@@ -61,8 +59,8 @@ public class    ShooterConstants {
     public static ConfigurableDouble indexer_kI = new ConfigurableDouble("Indexer KI", 0);
     public static ConfigurableDouble indexer_kD = new ConfigurableDouble("Indexer KD", 0);
     
-    public static ConfigurableDouble shooter_kP = new ConfigurableDouble("Shooter KP", 0.2);
-    public static ConfigurableDouble shooter_kI = new ConfigurableDouble("Shooter KI", 0);
+    public static ConfigurableDouble shooter_kP = new ConfigurableDouble("Shooter KP", 0.08);
+    public static ConfigurableDouble shooter_kI = new ConfigurableDouble("Shooter KI", 0.1);
     public static ConfigurableDouble shooter_kD = new ConfigurableDouble("Shooter KD", 0);
 
     // Limits
