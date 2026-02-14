@@ -220,19 +220,19 @@ public class RobotContainer {
 
         // IF the driver is holding the aim button, aim the robot towards the hub and shooter ready
         new Trigger(() -> getDeadbandedDriverController().getRightTriggerAxis() >= 0.5)
-            .whileTrue(new RunCommand(
-                () -> {
-                // m_robotSwerveDrive.driveFacingPosition(
-                //     getDeadbandedDriverController().getLeft(),
-                //     FieldPositions.HUB_POSITION);
-                }, m_robotSwerveDrive)
-            )
+            // .whileTrue(new RunCommand(
+            //     () -> {
+            //     m_robotSwerveDrive.driveFacingPosition(
+            //         getDeadbandedDriverController().getLeft(),
+            //         FieldPositions.HUB_POSITION);
+            //     }, m_robotSwerveDrive)
+            // )
             .onTrue(new InstantCommand(() -> {
                 // When Right trigger is pressed, 
                 m_robotShooter.setShooterReady();
             }))
             .onFalse(new InstantCommand(() -> {
-                m_robotIntake.setMode(IntakeMode.Retracted);
+                // m_robotIntake.setMode(IntakeMode.Retracted);
                 m_robotShooter.setShooterNotReady();
             }));
 

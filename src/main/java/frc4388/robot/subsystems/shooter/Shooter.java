@@ -61,9 +61,9 @@ public class Shooter extends SubsystemBase {
     private ShooterMode mode = ShooterMode.NotReady;
 
     public void setShooterReady() {
-        if(this.mode == ShooterMode.NotReady) {
-            this.mode = ShooterMode.Ready;
-        }
+        // if(this.mode == ShooterMode.NotReady) {
+        this.mode = ShooterMode.Ready;
+        // }
     }
     
     public void setShooterNotReady() {
@@ -94,6 +94,9 @@ public class Shooter extends SubsystemBase {
             
             double distanceToHub = robotPose2d.getTranslation().minus(FieldPositions.HUB_POSITION).getNorm();
 
+
+
+            this.mode = ShooterMode.Shooting;
 
             // TODO: get if the robot is within the angle of the hub
 
