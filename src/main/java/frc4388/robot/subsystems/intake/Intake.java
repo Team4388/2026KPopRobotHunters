@@ -16,15 +16,12 @@ public class Intake extends SubsystemBase {
     IntakeStateAutoLogged state = new IntakeStateAutoLogged();
 
     Supplier<Pose2d> m_swervePoseSupplier;
-    public DigitalInput m_armLimitSwitch;
 
     public Intake(
-        IntakeIO io,
-        DigitalInput m_armLimitSwitch
+        IntakeIO io
         // Supplier<Pose2d> swervePoseSupplier
     ) {
         this.io = io;
-        this.m_armLimitSwitch= m_armLimitSwitch;
         // this.m_swervePoseSupplier = swervePoseSupplier;
     }
 
@@ -76,8 +73,7 @@ public class Intake extends SubsystemBase {
                 io.setRollerVelocity(state, RotationsPerSecond.of(IntakeConstants.ROLLER_ACTIVE.get()));
                 break;
             case Retracted:
-                if (!m_armLimitSwitch.get()){
-                    System.out.println("Triggered!");
+                if (!state.retractedLimit){
                     io.stopArm();
                 } else {
                     io.setArmAngle(state, Rotations.of(IntakeConstants.ARM_LIMIT_RETRACTED.get()));
@@ -88,7 +84,11 @@ public class Intake extends SubsystemBase {
                 io.armExtend(IntakeConstants.ARM_EXTEND_PERCENT_OUTPUT.get());
                 break;
             case Retracting:
-                io.armRetract(IntakeConstants.ARM_RETRACT_PERCENT_OUTPUT.get());
+                if (!state.retractedLimit){
+                    io.stopArm();
+                } else {
+                    io.armRetract(IntakeConstants.ARM_RETRACT_PERCENT_OUTPUT.get());
+                }
                 break;
         }
 

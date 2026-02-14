@@ -5,18 +5,20 @@ import com.ctre.phoenix6.controls.VelocityDutyCycle;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.units.measure.*;
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DigitalOutput;
 
 public class IntakeReal implements IntakeIO {
 
-
     TalonFX m_armMotor;
     TalonFX m_rollerMotor;
+    DigitalInput m_armLimitSwitch;
 
     PositionDutyCycle armPosition = new PositionDutyCycle(0);
     VelocityDutyCycle rollerVelocity = new VelocityDutyCycle(0);
 
     public IntakeReal(
-
+        DigitalInput armLimitSwitch,
         TalonFX armMotor,
         TalonFX rollerMotor
     ) {
@@ -24,6 +26,7 @@ public class IntakeReal implements IntakeIO {
         // m_pitchMotor = pitchMotor;
         m_armMotor = armMotor;
         m_rollerMotor = rollerMotor;
+        m_armLimitSwitch = armLimitSwitch;
 
         // Apply the configs
         m_armMotor.getConfigurator().apply(IntakeConstants.ARM_PID);
@@ -96,7 +99,7 @@ public class IntakeReal implements IntakeIO {
     public void updateInputs(IntakeState state) {
         state.armAngle = m_armMotor.getPosition().getValue().div(IntakeConstants.ARM_MOTOR_GEAR_RATIO);
         state.armMotorCurrent = m_armMotor.getStatorCurrent().getValue();
-
+        state.retractedLimit = m_armLimitSwitch.get();
         state.rollerVelocity = m_rollerMotor.getVelocity().getValue().div(IntakeConstants.ROLLER_MOTOR_GEAR_RATIO);
         state.rollerMotorCurrent = m_rollerMotor.getStatorCurrent().getValue();
     }

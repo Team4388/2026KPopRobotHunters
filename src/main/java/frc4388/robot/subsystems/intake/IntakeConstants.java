@@ -21,6 +21,7 @@ public class IntakeConstants {
 
     public static final CanDevice ARM_ID   = new CanDevice("ARM", 20);
     public static final CanDevice ROLLER_ID   = new CanDevice("INTAKE_ROLLER", 21);
+    public static final int ARM_LIMIT_SWITCH_CHANNEL = 9;
         
     // Limits
 

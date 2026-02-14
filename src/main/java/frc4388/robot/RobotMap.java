@@ -12,6 +12,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.swerve.SwerveDrivetrain;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import frc4388.robot.constants.Constants;
 //import frc4388.robot.constants.Constants.ElevatorConstants;
 import frc4388.robot.constants.Constants.SimConstants;
@@ -91,7 +92,7 @@ public class RobotMap {
                 //Configure Intake 20,21
                 TalonFX arm = new TalonFX(IntakeConstants.ARM_ID.id, Constants.CANIVORE_CANBUS);
                 TalonFX roller = new TalonFX(IntakeConstants.ROLLER_ID.id, Constants.CANIVORE_CANBUS);
-
+                DigitalInput armLimitSwitch = new DigitalInput(IntakeConstants.ARM_LIMIT_SWITCH_CHANNEL);
                 // DigitalInput basinLimitSwitch = new DigitalInput(ElevatorConstants.BASIN_LIMIT_SWITCH);
                 // DigitalInput endeffectorLimitSwitch = new DigitalInput(ElevatorConstants.ENDEFFECTOR_LIMIT_SWITCH);
                 // DigitalInput IRIntakeBeam = new DigitalInput(ElevatorConstants.INTAKE_LIMIT_SWITCH);
@@ -100,7 +101,7 @@ public class RobotMap {
                 // shooterIO = new ShooterIO() {};
                 shooterIO = new ShooterReal(shooter1, shooter2, indexer);
 
-                intakeIO = new IntakeReal(arm, roller);
+                intakeIO = new IntakeReal(armLimitSwitch, arm, roller);
 
                 // Fault
                 FaultPidgeon2.addDevice(swerveDrivetrainReal.getPigeon2(), "Gyro");

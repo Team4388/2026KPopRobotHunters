@@ -59,14 +59,14 @@ public class RobotContainer {
     public final RobotMap m_robotMap = new RobotMap(Mode.REAL);
     
     /*Limit Switch */
-    public final DigitalInput m_armLimitSwitch = new DigitalInput(9);
+    // public final DigitalInput m_armLimitSwitch = new DigitalInput(9);
 
     /* Subsystems */
     public final LED m_robotLED = new LED(Constants.LEDConstants.LED_SPARK_ID);
     //Testing of Colors
     public final Vision m_vision = new Vision();
     public final SwerveDrive m_robotSwerveDrive = new SwerveDrive(m_robotMap.swerveDrivetrain, m_vision);
-    public final Intake m_robotIntake = new Intake(m_robotMap.intakeIO, m_armLimitSwitch);
+    public final Intake m_robotIntake = new Intake(m_robotMap.intakeIO);
     public final Shooter m_robotShooter = new Shooter(m_robotMap.shooterIO, m_robotSwerveDrive, m_robotIntake, m_robotLED);
     
 

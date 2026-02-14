@@ -13,6 +13,7 @@ import edu.wpi.first.units.measure.Current;
 public interface IntakeIO {
     @AutoLog
     public class IntakeState {
+        boolean retractedLimit = false;
         Angle armAngle = Rotations.of(0);
         Angle armTargetAngle = Rotations.of(0);
         Current armMotorCurrent = Amps.of(0);
