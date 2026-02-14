@@ -7,19 +7,24 @@ import java.util.function.Supplier;
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc4388.robot.subsystems.intake.Intake.IntakeMode;
 
 public class Intake extends SubsystemBase {
     public IntakeIO io;
     IntakeStateAutoLogged state = new IntakeStateAutoLogged();
 
     Supplier<Pose2d> m_swervePoseSupplier;
+    public DigitalInput m_armLimitSwitch;
 
     public Intake(
-        IntakeIO io
+        IntakeIO io,
+        DigitalInput m_armLimitSwitch
         // Supplier<Pose2d> swervePoseSupplier
     ) {
         this.io = io;
+        this.m_armLimitSwitch= m_armLimitSwitch;
         // this.m_swervePoseSupplier = swervePoseSupplier;
     }
 
@@ -56,6 +61,7 @@ public class Intake extends SubsystemBase {
     @Override
     public void periodic() {
         // FaultReporter.register(this); // TODO Implement fault reporter
+        // System.out.println(m_armLimitSwitch.get());
 
 
         Logger.processInputs("Intake", state);
@@ -68,7 +74,12 @@ public class Intake extends SubsystemBase {
                 io.setRollerVelocity(state, RotationsPerSecond.of(IntakeConstants.ROLLER_ACTIVE.get()));
                 break;
             case Retracted:
-                io.setArmAngle(state, Rotations.of(IntakeConstants.ARM_LIMIT_RETRACTED.get()));
+                if (!m_armLimitSwitch.get()){
+                    System.out.println("Triggered!");
+                    io.stopArm();
+                } else {
+                    io.setArmAngle(state, Rotations.of(IntakeConstants.ARM_LIMIT_RETRACTED.get()));
+                }
                 io.setRollerVelocity(state, RotationsPerSecond.of(0));
                 break;
         }

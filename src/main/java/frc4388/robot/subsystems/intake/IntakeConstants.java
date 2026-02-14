@@ -12,7 +12,7 @@ import frc4388.utility.status.CanDevice;
 public class IntakeConstants {
     // Motor conversions
 
-    public static final double ARM_MOTOR_GEAR_RATIO = 100;
+    public static final double ARM_MOTOR_GEAR_RATIO = 125;
     public static final double ROLLER_MOTOR_GEAR_RATIO = 3;
 
 
@@ -68,7 +68,7 @@ public class IntakeConstants {
     public static final TalonFXConfiguration ARM_MOTOR_CONFIG = new TalonFXConfiguration()
         .withCurrentLimits(
             new CurrentLimitsConfigs()
-                .withStatorCurrentLimit(40) // TODO: tune???
+                .withStatorCurrentLimit(15) // TODO: tune???
                 .withStatorCurrentLimitEnable(true)
             ).withMotorOutput(
                 new MotorOutputConfigs()

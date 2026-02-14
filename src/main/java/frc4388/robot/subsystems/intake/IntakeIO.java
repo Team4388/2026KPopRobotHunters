@@ -33,6 +33,7 @@ public interface IntakeIO {
     // public default void setShooterAngle(ShooterState state, Angle angle) {}
     // public default void setShooterPitch(ShooterState state, Angle angle) {}
     public default void setArmAngle(IntakeState state, Angle angle) {}
+    public default void stopArm() {}
     public default void setRollerVelocity(IntakeState state, AngularVelocity angularVelocity) {}
 
     public default void updateInputs(IntakeState state) {}

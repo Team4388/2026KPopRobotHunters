@@ -13,6 +13,7 @@ import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -34,6 +35,7 @@ import frc4388.robot.subsystems.LED;
 import frc4388.robot.subsystems.intake.Intake;
 import frc4388.robot.subsystems.intake.Intake.IntakeMode;
 import frc4388.robot.subsystems.shooter.Shooter;
+import frc4388.robot.subsystems.shooter.Shooter.ShooterMode;
 import frc4388.robot.subsystems.swerve.SwerveDrive;
 import frc4388.robot.subsystems.vision.Vision;
 import frc4388.utility.DeferredBlock;
@@ -56,18 +58,23 @@ public class RobotContainer {
     
     public final RobotMap m_robotMap = new RobotMap(Mode.REAL);
     
+    /*Limit Switch */
+    public final DigitalInput m_armLimitSwitch = new DigitalInput(9);
+
     /* Subsystems */
     public final LED m_robotLED = new LED(Constants.LEDConstants.LED_SPARK_ID);
     //Testing of Colors
     public final Vision m_vision = new Vision();
     public final SwerveDrive m_robotSwerveDrive = new SwerveDrive(m_robotMap.swerveDrivetrain, m_vision);
-    public final Intake m_robotIntake = new Intake(m_robotMap.intakeIO);
+    public final Intake m_robotIntake = new Intake(m_robotMap.intakeIO, m_armLimitSwitch);
     public final Shooter m_robotShooter = new Shooter(m_robotMap.shooterIO, m_robotSwerveDrive, m_robotIntake, m_robotLED);
     
 
     /* Controllers */
     private final DeadbandedXboxController m_driverXbox   = new DeadbandedXboxController(OIConstants.XBOX_DRIVER_ID);
     private final DeadbandedXboxController m_operatorXbox = new DeadbandedXboxController(OIConstants.XBOX_OPERATOR_ID);
+
+
     // private final ButtonBox m_buttonBox = new ButtonBox(OIConstants.BUTTONBOX_ID);
 
     // public List<Subsystem> subsystems = new ArrayList<>();
@@ -146,8 +153,8 @@ public class RobotContainer {
     private void configureButtonBindings() {
         
 
-        // new JoystickButton(getDeadbandedDriverController(), XboxController.A_BUTTON)
-        //     .onTrue(new InstantCommand(() -> m_robotSwerveDrive.resetGyro()));
+        new JoystickButton(getDeadbandedDriverController(), XboxController.A_BUTTON)
+            .onTrue(new InstantCommand(() -> m_robotSwerveDrive.resetGyro()));
 
             
         // new JoystickButton(getDeadbandedDriverController(), XboxController.X_BUTTON)
@@ -209,25 +216,25 @@ public class RobotContainer {
             .onFalse(new InstantCommand(() -> {
                 m_robotIntake.setMode(IntakeMode.Retracted);
                 m_robotSwerveDrive.softStop();
-            }, m_robotSwerveDrive));
+            }));
 
         // IF the driver is holding the aim button, aim the robot towards the hub and shooter ready
         new Trigger(() -> getDeadbandedDriverController().getRightTriggerAxis() >= 0.5)
             .whileTrue(new RunCommand(
                 () -> {
-                m_robotSwerveDrive.driveFacingPosition(
-                    getDeadbandedDriverController().getLeft(),
-                    FieldPositions.HUB_POSITION);
+                // m_robotSwerveDrive.driveFacingPosition(
+                //     getDeadbandedDriverController().getLeft(),
+                //     FieldPositions.HUB_POSITION);
                 }, m_robotSwerveDrive)
             )
             .onTrue(new InstantCommand(() -> {
                 // When Right trigger is pressed, 
-                m_robotIntake.setMode(IntakeMode.Extended);
+                m_robotShooter.setShooterReady();
             }))
             .onFalse(new InstantCommand(() -> {
                 m_robotIntake.setMode(IntakeMode.Retracted);
-                m_robotSwerveDrive.softStop();
-            }, m_robotSwerveDrive));
+                m_robotShooter.setShooterNotReady();
+            }));
 
 
         // D-PAD fine alignment

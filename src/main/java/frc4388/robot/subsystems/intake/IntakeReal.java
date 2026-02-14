@@ -78,6 +78,10 @@ public class IntakeReal implements IntakeIO {
         // PositionDutyCycle posRequest = new PositionDutyCycle(motorTargetAngle);
         m_armMotor.setControl(armPosition.withPosition(motorAngle));
     }
+    @Override
+    public void stopArm(){
+        m_armMotor.set(0);
+    }
 
     @Override
     public void updateInputs(IntakeState state) {
