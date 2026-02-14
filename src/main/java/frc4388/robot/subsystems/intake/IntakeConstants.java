@@ -16,6 +16,7 @@ public class IntakeConstants {
     public static final double ROLLER_MOTOR_GEAR_RATIO = 3;
 
 
+
     //IDs
 
     public static final CanDevice ARM_ID   = new CanDevice("ARM", 20);
@@ -33,7 +34,8 @@ public class IntakeConstants {
 
     public static final ConfigurableDouble ARM_LIMIT_RETRACTED = new ConfigurableDouble("Arm angle retracted", -0.3*0);
     public static final ConfigurableDouble ARM_LIMIT_EXTENDED = new ConfigurableDouble("Arm angle extended", 0);
-    
+    public static final ConfigurableDouble ARM_EXTEND_PERCENT_OUTPUT = new ConfigurableDouble("Arm extend % output", 0.1);
+    public static final ConfigurableDouble ARM_RETRACT_PERCENT_OUTPUT = new ConfigurableDouble("Arm retract % output", -0.1);
     public static final ConfigurableDouble ROLLER_ACTIVE = new ConfigurableDouble("Rolelr Active", 10);
     // public static final ConfigurableDouble ROLL = new ConfigurableDouble("Arm angle extended", 0.25);
 

@@ -269,7 +269,17 @@ public class RobotContainer {
             .onFalse(new InstantCommand(() -> {
                 m_robotShooter.setShooterNotReady();
             }));
-        
+
+        new JoystickButton(getDeadbandedOperatorController(), XboxController.Y_BUTTON)
+            .onFalse(new InstantCommand(() -> {
+                m_robotIntake.setMode(IntakeMode.Retracting);
+            }));
+
+        new JoystickButton(getDeadbandedOperatorController(), XboxController.X_BUTTON)
+            .onFalse(new InstantCommand(() -> {
+                m_robotShooter.setShooterNotReady();
+                m_robotIntake.setMode(IntakeMode.Extending);
+            }));
 
 
    }

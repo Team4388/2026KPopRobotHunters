@@ -35,7 +35,8 @@ public interface IntakeIO {
     public default void setArmAngle(IntakeState state, Angle angle) {}
     public default void stopArm() {}
     public default void setRollerVelocity(IntakeState state, AngularVelocity angularVelocity) {}
-
+    public default void armExtend(double percentOutput) {}
+    public default void armRetract(double percentOutput) {}
     public default void updateInputs(IntakeState state) {}
     public default void updateGains() {}
 }

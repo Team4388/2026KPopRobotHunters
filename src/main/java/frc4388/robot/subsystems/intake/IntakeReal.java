@@ -82,6 +82,15 @@ public class IntakeReal implements IntakeIO {
     public void stopArm(){
         m_armMotor.set(0);
     }
+    @Override
+    public void armExtend(double percentOutput){
+        m_armMotor.set(percentOutput);
+    }
+
+    @Override
+        public void armRetract(double percentOutput){
+        m_armMotor.set(percentOutput);
+    }
 
     @Override
     public void updateInputs(IntakeState state) {
