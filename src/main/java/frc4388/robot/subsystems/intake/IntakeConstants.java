@@ -53,7 +53,7 @@ public class IntakeConstants {
         .withKI(0.0)
         .withKD(0.0);
 
-    public static ConfigurableDouble arm_kP = new ConfigurableDouble("ARM KP", 0.2);
+    public static ConfigurableDouble arm_kP = new ConfigurableDouble("ARM KP", 0.1);
     public static ConfigurableDouble arm_kI = new ConfigurableDouble("ARM KI", 0);
     public static ConfigurableDouble arm_kD = new ConfigurableDouble("ARM KD", 0);
     

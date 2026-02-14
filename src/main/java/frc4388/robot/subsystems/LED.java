@@ -49,6 +49,7 @@ public class LED extends SubsystemBase implements Queryable {
     }
   }
 
+  @AutoLogOutput
   public String getMode(){
     return mode.name();
   }
