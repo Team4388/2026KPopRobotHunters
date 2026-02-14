@@ -24,10 +24,10 @@ public class    ShooterConstants {
     // public static final AngularVelocity INDEXER_ACTIVE_VELOCITY = RotationsPerSecond.of(10);
     // public static final AngularVelocity INDEXER_INACTIVE_VELOCITY = RotationsPerSecond.of(0.0);
 
-    public static final ConfigurableDouble SHOOTER_ACTIVE_VELOCITY = new ConfigurableDouble("Shooter Active Velocity", 0);
-    public static final ConfigurableDouble SHOOTER_RESTING_VELOCITY = new ConfigurableDouble("Shooter Resting Velocity", 0);
+    public static final ConfigurableDouble SHOOTER_ACTIVE_VELOCITY = new ConfigurableDouble("Shooter Active Velocity", -35);
+    public static final ConfigurableDouble SHOOTER_RESTING_VELOCITY = new ConfigurableDouble("Shooter Resting Velocity", -10);
     
-    public static final ConfigurableDouble INDEXER_FORWARD_VELOCITY = new ConfigurableDouble("Indexer FWD Velocity", 10);
+    public static final ConfigurableDouble INDEXER_FORWARD_VELOCITY = new ConfigurableDouble("Indexer FWD Velocity", -10);
     public static final ConfigurableDouble INDEXER_REVERSE_VELOCITY = new ConfigurableDouble("Indexer reverse Velocity", 10);
 
 

@@ -62,7 +62,7 @@ public class Shooter extends SubsystemBase {
 
     public void setShooterReady() {
         // if(this.mode == ShooterMode.NotReady) {
-        this.mode = ShooterMode.Ready;
+        this.mode = ShooterMode.Shooting;
         // }
     }
     
@@ -94,7 +94,8 @@ public class Shooter extends SubsystemBase {
             
             double distanceToHub = robotPose2d.getTranslation().minus(FieldPositions.HUB_POSITION).getNorm();
 
-            this.mode = ShooterMode.Shooting;
+            // this.mode = ShooterMode.Shooting;
+
             // TODO: get if the robot is within the angle of the hub
 
         //     boolean driverError = 
@@ -144,7 +145,8 @@ public class Shooter extends SubsystemBase {
         //         ShooterMode.NotReady
         //     );
 
-        // }
+        }
+
 
         switch (mode) {
             case Shooting:
@@ -162,4 +164,4 @@ public class Shooter extends SubsystemBase {
         }
 
     }
-    }}
+}

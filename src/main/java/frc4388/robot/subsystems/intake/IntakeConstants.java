@@ -31,7 +31,7 @@ public class IntakeConstants {
     // public static final Angle ARM_LIMIT_LOWER = Degrees.of(90);
     // public static final Angle ARM_LIMIT_UPPER = Degrees.of(-90);
 
-    public static final ConfigurableDouble ARM_LIMIT_RETRACTED = new ConfigurableDouble("Arm angle retracted", -0.3);
+    public static final ConfigurableDouble ARM_LIMIT_RETRACTED = new ConfigurableDouble("Arm angle retracted", -0.3*0);
     public static final ConfigurableDouble ARM_LIMIT_EXTENDED = new ConfigurableDouble("Arm angle extended", 0);
     
     public static final ConfigurableDouble ROLLER_ACTIVE = new ConfigurableDouble("Rolelr Active", 10);
