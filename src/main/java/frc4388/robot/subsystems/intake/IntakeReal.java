@@ -95,7 +95,7 @@ public class IntakeReal implements IntakeIO {
     public void stopArm(){
         m_armMotor.set(0);
     }
-    
+
     @Override
     public void armOutput(double percentOutput){
         var d = new DutyCycleOut(0);
@@ -109,7 +109,7 @@ public class IntakeReal implements IntakeIO {
     public void updateInputs(IntakeState state) {
         state.armAngle = m_armMotor.getPosition().getValue().div(IntakeConstants.ARM_MOTOR_GEAR_RATIO);
         state.armMotorCurrent = m_armMotor.getStatorCurrent().getValue();
-        state.retractedLimit = m_armLimitSwitch.get();
+        state.retractedLimit = !m_armLimitSwitch.get();
         state.rollerVelocity = m_rollerMotor.getVelocity().getValue().div(IntakeConstants.ROLLER_MOTOR_GEAR_RATIO);
         state.rollerMotorCurrent = m_rollerMotor.getStatorCurrent().getValue();
     }

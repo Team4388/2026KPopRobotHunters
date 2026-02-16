@@ -76,16 +76,19 @@ public class Intake extends SubsystemBase {
                 io.setRollerVelocity(state, RotationsPerSecond.of(0));
                 break;
             case Extending:
-                io.armOutput(0.1);
+                io.armOutput(IntakeConstants.ARM_EXTEND_PERCENT_OUTPUT.get());
                 io.setRollerVelocity(state, RotationsPerSecond.of(IntakeConstants.ROLLER_ACTIVE.get()));
                 break;
             case Retracting:
-                io.armOutput(-0.1);
+                io.armOutput(IntakeConstants.ARM_RETRACT_PERCENT_OUTPUT.get());
                 io.setRollerVelocity(state, RotationsPerSecond.of(0));
                 break;
-             case Idle:
+            case Idle:
                 io.stopArm();
                 break;
+        }
+        if (state.retractedLimit){
+            this.mode = IntakeMode.Retracted;
         }
 
     }

@@ -250,18 +250,12 @@ public class RobotContainer {
         //Operator Controls
         new Trigger(() -> getDeadbandedOperatorController().getLeftTriggerAxis() >= 0.5)
             .onTrue(new InstantCommand(() -> {
-                m_robotIntake.setMode(IntakeMode.Extending);
-            }))
-            .onFalse(new InstantCommand(() -> {
-                m_robotIntake.setMode(IntakeMode.Idle);
+                m_robotIntake.setMode(IntakeMode.Extended);
             }));
         
         new JoystickButton(getDeadbandedOperatorController(), XboxController.LEFT_BUMPER_BUTTON)
             .onTrue(new InstantCommand(() -> {
-                m_robotIntake.setMode(IntakeMode.Retracting);
-            }))
-            .onFalse(new InstantCommand(() -> {
-                m_robotIntake.setMode(IntakeMode.Idle);
+                m_robotIntake.setMode(IntakeMode.Retracted);
             }));
 
         new Trigger(() -> getDeadbandedOperatorController().getRightTriggerAxis() >= 0.5)
@@ -275,14 +269,19 @@ public class RobotContainer {
             }));
 
         new JoystickButton(getDeadbandedOperatorController(), XboxController.Y_BUTTON)
-            .onFalse(new InstantCommand(() -> {
+            .onTrue(new InstantCommand(() -> {
                 m_robotIntake.setMode(IntakeMode.Retracting);
+            }))
+            .onFalse(new InstantCommand(() -> {
+                m_robotIntake.setMode(IntakeMode.Idle);
             }));
 
         new JoystickButton(getDeadbandedOperatorController(), XboxController.X_BUTTON)
-            .onFalse(new InstantCommand(() -> {
-                m_robotShooter.setShooterNotReady();
+            .onTrue(new InstantCommand(() -> {
                 m_robotIntake.setMode(IntakeMode.Extending);
+            }))
+            .onFalse(new InstantCommand(() -> {
+                m_robotIntake.setMode(IntakeMode.Idle);
             }));
 
 
