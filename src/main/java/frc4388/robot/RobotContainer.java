@@ -264,7 +264,7 @@ public class RobotContainer {
             }));
         
         new JoystickButton(getDeadbandedOperatorController(), XboxController.RIGHT_BUMPER_BUTTON)
-            .onFalse(new InstantCommand(() -> {
+            .onTrue(new InstantCommand(() -> {
                 m_robotShooter.setShooterNotReady();
             }));
 
