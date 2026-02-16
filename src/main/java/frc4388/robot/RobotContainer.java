@@ -13,7 +13,6 @@ import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -35,7 +34,6 @@ import frc4388.robot.subsystems.LED;
 import frc4388.robot.subsystems.intake.Intake;
 import frc4388.robot.subsystems.intake.Intake.IntakeMode;
 import frc4388.robot.subsystems.shooter.Shooter;
-import frc4388.robot.subsystems.shooter.Shooter.ShooterMode;
 import frc4388.robot.subsystems.swerve.SwerveDrive;
 import frc4388.robot.subsystems.vision.Vision;
 import frc4388.utility.DeferredBlock;
@@ -252,12 +250,18 @@ public class RobotContainer {
         //Operator Controls
         new Trigger(() -> getDeadbandedOperatorController().getLeftTriggerAxis() >= 0.5)
             .onTrue(new InstantCommand(() -> {
-                m_robotIntake.setMode(IntakeMode.Extended);
+                m_robotIntake.setMode(IntakeMode.Extending);
+            }))
+            .onFalse(new InstantCommand(() -> {
+                m_robotIntake.setMode(IntakeMode.Idle);
             }));
         
         new JoystickButton(getDeadbandedOperatorController(), XboxController.LEFT_BUMPER_BUTTON)
+            .onTrue(new InstantCommand(() -> {
+                m_robotIntake.setMode(IntakeMode.Retracting);
+            }))
             .onFalse(new InstantCommand(() -> {
-                m_robotIntake.setMode(IntakeMode.Retracted);
+                m_robotIntake.setMode(IntakeMode.Idle);
             }));
 
         new Trigger(() -> getDeadbandedOperatorController().getRightTriggerAxis() >= 0.5)

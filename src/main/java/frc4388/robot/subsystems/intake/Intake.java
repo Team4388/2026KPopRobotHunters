@@ -7,9 +7,7 @@ import java.util.function.Supplier;
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc4388.robot.subsystems.intake.Intake.IntakeMode;
 
 public class Intake extends SubsystemBase {
     public IntakeIO io;
@@ -29,7 +27,8 @@ public class Intake extends SubsystemBase {
         Extended,
         Retracted,
         Extending,
-        Retracting
+        Retracting,
+        Idle
     }
 
     private IntakeMode mode = IntakeMode.Extended;
@@ -73,22 +72,19 @@ public class Intake extends SubsystemBase {
                 io.setRollerVelocity(state, RotationsPerSecond.of(IntakeConstants.ROLLER_ACTIVE.get()));
                 break;
             case Retracted:
-                if (!state.retractedLimit){
-                    io.stopArm();
-                } else {
-                    io.setArmAngle(state, Rotations.of(IntakeConstants.ARM_LIMIT_RETRACTED.get()));
-                }
+                io.setArmAngle(state, Rotations.of(IntakeConstants.ARM_LIMIT_RETRACTED.get()));
                 io.setRollerVelocity(state, RotationsPerSecond.of(0));
                 break;
             case Extending:
-                io.armExtend(IntakeConstants.ARM_EXTEND_PERCENT_OUTPUT.get());
+                io.armOutput(0.1);
+                io.setRollerVelocity(state, RotationsPerSecond.of(IntakeConstants.ROLLER_ACTIVE.get()));
                 break;
             case Retracting:
-                if (!state.retractedLimit){
-                    io.stopArm();
-                } else {
-                    io.armRetract(IntakeConstants.ARM_RETRACT_PERCENT_OUTPUT.get());
-                }
+                io.armOutput(-0.1);
+                io.setRollerVelocity(state, RotationsPerSecond.of(0));
+                break;
+             case Idle:
+                io.stopArm();
                 break;
         }
 

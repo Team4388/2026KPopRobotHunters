@@ -1,5 +1,9 @@
 package frc4388.robot.subsystems.intake;
 
+import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Rotation;
+
+import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.PositionDutyCycle;
 import com.ctre.phoenix6.controls.VelocityDutyCycle;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -69,6 +73,7 @@ public class IntakeReal implements IntakeIO {
 
     @Override
     public void setArmAngle(IntakeState state, Angle angle) {
+        
         state.armTargetAngle = angle;
         // Assume that the angle is always accurate, because I think we will use a shaft encoder
         // Assume that 0 degrees = forwards. Might need an offset here
@@ -79,20 +84,25 @@ public class IntakeReal implements IntakeIO {
         Angle motorAngle = angle.times(IntakeConstants.ARM_MOTOR_GEAR_RATIO);
         
         // PositionDutyCycle posRequest = new PositionDutyCycle(motorTargetAngle);
-        m_armMotor.setControl(armPosition.withPosition(motorAngle));
+        m_armMotor.setControl(
+            armPosition
+                .withPosition(motorAngle)
+                .withLimitReverseMotion(!m_armLimitSwitch.get())
+            );
     }
+
     @Override
     public void stopArm(){
         m_armMotor.set(0);
     }
+    
     @Override
-    public void armExtend(double percentOutput){
-        m_armMotor.set(percentOutput);
-    }
-
-    @Override
-        public void armRetract(double percentOutput){
-        m_armMotor.set(percentOutput);
+    public void armOutput(double percentOutput){
+        var d = new DutyCycleOut(0);
+        m_armMotor.setControl(
+            d.withOutput(percentOutput)
+                .withLimitReverseMotion(!m_armLimitSwitch.get())
+            );
     }
 
     @Override
