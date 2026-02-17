@@ -21,11 +21,12 @@ public interface ShooterIO {
 
         AngularVelocity motor1TargetVelocity = RotationsPerSecond.of(0);
         AngularVelocity motor2TargetVelocity = RotationsPerSecond.of(0);
-        AngularVelocity indexerTargetVelocity = RotationsPerSecond.of(0);
+        double indexerTargetOutput = 0;
+
 
         AngularVelocity motor1Velocity = RotationsPerSecond.of(0);
         AngularVelocity motor2Velocity = RotationsPerSecond.of(0);
-        AngularVelocity indexerVelocity = RotationsPerSecond.of(0);
+        double indexerOutput = 0;
         
         Current motor1Current = Amps.of(0);
         Current motor2Current = Amps.of(0);
@@ -38,7 +39,7 @@ public interface ShooterIO {
     // public default void setShooterPitch(ShooterState state, Angle angle) {}
     public default void setShooterVelocity(ShooterState state, AngularVelocity angularVelocity) {}
     // public default void setMotor2Velocity(ShooterState state, AngularVelocity angularVelocity) {}
-    public default void setIndexerVelocity(ShooterState state, AngularVelocity linearVelocity) {}
+    public default void setIndexerOutput(ShooterState state, double percentOutput) {}
 
     public default void updateInputs(ShooterState state) {}
 

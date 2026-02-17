@@ -152,19 +152,15 @@ public class Shooter extends SubsystemBase {
         switch (mode) {
             case Shooting:
                 io.setShooterVelocity(state, RotationsPerSecond.of(ShooterConstants.SHOOTER_ACTIVE_VELOCITY.get()));
-                if(state.motor1Velocity.in(RotationsPerSecond) > 30){
-                    io.setIndexerVelocity(state, RotationsPerSecond.of(ShooterConstants.INDEXER_FORWARD_VELOCITY.get()));
-                }else{
-                  io.setIndexerVelocity(state, RotationsPerSecond.of(ShooterConstants.INDEXER_REVERSE_VELOCITY.get()));  
-                }
+                io.setIndexerOutput(state, ShooterConstants.INDEXER_FORWARD_OUTPUT.get());            
                 break;
             case Ready:
                 io.setShooterVelocity(state, RotationsPerSecond.of(ShooterConstants.SHOOTER_ACTIVE_VELOCITY.get()));
-                io.setIndexerVelocity(state, RotationsPerSecond.of(ShooterConstants.INDEXER_REVERSE_VELOCITY.get()));
+                io.setIndexerOutput(state, ShooterConstants.INDEXER_REVERSE_OUTPUT.get());
                 break;
             case NotReady:
                 io.setShooterVelocity(state, RotationsPerSecond.of(ShooterConstants.SHOOTER_RESTING_VELOCITY.get()));
-                io.setIndexerVelocity(state, RotationsPerSecond.of(ShooterConstants.INDEXER_REVERSE_VELOCITY.get()));
+                io.setIndexerOutput(state, ShooterConstants.INDEXER_REVERSE_OUTPUT.get());
                 break;
         }
 

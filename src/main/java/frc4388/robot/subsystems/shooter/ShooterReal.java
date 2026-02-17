@@ -56,16 +56,18 @@ public class ShooterReal implements ShooterIO {
     }
 
     @Override
-    public void setIndexerVelocity(ShooterState state, AngularVelocity target) {
-        state.indexerTargetVelocity = target;
+    public void setIndexerOutput(ShooterState state, double percentOutput) {
+        state.indexerTargetOutput = percentOutput;
 
-        if(target.baseUnitMagnitude() == 0) {
+        if(percentOutput == 0) {
             m_indexerMotor.set(0);
             return;
         }
 
-        AngularVelocity motorRps = target.times(ShooterConstants.INDEXER_GEAR_RATIO);
-        m_indexerMotor.setControl(m_indexerVelocity.withVelocity(motorRps));
+
+
+        // AngularVelocity motorRps = target.times(ShooterConstants.INDEXER_GEAR_RATIO);
+        m_indexerMotor.set(percentOutput);
     }
 
 
@@ -74,7 +76,8 @@ public class ShooterReal implements ShooterIO {
 
         state.motor1Velocity = m_shooter1Motor.getVelocity().getValue().div(ShooterConstants.SHOOTERMOTOR_GEAR_RATIO);
         state.motor2Velocity = m_shooter2Motor.getVelocity().getValue().div(ShooterConstants.SHOOTERMOTOR_GEAR_RATIO);
-        state.indexerVelocity = m_indexerMotor.getVelocity().getValue().div(ShooterConstants.INDEXER_GEAR_RATIO);
+        state.indexerOutput = m_indexerMotor.get();
+        // state.indexerOutput = m_indexerMotor.getVelocity().getValue().div(ShooterConstants.INDEXER_GEAR_RATIO);
 
         // state.motorLinearVelocity = InchesPerSecond.of(m_shooter1Motor.getVelocity().getValue().in(RotationsPerSecond) * ShooterConstants.FEEDER_INCHES_PER_ROT);
         
