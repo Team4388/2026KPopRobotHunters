@@ -6,6 +6,8 @@ import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc4388.robot.constants.Constants;
@@ -76,7 +78,6 @@ public class Shooter extends SubsystemBase {
     }
 
 
-
     @Override
     public void periodic() {
         // FaultReporter.register(this); // TODO Implement fault reporter
@@ -84,20 +85,18 @@ public class Shooter extends SubsystemBase {
         Logger.processInputs("Shooter", state);
         io.updateInputs(state);
 
+
+        ChassisSpeeds speed = m_SwerveDrive.chassisSpeeds;
+        double XYSpeed = Math.sqrt(Math.pow(speed.vxMetersPerSecond,2) + Math.pow(speed.vyMetersPerSecond,2));
+        double AngSpeed  = Math.abs(speed.omegaRadiansPerSecond * (180/Math.PI));
+
+        Pose2d robotPose2d = m_SwerveDrive.getPose2d();
+        
+        double distanceToHub = robotPose2d.getTranslation().minus(FieldPositions.HUB_POSITION).getNorm();
+        Logger.recordOutput("Hub Dist", distanceToHub);
+
+
         if(this.mode != ShooterMode.NotReady) {
-
-            ChassisSpeeds speed = m_SwerveDrive.chassisSpeeds;
-            double XYSpeed = Math.sqrt(Math.pow(speed.vxMetersPerSecond,2) + Math.pow(speed.vyMetersPerSecond,2));
-            double AngSpeed  = Math.abs(speed.omegaRadiansPerSecond * (180/Math.PI));
-
-            Pose2d robotPose2d = m_SwerveDrive.getPose2d();
-            
-            double distanceToHub = robotPose2d.getTranslation().minus(FieldPositions.HUB_POSITION).getNorm();
-
-
-
-            // this.mode = ShooterMode.Shooting;
-
             // TODO: get if the robot is within the angle of the hub
 
             boolean driverError = false;
@@ -153,11 +152,11 @@ public class Shooter extends SubsystemBase {
 
         switch (mode) {
             case Shooting:
-                io.setShooterVelocity(state, RotationsPerSecond.of(ShooterConstants.SHOOTER_ACTIVE_VELOCITY.get()));
+                io.setShooterVelocity(state, ShooterConstants.getTargetShooterSpeed(distanceToHub));
                 io.setIndexerVelocity(state, RotationsPerSecond.of(ShooterConstants.INDEXER_FORWARD_VELOCITY.get()));
                 break;
             case Ready:
-                io.setShooterVelocity(state, RotationsPerSecond.of(ShooterConstants.SHOOTER_ACTIVE_VELOCITY.get()));
+                io.setShooterVelocity(state, ShooterConstants.getTargetShooterSpeed(distanceToHub));
                 io.setIndexerVelocity(state, RotationsPerSecond.of(ShooterConstants.INDEXER_REVERSE_VELOCITY.get()));
                 break;
             case NotReady:
