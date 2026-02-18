@@ -9,6 +9,8 @@ package frc4388.robot;
 
 import com.ctre.phoenix6.hardware.TalonFX;
 
+import org.photonvision.PhotonCamera;
+
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.swerve.SwerveDrivetrain;
 
@@ -16,6 +18,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import frc4388.robot.constants.Constants;
 //import frc4388.robot.constants.Constants.ElevatorConstants;
 import frc4388.robot.constants.Constants.SimConstants;
+import frc4388.robot.constants.Constants.VisionConstants;
 import frc4388.robot.subsystems.intake.IntakeConstants;
 import frc4388.robot.subsystems.intake.IntakeIO;
 import frc4388.robot.subsystems.intake.IntakeReal;
@@ -27,7 +30,10 @@ import frc4388.robot.subsystems.shooter.ShooterReal;
 import frc4388.robot.subsystems.swerve.SwerveDriveConstants;
 import frc4388.robot.subsystems.swerve.SwerveIO;
 import frc4388.robot.subsystems.swerve.SwerveReal;
+import frc4388.robot.subsystems.vision.VisionIO;
+import frc4388.robot.subsystems.vision.VisionReal;
 import frc4388.utility.status.FaultCANCoder;
+import frc4388.utility.status.FaultPhotonCamera;
 import frc4388.utility.status.FaultPidgeon2;
 import frc4388.utility.status.FaultTalonFX;
 
@@ -40,7 +46,7 @@ public class RobotMap {
     // public RobotGyro gyro = new RobotGyro(m_pigeon2);
 
     // public final VisionIO leftCamera;
-    // public final VisionIO rightCamera;
+    public final VisionIO rightCamera;
 
     // public final LiDAR lidar = new 
 
@@ -63,13 +69,13 @@ public class RobotMap {
             case REAL:
                 // Configure cameras
                 // PhotonCamera leftCameraReal = new PhotonCamera(VisionConstants.LEFT_CAMERA_NAME);
-                // PhotonCamera rightCameraReal = new PhotonCamera(VisionConstants.RIGHT_CAMERA_NAME);
+                PhotonCamera rightCameraReal = new PhotonCamera(VisionConstants.RIGHT_CAMERA_NAME);
 
                 // leftCamera =  new VisionReal(leftCameraReal, VisionConstants.RIGHT_CAMERA_POS);                ;
-                // rightCamera = new VisionReal(rightCameraReal, VisionConstants.LEFT_CAMERA_POS);
+                rightCamera = new VisionReal(rightCameraReal, VisionConstants.RIGHT_CAMERA_POS);
 
                 // FaultPhotonCamera.addDevice(leftCameraReal, "Left Camera");
-                // FaultPhotonCamera.addDevice(rightCameraReal , "Right Camera");
+                FaultPhotonCamera.addDevice(rightCameraReal , "Right Camera");
 
                 // // Configure LiDAR
                 // reefLidar = new LidarReal(LiDARConstants.REEF_LIDAR_DIO_CHANNEL);
@@ -131,7 +137,7 @@ public class RobotMap {
             //     break;
             default:
                 // leftCamera = new VisionIO() {};
-                // rightCamera = new VisionIO() {};
+                rightCamera = new VisionIO() {};
                 swerveDrivetrain = new SwerveIO() {};
                 intakeIO = new IntakeIO() {};
                 shooterIO = new ShooterIO() {};

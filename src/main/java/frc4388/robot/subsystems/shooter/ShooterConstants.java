@@ -25,8 +25,8 @@ public class    ShooterConstants {
     public static final ConfigurableDouble SHOOTER_ACTIVE_VELOCITY = new ConfigurableDouble("Shooter Active Velocity", -35);
     public static final ConfigurableDouble SHOOTER_RESTING_VELOCITY = new ConfigurableDouble("Shooter Resting Velocity", -10);
     
-    public static final ConfigurableDouble INDEXER_FORWARD_OUTPUT = new ConfigurableDouble("Indexer FWD Velocity", -10);
-    public static final ConfigurableDouble INDEXER_REVERSE_OUTPUT = new ConfigurableDouble("Indexer reverse Velocity", 10);
+    public static final ConfigurableDouble INDEXER_FORWARD_OUTPUT = new ConfigurableDouble("Indexer FWD % Output", -0.1);
+    public static final ConfigurableDouble INDEXER_REVERSE_OUTPUT = new ConfigurableDouble("Indexer reverse % Output", 0.1);
 
 
     // Tolerances
@@ -48,16 +48,10 @@ public class    ShooterConstants {
         .withKI(0.1)
         .withKD(0.08);
 
-    public static Slot0Configs INDEXER_PID = new Slot0Configs()
-        .withKV(0.0)
-        .withKP(0.0)
-        .withKI(0.0)
-        .withKD(0.2);
     
     
-    public static ConfigurableDouble indexer_kP = new ConfigurableDouble("Indexer KP", 0.2);
-    public static ConfigurableDouble indexer_kI = new ConfigurableDouble("Indexer KI", 0);
-    public static ConfigurableDouble indexer_kD = new ConfigurableDouble("Indexer KD", 0);
+    
+    
     
     public static ConfigurableDouble shooter_kP = new ConfigurableDouble("Shooter KP", 0.08);
     public static ConfigurableDouble shooter_kI = new ConfigurableDouble("Shooter KI", 0.1);

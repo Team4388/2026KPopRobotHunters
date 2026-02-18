@@ -62,7 +62,7 @@ public class RobotContainer {
     /* Subsystems */
     public final LED m_robotLED = new LED(Constants.LEDConstants.LED_SPARK_ID);
     //Testing of Colors
-    public final Vision m_vision = new Vision();
+    public final Vision m_vision = new Vision(m_robotMap.rightCamera);
     public final SwerveDrive m_robotSwerveDrive = new SwerveDrive(m_robotMap.swerveDrivetrain, m_vision);
     public final Intake m_robotIntake = new Intake(m_robotMap.intakeIO);
     public final Shooter m_robotShooter = new Shooter(m_robotMap.shooterIO, m_robotSwerveDrive, m_robotIntake, m_robotLED);
@@ -248,24 +248,24 @@ public class RobotContainer {
             .onFalse(new InstantCommand(() -> m_robotSwerveDrive.softStop(), m_robotSwerveDrive));
         
         //Operator Controls
-        new Trigger(() -> getDeadbandedOperatorController().getLeftTriggerAxis() >= 0.5)
+        new Trigger(() -> getDeadbandedOperatorController().getRightTriggerAxis() >= 0.5)
             .onTrue(new InstantCommand(() -> {
                 m_robotIntake.setMode(IntakeMode.Extended);
             }));
         
-        new JoystickButton(getDeadbandedOperatorController(), XboxController.LEFT_BUMPER_BUTTON)
+        new JoystickButton(getDeadbandedOperatorController(), XboxController.RIGHT_BUMPER_BUTTON)
             .onTrue(new InstantCommand(() -> {
                 m_robotIntake.setMode(IntakeMode.Retracted);
             }));
 
-        new Trigger(() -> getDeadbandedOperatorController().getRightTriggerAxis() >= 0.5)
-            .onTrue(new InstantCommand(() -> {
-                m_robotShooter.setShooterReady();
-            }));
-        
-        new JoystickButton(getDeadbandedOperatorController(), XboxController.RIGHT_BUMPER_BUTTON)
+        new Trigger(() -> getDeadbandedOperatorController().getLeftTriggerAxis() >= 0.5)
             .onTrue(new InstantCommand(() -> {
                 m_robotShooter.setShooterNotReady();
+            }));
+        
+        new JoystickButton(getDeadbandedOperatorController(), XboxController.LEFT_BUMPER_BUTTON)
+            .onTrue(new InstantCommand(() -> {
+                m_robotShooter.setShooterReady();
             }));
 
         new JoystickButton(getDeadbandedOperatorController(), XboxController.Y_BUTTON)

@@ -69,27 +69,27 @@ public class Intake extends SubsystemBase {
         switch (mode) {
             case Extended:
                 io.setArmAngle(state, Rotations.of(IntakeConstants.ARM_LIMIT_EXTENDED.get()));
-                io.setRollerVelocity(state, RotationsPerSecond.of(IntakeConstants.ROLLER_ACTIVE.get()));
+                io.setRollerOutput(state, IntakeConstants.ROLLER_PERCENT_OUTPUT.get());
                 break;
             case Retracted:
                 io.setArmAngle(state, Rotations.of(IntakeConstants.ARM_LIMIT_RETRACTED.get()));
-                io.setRollerVelocity(state, RotationsPerSecond.of(0));
+                io.setRollerOutput(state, 0);
                 break;
             case Extending:
                 io.armOutput(IntakeConstants.ARM_EXTEND_PERCENT_OUTPUT.get());
-                io.setRollerVelocity(state, RotationsPerSecond.of(IntakeConstants.ROLLER_ACTIVE.get()));
+                io.setRollerOutput(state, IntakeConstants.ROLLER_PERCENT_OUTPUT.get());
                 break;
             case Retracting:
                 io.armOutput(IntakeConstants.ARM_RETRACT_PERCENT_OUTPUT.get());
-                io.setRollerVelocity(state, RotationsPerSecond.of(0));
+                io.setRollerOutput(state, 0);
                 break;
             case Idle:
                 io.stopArm();
                 break;
         }
-        if (state.retractedLimit){
-            this.mode = IntakeMode.Retracted;
-        }
+        // if (state.retractedLimit){
+        //     this.mode = IntakeMode.Retracted;
+        // }
 
     }
 }

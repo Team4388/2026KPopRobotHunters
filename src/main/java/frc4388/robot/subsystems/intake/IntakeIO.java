@@ -22,8 +22,8 @@ public interface IntakeIO {
         // Angle shooterTargetPitch = Rotations.of(0);
         // Current pitchMotorCurrent = Amps.of(0);
 
-        AngularVelocity rollerVelocity = RotationsPerSecond.of(0);
-        AngularVelocity rollerTargetVelocity = RotationsPerSecond.of(0);
+        double rollerOutput = 0;
+        double rollerTargetOutput = 0;
         Current rollerMotorCurrent = Amps.of(0);
 
         // LinearVelocity feederVelocity = InchesPerSecond.of(0);
@@ -35,7 +35,7 @@ public interface IntakeIO {
     // public default void setShooterPitch(ShooterState state, Angle angle) {}
     public default void setArmAngle(IntakeState state, Angle angle) {}
     public default void stopArm() {}
-    public default void setRollerVelocity(IntakeState state, AngularVelocity angularVelocity) {}
+    public default void setRollerOutput(IntakeState state, double rollerOutput) {}
     public default void armOutput(double percentOutput) {}
     public default void updateInputs(IntakeState state) {}
     public default void updateGains() {}

@@ -78,7 +78,7 @@ public final class Constants {
         public static final String RIGHT_CAMERA_NAME = "CAMERA_RIGHT";
 
         public static final Transform3d LEFT_CAMERA_POS = new Transform3d(new Translation3d(Units.inchesToMeters(4.547), Units.inchesToMeters(8.031), Units.inchesToMeters(8.858)), new Rotation3d(0,0.0,0.0));
-        public static final Transform3d RIGHT_CAMERA_POS = new Transform3d(new Translation3d(Units.inchesToMeters(4.547), -Units.inchesToMeters(8.031), Units.inchesToMeters(8.858)), new Rotation3d(0,0.0,0.0));
+        public static final Transform3d RIGHT_CAMERA_POS = new Transform3d(new Translation3d(Units.inchesToMeters(-13), Units.inchesToMeters(10.75), Units.inchesToMeters(9.5)), new Rotation3d(0,40.*(Math.PI/180.),Math.PI));
         
         public static final double MIN_ESTIMATION_DISTANCE = 2; // Meters
 

@@ -19,7 +19,7 @@ public class IntakeReal implements IntakeIO {
     DigitalInput m_armLimitSwitch;
 
     PositionDutyCycle armPosition = new PositionDutyCycle(0);
-    VelocityDutyCycle rollerVelocity = new VelocityDutyCycle(0);
+    // VelocityDutyCycle rollerVelocity = new VelocityDutyCycle(0);
 
     public IntakeReal(
         DigitalInput armLimitSwitch,
@@ -35,11 +35,10 @@ public class IntakeReal implements IntakeIO {
         // Apply the configs
         m_armMotor.getConfigurator().apply(IntakeConstants.ARM_PID);
         m_armMotor.getConfigurator().apply(IntakeConstants.ARM_MOTOR_CONFIG);
-        m_rollerMotor.getConfigurator().apply(IntakeConstants.ROLLER_PID);
         m_rollerMotor.getConfigurator().apply(IntakeConstants.ROLLER_MOTOR_CONFIG);
 
         armPosition.Slot = 0;
-        rollerVelocity.Slot = 0;
+        // rollerVelocity.Slot = 0;
     }
 
     private Angle clampAng(Angle x, Angle min, Angle max){
@@ -55,20 +54,15 @@ public class IntakeReal implements IntakeIO {
 
     
     @Override
-    public void setRollerVelocity(IntakeState state, AngularVelocity angularVelocity) {
-        state.rollerTargetVelocity = angularVelocity;
+    public void setRollerOutput(IntakeState state, double rollerOutput) {
+        state.rollerTargetOutput = rollerOutput;
 
-        if(angularVelocity.baseUnitMagnitude() == 0) {
+
+        if(rollerOutput == 0) {
             m_rollerMotor.set(0);
             return;
         }
-
-        // (REAL_ROT / SEC) * (MOTOR_ROT / REAL_ROT) = (MOTOR_ROT / SEC)
-        AngularVelocity motorSpeed = angularVelocity.times(IntakeConstants.ROLLER_MOTOR_GEAR_RATIO);
-
-        // m_rollerMotor.set(motorSpeed);
-        // VelocityDutyCycle velocity = new VelocityDutyCycle(motorSpeed);
-        m_rollerMotor.setControl(rollerVelocity.withVelocity(motorSpeed));
+        m_rollerMotor.set(rollerOutput);
     }
 
     @Override
@@ -109,9 +103,14 @@ public class IntakeReal implements IntakeIO {
     public void updateInputs(IntakeState state) {
         state.armAngle = m_armMotor.getPosition().getValue().div(IntakeConstants.ARM_MOTOR_GEAR_RATIO);
         state.armMotorCurrent = m_armMotor.getStatorCurrent().getValue();
-        state.retractedLimit = !m_armLimitSwitch.get();
-        state.rollerVelocity = m_rollerMotor.getVelocity().getValue().div(IntakeConstants.ROLLER_MOTOR_GEAR_RATIO);
+        state.rollerOutput = m_rollerMotor.get();
         state.rollerMotorCurrent = m_rollerMotor.getStatorCurrent().getValue();
+        state.retractedLimit = !m_armLimitSwitch.get();
+
+        if(state.retractedLimit) {
+            // Set the arm motor to be zero if the limit switch is pressed
+            m_armMotor.setPosition(0., 0); 
+        }
     }
 
     @Override 
@@ -122,9 +121,5 @@ public class IntakeReal implements IntakeIO {
         IntakeConstants.ARM_PID.kD = IntakeConstants.arm_kD.get();
         m_armMotor.getConfigurator().apply(IntakeConstants.ARM_PID);
 
-        IntakeConstants.ROLLER_PID.kP = IntakeConstants.roller_kP.get();
-        IntakeConstants.ROLLER_PID.kI = IntakeConstants.roller_kI.get();
-        IntakeConstants.ROLLER_PID.kD = IntakeConstants.roller_kD.get();
-        m_rollerMotor.getConfigurator().apply(IntakeConstants.ROLLER_PID);
     }
 }

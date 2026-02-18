@@ -13,7 +13,7 @@ public class ShooterReal implements ShooterIO {
 
     VelocityDutyCycle shooter1Velocity = new VelocityDutyCycle(0);
     VelocityDutyCycle shooter2Velocity = new VelocityDutyCycle(0);
-    VelocityDutyCycle m_indexerVelocity = new VelocityDutyCycle(0);
+    // VelocityDutyCycle m_indexerVelocity = new VelocityDutyCycle(0);
 
 
     public ShooterReal(
@@ -27,7 +27,6 @@ public class ShooterReal implements ShooterIO {
 
         m_shooter1Motor.getConfigurator().apply(ShooterConstants.SHOOTER_PID);
         m_shooter2Motor.getConfigurator().apply(ShooterConstants.SHOOTER_PID);
-        m_indexerMotor.getConfigurator().apply(ShooterConstants.SHOOTER_PID);
 
         m_shooter1Motor.getConfigurator().apply(ShooterConstants.SHOOTER1_MOTOR_CONFIG);
         m_shooter2Motor.getConfigurator().apply(ShooterConstants.SHOOTER2_MOTOR_CONFIG);
@@ -35,7 +34,7 @@ public class ShooterReal implements ShooterIO {
 
         shooter1Velocity.Slot = 0;
         shooter2Velocity.Slot = 0;
-        m_indexerVelocity.Slot = 0;
+        // m_indexerVelocity.Slot = 0;
     }
     
     @Override
@@ -95,11 +94,6 @@ public class ShooterReal implements ShooterIO {
         ShooterConstants.SHOOTER_PID.kD = ShooterConstants.shooter_kD.get();
         m_shooter1Motor.getConfigurator().apply(ShooterConstants.SHOOTER_PID);
         m_shooter2Motor.getConfigurator().apply(ShooterConstants.SHOOTER_PID);
-
-        ShooterConstants.INDEXER_PID.kP = ShooterConstants.indexer_kP.get();
-        ShooterConstants.INDEXER_PID.kI = ShooterConstants.indexer_kI.get();
-        ShooterConstants.INDEXER_PID.kD = ShooterConstants.indexer_kD.get();
-        m_indexerMotor.getConfigurator().apply(ShooterConstants.INDEXER_PID);
     }
     
 }
