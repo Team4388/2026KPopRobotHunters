@@ -31,7 +31,7 @@ public class Intake extends SubsystemBase {
         Idle
     }
 
-    private IntakeMode mode = IntakeMode.Extended;
+    private IntakeMode mode = IntakeMode.Retracted;
 
     public void setMode(IntakeMode mode) {
         this.mode = mode;

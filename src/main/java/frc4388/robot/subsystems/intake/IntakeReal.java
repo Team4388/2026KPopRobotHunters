@@ -88,6 +88,7 @@ public class IntakeReal implements IntakeIO {
     @Override
     public void stopArm(){
         m_armMotor.set(0);
+        // m_rollerMotor.set(0);
     }
 
     @Override
