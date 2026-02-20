@@ -91,8 +91,9 @@ public class Shooter extends SubsystemBase {
         double AngSpeed  = Math.abs(speed.omegaRadiansPerSecond * (180/Math.PI));
 
         Pose2d robotPose2d = m_SwerveDrive.getPose2d();
-        
-        double distanceToHub = robotPose2d.getTranslation().minus(FieldPositions.HUB_POSITION).getNorm();
+        //
+        double distanceToHub = (robotPose2d.getTranslation().minus(FieldPositions.HUB_POSITION).getNorm());
+        //Center of hub to cameras in inches
         Logger.recordOutput("Hub Dist", distanceToHub);
 
 
