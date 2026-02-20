@@ -339,7 +339,7 @@ public class SwerveDrive extends SubsystemBase implements Queryable {
 
 
     // Drive with the robot facing towards a specific position
-    public void driveFacingPosition(Translation2d leftStick, Translation2d fieldPos) {
+    public void driveFacingPosition(Translation2d leftStick, Translation2d fieldPos, double aimLeadTime) {
 
         // Get the current speed of the robot
         Translation2d robotSpeed = new Translation2d(
@@ -348,7 +348,7 @@ public class SwerveDrive extends SubsystemBase implements Queryable {
         );
 
         // Calculate a point to aim ahead of the actual position.
-        Translation2d fieldPosLead = robotSpeed.times(SwerveDriveConstants.AIM_LEAD_TIME.get()).plus(fieldPos);
+        Translation2d fieldPosLead = robotSpeed.times(aimLeadTime).plus(fieldPos);
 
         // Calculate the angle between the current position and the lead position
         Rotation2d ang = fieldPosLead.minus(getPose2d().getTranslation()).getAngle();

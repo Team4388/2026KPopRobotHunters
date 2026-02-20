@@ -24,6 +24,7 @@ public class    ShooterConstants {
     public static final ConfigurableDouble INDEXER_FORWARD_OUTPUT = new ConfigurableDouble("Indexer FWD % Output", -0.1);
     public static final ConfigurableDouble INDEXER_REVERSE_OUTPUT = new ConfigurableDouble("Indexer reverse % Output", 0.0);
 
+    public static final ConfigurableDouble AIM_LEAD_TIME = new ConfigurableDouble("Aim lead time", 0);
 
     // Shoot mode tolerances
     public static final ConfigurableDouble ROBOT_MIN_HUB = new ConfigurableDouble("Shoot min dist M", 0);

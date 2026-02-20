@@ -39,9 +39,6 @@ public final class SwerveDriveConstants {
     public static       double PLAYBACK_ROTATION_SPEED = AUTO_MAX_ROT_SPEED;
     public static       double ROT_CORRECTION_SPEED = 10; // MIN_ROT_SPEED;
 
-    // TODO: Replace with a constant
-    public static final ConfigurableDouble AIM_LEAD_TIME = new ConfigurableDouble("Aim lead time", 0);
-
     public static final double CORRECTION_MIN = 10;
     public static final double CORRECTION_MAX = 50;
     

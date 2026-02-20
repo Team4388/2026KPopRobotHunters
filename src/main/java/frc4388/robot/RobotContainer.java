@@ -34,6 +34,7 @@ import frc4388.robot.subsystems.LED;
 import frc4388.robot.subsystems.intake.Intake;
 import frc4388.robot.subsystems.intake.Intake.IntakeMode;
 import frc4388.robot.subsystems.shooter.Shooter;
+import frc4388.robot.subsystems.shooter.ShooterConstants;
 import frc4388.robot.subsystems.swerve.SwerveDrive;
 import frc4388.robot.subsystems.vision.Vision;
 import frc4388.utility.DeferredBlock;
@@ -222,7 +223,9 @@ public class RobotContainer {
                 () -> {
                 m_robotSwerveDrive.driveFacingPosition(
                     getDeadbandedDriverController().getLeft(),
-                    FieldPositions.HUB_POSITION);
+                    FieldPositions.HUB_POSITION,
+                    ShooterConstants.AIM_LEAD_TIME.get()
+                    );
                 }, m_robotSwerveDrive)
             );
             // .onTrue(new InstantCommand(() -> {
