@@ -164,6 +164,19 @@ public class RobotContainer {
         
         new JoystickButton(getDeadbandedDriverController(), XboxController.BACK_BUTTON)
             .onTrue(new InstantCommand(()  -> m_robotSwerveDrive.deactivateLuigiMode()));
+
+        new Trigger(() -> getDeadbandedDriverController().getLeftTriggerAxis() >= 0.5)
+            .whileTrue(new RunCommand(
+                () -> {
+                    m_robotSwerveDrive.driveIntakeOrientation(
+                        getDeadbandedDriverController().getLeft(),
+                        getDeadbandedDriverController().getRight()
+                        
+                    );
+                }, m_robotSwerveDrive))
+            .onFalse(new InstantCommand(() -> {
+                m_robotSwerveDrive.softStop();
+            }));
     }
 
     /**
