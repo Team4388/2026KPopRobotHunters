@@ -36,7 +36,7 @@ public class LED extends SubsystemBase implements Queryable {
     m_pwm.setPeriodMultiplier(PWM.PeriodMultiplier.k1X);
     m_pwm.setSpeed(0.0);
     m_pwm.setZeroLatch();
-
+    update();
   }
 
   private LEDPatterns mode = LEDConstants.DEFAULT_PATTERN;

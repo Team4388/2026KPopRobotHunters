@@ -9,6 +9,7 @@ package frc4388.robot;
 
 import java.io.File;
 
+import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.trajectory.PathPlannerTrajectory;
 
@@ -25,6 +26,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc4388.robot.commands.MoveForTimeCommand;
@@ -91,6 +93,20 @@ public class RobotContainer {
     private SendableChooser<String> autoChooser;
     private Command autoCommand;
 
+
+    private Command RobotIntakeDown = new SequentialCommandGroup(
+        new InstantCommand(() -> m_robotIntake.setMode(IntakeMode.Extended))
+    );
+    
+    private Command RobotShoot = new SequentialCommandGroup(
+        new InstantCommand(() -> m_robotShooter.setShooterReady()),
+        new InstantCommand(()->m_robotIntake.setMode(IntakeMode.Idle)),
+        new WaitCommand(5),
+        new InstantCommand(()->m_robotShooter.setShooterShoot()),
+        new WaitCommand(10),
+        new InstantCommand(()->m_robotShooter.setShooterNOTShoot())
+    );
+
     // private Command RobotShoot = new SequentialCommandGroup(
     //     new InstantCommand(() -> System.out.println(m_robotLED.getMode())),
     //     new InstantCommand(() -> m_robotLED.setMode(LEDPatterns.PARTY_TWINKLES), m_robotLED),
@@ -125,6 +141,9 @@ public class RobotContainer {
             m_robotIntake.io.updateGains();
             m_robotShooter.io.updateGains();
         }, true);
+
+        NamedCommands.registerCommand("Robot Shoot", RobotShoot);
+        NamedCommands.registerCommand("Robot Intake Down", RobotIntakeDown);
 
 
         DriverStation.silenceJoystickConnectionWarning(true);

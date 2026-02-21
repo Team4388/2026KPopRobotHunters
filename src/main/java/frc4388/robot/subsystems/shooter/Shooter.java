@@ -158,7 +158,10 @@ public class Shooter extends SubsystemBase {
                 ShooterMode.Ready
             );
 
-        } 
+        } else {
+            m_robotLED.setMode(Constants.LEDConstants.DEFAULT_PATTERN);
+
+        }
         
         
 
