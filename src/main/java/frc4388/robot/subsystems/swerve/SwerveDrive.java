@@ -14,6 +14,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import com.pathplanner.lib.trajectory.PathPlannerTrajectory;
 import com.pathplanner.lib.util.PathPlannerLogging;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -21,6 +22,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc4388.robot.constants.Constants.AutoConstants;
 import frc4388.robot.subsystems.vision.Vision;
@@ -50,7 +52,8 @@ public class SwerveDrive extends SubsystemBase implements Queryable {
 
     public double lastOdomSpeed;
 
-    public Pose2d initalPose2d = new Pose2d(); // Mira aqui
+    public Pose2d initalPose2d = new Pose2d();
+    
 
 
     public double rotTarget = 0.0;
@@ -136,7 +139,11 @@ public class SwerveDrive extends SubsystemBase implements Queryable {
     public void setOdoPose(Pose2d pose) {
         if (pose == null) return;
         initalPose2d = pose;
-        io.resetPose(pose);
+        io.resetPose(initalPose2d);
+    }
+
+    public void setInitalPose(Pose2d startingAutoPose){
+        initalPose2d = startingAutoPose;
     }
     // MIRA public void setOdoPose(Pose2d pose) {
     //     if (pose == null) return;

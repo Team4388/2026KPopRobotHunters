@@ -10,7 +10,9 @@ package frc4388.robot;
 import java.io.File;
 
 import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.trajectory.PathPlannerTrajectory;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -353,16 +355,21 @@ public class RobotContainer {
 
         autoChooser.onChange((filename) -> {
             autoChooserUpdated = true;
-            if (filename.equals("Taxi")) {
-                autoCommand = new SequentialCommandGroup(
-                    new MoveForTimeCommand(m_robotSwerveDrive, 
-                        new Translation2d(0, -1), 
-                        new Translation2d(), 1000, true
-                ), new InstantCommand(()-> {m_robotSwerveDrive.softStop();} , m_robotSwerveDrive));
-            } else {
+            // if (filename.equals("Taxi")) {
+            //     autoCommand = new SequentialCommandGroup(
+            //         new MoveForTimeCommand(m_robotSwerveDrive, 
+            //             new Translation2d(0, -1), 
+            //             new Translation2d(), 1000, true
+            //     ), new InstantCommand(()-> {m_robotSwerveDrive.softStop();} , m_robotSwerveDrive));
+            // } else {
                 autoCommand = new PathPlannerAuto(filename);
-            }
+            // }
             System.out.println("Robot Auto Changed " + filename);
+
+            //----
+            PathPlannerAuto auto = new PathPlannerAuto(filename);
+            m_robotSwerveDrive.setInitalPose(auto.getStartingPose());
+            //-----
         });
         SmartDashboard.putData(autoChooser);
 
