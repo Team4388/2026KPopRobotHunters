@@ -23,13 +23,11 @@ public class Vision extends SubsystemBase implements Queryable{
     
     public Pose2d lastVisionPose = new Pose2d();
     public Pose2d lastPhysOdomPose = new Pose2d();
-    public LED m_robotLED;
 
     public Vision(VisionIO... devices) {
         FaultReporter.register(this);
         io = devices;
         state = new VisionStateAutoLogged[io.length];
-        m_robotLED = new LED();
         for(int i = 0; i < io.length; i++) {
             state[i] = new VisionStateAutoLogged();
         }
@@ -43,9 +41,9 @@ public class Vision extends SubsystemBase implements Queryable{
         }
         Logger.recordOutput("Vision/isTagDectected", isTag());
         
-        if (isTag()){
-            m_robotLED.setMode(LEDPatterns.SOLID_GREEN_DARK);
-        }
+        // if (isTag()){
+        //     m_robotLED.setMode(LEDPatterns.SOLID_GREEN_DARK);
+        // }
     }
 
     public List<PoseObservation> getPosesToAdd(){

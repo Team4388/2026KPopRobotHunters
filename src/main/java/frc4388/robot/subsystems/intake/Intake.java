@@ -63,30 +63,31 @@ public class Intake extends SubsystemBase {
 
 
         Logger.processInputs("Intake", state);
+        Logger.recordOutput("Intake/IntakeState", this.mode);
 
         io.updateInputs(state);
 
-        switch (mode) {
-            case Extended:
-                io.setArmAngle(state, Rotations.of(IntakeConstants.ARM_LIMIT_EXTENDED.get()));
-                io.setRollerOutput(state, IntakeConstants.ROLLER_PERCENT_OUTPUT.get());
-                break;
-            case Retracted:
-                io.setArmAngle(state, Rotations.of(IntakeConstants.ARM_LIMIT_RETRACTED.get()));
-                io.setRollerOutput(state, 0);
-                break;
-            case Extending:
-                io.armOutput(IntakeConstants.ARM_EXTEND_PERCENT_OUTPUT.get());
-                io.setRollerOutput(state, IntakeConstants.ROLLER_PERCENT_OUTPUT.get());
-                break;
-            case Retracting:
-                io.armOutput(IntakeConstants.ARM_RETRACT_PERCENT_OUTPUT.get());
-                io.setRollerOutput(state, 0);
-                break;
-            case Idle:
-                io.stopArm();
-                break;
-        }
+        // switch (mode) {
+        //     case Extended:
+        //         io.setArmAngle(state, Rotations.of(IntakeConstants.ARM_LIMIT_EXTENDED.get()));
+        //         io.setRollerOutput(state, IntakeConstants.ROLLER_PERCENT_OUTPUT.get());
+        //         break;
+        //     case Retracted:
+        //         io.setArmAngle(state, Rotations.of(IntakeConstants.ARM_LIMIT_RETRACTED.get()));
+        //         io.setRollerOutput(state, 0);
+        //         break;
+        //     case Extending:
+        //         io.armOutput(IntakeConstants.ARM_EXTEND_PERCENT_OUTPUT.get());
+        //         io.setRollerOutput(state, IntakeConstants.ROLLER_PERCENT_OUTPUT.get());
+        //         break;
+        //     case Retracting:
+        //         io.armOutput(IntakeConstants.ARM_RETRACT_PERCENT_OUTPUT.get());
+        //         io.setRollerOutput(state, 0);
+        //         break;
+        //     case Idle:
+        //         io.stopArm();
+        //         break;
+        // }
         // if (state.retractedLimit){
         //     this.mode = IntakeMode.Retracted;
         // }

@@ -63,7 +63,7 @@ public class RobotContainer {
     /* Subsystems */
     public final LED m_robotLED = new LED(Constants.LEDConstants.LED_SPARK_ID);
     //Testing of Colors
-    public final Vision m_vision = new Vision(m_robotMap.rightCamera);
+    public final Vision m_vision = new Vision(m_robotMap.rightCamera, m_robotMap.leftCamera);
     public final SwerveDrive m_robotSwerveDrive = new SwerveDrive(m_robotMap.swerveDrivetrain, m_vision);
     public final Intake m_robotIntake = new Intake(m_robotMap.intakeIO);
     public final Shooter m_robotShooter = new Shooter(m_robotMap.shooterIO, m_robotSwerveDrive, m_robotIntake, m_robotLED);

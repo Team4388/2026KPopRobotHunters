@@ -45,7 +45,7 @@ public class RobotMap {
     // private Pigeon2 m_pigeon2 = new Pigeon2(SwerveDriveConstants.IDs.DRIVE_PIGEON.id);
     // public RobotGyro gyro = new RobotGyro(m_pigeon2);
 
-    // public final VisionIO leftCamera;
+    public final VisionIO leftCamera;
     public final VisionIO rightCamera;
 
     // public final LiDAR lidar = new 
@@ -68,13 +68,13 @@ public class RobotMap {
         switch (mode) {
             case REAL:
                 // Configure cameras
-                // PhotonCamera leftCameraReal = new PhotonCamera(VisionConstants.LEFT_CAMERA_NAME);
+                PhotonCamera leftCameraReal = new PhotonCamera(VisionConstants.LEFT_CAMERA_NAME);
                 PhotonCamera rightCameraReal = new PhotonCamera(VisionConstants.RIGHT_CAMERA_NAME);
 
-                // leftCamera =  new VisionReal(leftCameraReal, VisionConstants.RIGHT_CAMERA_POS);                ;
+                leftCamera =  new VisionReal(leftCameraReal, VisionConstants.LEFT_CAMERA_POS);                ;
                 rightCamera = new VisionReal(rightCameraReal, VisionConstants.RIGHT_CAMERA_POS);
 
-                // FaultPhotonCamera.addDevice(leftCameraReal, "Left Camera");
+                FaultPhotonCamera.addDevice(leftCameraReal, "Left Camera");
                 FaultPhotonCamera.addDevice(rightCameraReal , "Right Camera");
 
                 // // Configure LiDAR
@@ -136,7 +136,7 @@ public class RobotMap {
             // case SIM:
             //     break;
             default:
-                // leftCamera = new VisionIO() {};
+                leftCamera = new VisionIO() {};
                 rightCamera = new VisionIO() {};
                 swerveDrivetrain = new SwerveIO() {};
                 intakeIO = new IntakeIO() {};

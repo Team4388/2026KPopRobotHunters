@@ -19,9 +19,10 @@ public class    ShooterConstants {
     public static final double INDEXER_GEAR_RATIO = 1.;
 
     public static final ConfigurableDouble SHOOTER_ACTIVE_VELOCITY = new ConfigurableDouble("Shooter Active Velocity", -40);
+    public static final ConfigurableDouble SHOOTER_MAX_VELOCITY = new ConfigurableDouble("Shooter MAX Velocity", 60);
     public static final ConfigurableDouble SHOOTER_RESTING_VELOCITY = new ConfigurableDouble("Shooter Resting Velocity", 0.0);
     
-    public static final ConfigurableDouble INDEXER_FORWARD_OUTPUT = new ConfigurableDouble("Indexer FWD % Output", -0.1);
+    public static final ConfigurableDouble INDEXER_FORWARD_OUTPUT = new ConfigurableDouble("Indexer FWD % Output", -0.4);
     public static final ConfigurableDouble INDEXER_REVERSE_OUTPUT = new ConfigurableDouble("Indexer reverse % Output", 0.0);
 
     public static final ConfigurableDouble AIM_LEAD_TIME = new ConfigurableDouble("Aim lead time", 0);
@@ -39,17 +40,30 @@ public class    ShooterConstants {
 
     // 
     public static AngularVelocity getTargetShooterSpeed(double hubDistMeters) {
-        double speed = SHOOTER_ACTIVE_VELOCITY.get();
+        // Model derived from points
+        double speed = 
+            1.11576*hubDistMeters*hubDistMeters +
+            0.318464*hubDistMeters +
+            30.6293;
+        
+        double max = SHOOTER_MAX_VELOCITY.get();
 
-        return RotationsPerSecond.of(speed);
+        // Clamp speed to max
+        if(speed > max) {
+            speed = max;
+        } else if(speed < -max) {
+            speed = -max;
+        }
+        
+        return RotationsPerSecond.of(-speed);
     }
 
     // Motor Configuration
     public static Slot0Configs SHOOTER_PID = new Slot0Configs()
         .withKV(0.0)
-        .withKP(0.0)
+        .withKP(0.08)
         .withKI(0.1)
-        .withKD(0.08);
+        .withKD(0.0);
 
     
     
