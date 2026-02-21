@@ -45,7 +45,7 @@ public class LED extends SubsystemBase implements Queryable {
     // Don't stall the main thread every time the setMode function is called
     if(this.mode != pattern) {
       this.mode = pattern;
-      setTo5V();
+      update();
     }
   }
 

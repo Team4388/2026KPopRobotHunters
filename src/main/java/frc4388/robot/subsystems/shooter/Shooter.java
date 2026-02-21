@@ -61,6 +61,7 @@ public class Shooter extends SubsystemBase {
     }
 
     private ShooterMode mode = ShooterMode.NotReady;
+    private boolean shooterButtonReady = false;
 
     public void setShooterReady() {
         if(this.mode == ShooterMode.NotReady) {
@@ -70,6 +71,15 @@ public class Shooter extends SubsystemBase {
     
     public void setShooterNotReady() {
         this.mode = ShooterMode.NotReady;
+    }
+
+    public void setShooterShoot() {
+        shooterButtonReady = true;
+    }
+
+    
+    public void setShooterNOTShoot() {
+        shooterButtonReady = false;
     }
 
     @AutoLogOutput
@@ -100,11 +110,11 @@ public class Shooter extends SubsystemBase {
         if(this.mode != ShooterMode.NotReady) {
             // TODO: get if the robot is within the angle of the hub
 
-            boolean driverError = false;
+            boolean driverError = 
                 // XYSpeed <= ShooterConstants.ROBOT_SPEED_TOLERANCE.get() |
                 // AngSpeed <= ShooterConstants.ROBOT_ANG_SPEED_TOLERANCE.get() |
-                // distanceToHub <= ShooterConstants.ROBOT_MIN_HUB.get() | 
-                // distanceToHub >= ShooterConstants.ROBOT_MAX_HUB.get();
+                distanceToHub <= ShooterConstants.ROBOT_MIN_HUB.get() | 
+                distanceToHub >= ShooterConstants.ROBOT_MAX_HUB.get();
 
             double shooterSpeed = Math.abs(state.motor1Velocity.in(RotationsPerSecond) + state.motor2Velocity.in(RotationsPerSecond)) / 2;
             double shooterSpeedTarget = Math.abs(state.motor1TargetVelocity.in(RotationsPerSecond) + state.motor2TargetVelocity.in(RotationsPerSecond)) / 2;
@@ -148,16 +158,23 @@ public class Shooter extends SubsystemBase {
                 ShooterMode.Ready
             );
 
-        }
+        } 
+        
+        
 
 
         switch (mode) {
             case Shooting:
-                io.setShooterVelocity(state, RotationsPerSecond.of(ShooterConstants.SHOOTER_ACTIVE_VELOCITY.get()));
-                io.setIndexerOutput(state, ShooterConstants.INDEXER_FORWARD_OUTPUT.get());            
+                if(shooterButtonReady) {
+                    io.setShooterVelocity(state, ShooterConstants.getTargetShooterSpeed(distanceToHub));
+                    io.setIndexerOutput(state, ShooterConstants.INDEXER_FORWARD_OUTPUT.get());
+                } else {
+                    io.setShooterVelocity(state, ShooterConstants.getTargetShooterSpeed(distanceToHub));
+                    io.setIndexerOutput(state, ShooterConstants.INDEXER_REVERSE_OUTPUT.get());
+                }
                 break;
             case Ready:
-                io.setShooterVelocity(state, RotationsPerSecond.of(ShooterConstants.SHOOTER_ACTIVE_VELOCITY.get()));
+                io.setShooterVelocity(state, ShooterConstants.getTargetShooterSpeed(distanceToHub));
                 io.setIndexerOutput(state, ShooterConstants.INDEXER_REVERSE_OUTPUT.get());
                 break;
             case NotReady:

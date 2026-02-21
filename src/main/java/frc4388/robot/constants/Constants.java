@@ -78,10 +78,10 @@ public final class Constants {
         public static final String RIGHT_CAMERA_NAME = "CAMERA_RIGHT";
 
         public static final Transform3d LEFT_CAMERA_POS = new Transform3d(
-            new Translation3d(Units.inchesToMeters(-13-9.134-1.5), -Units.inchesToMeters(10.75), Units.inchesToMeters(9.5)
+            new Translation3d(Units.inchesToMeters(-13-9.134), -Units.inchesToMeters(10.75), Units.inchesToMeters(9.5)
             ), new Rotation3d(0,25.*(Math.PI/180.),Math.PI));
         public static final Transform3d RIGHT_CAMERA_POS = new Transform3d(
-            new Translation3d(Units.inchesToMeters(-13-9.134-1.5), Units.inchesToMeters(10.75), Units.inchesToMeters(9.5)), 
+            new Translation3d(Units.inchesToMeters(-13-9.134), Units.inchesToMeters(10.75), Units.inchesToMeters(9.5)), 
             new Rotation3d(0,25.*(Math.PI/180.),Math.PI)
         );
         
@@ -99,7 +99,7 @@ public final class Constants {
     public static final class LEDConstants {
         public static final int LED_SPARK_ID = 9;
 
-        public static final LEDPatterns DEFAULT_PATTERN = LEDPatterns.SOLID_RED_ORANGE;
+        public static final LEDPatterns DEFAULT_PATTERN = LEDPatterns.FOREST_TWINKLES;
 
         // LED color for when the intake is out
         public static final LEDPatterns INTAKE_OUT = LEDPatterns.SOLID_RED;

@@ -83,6 +83,7 @@ public class IntakeReal implements IntakeIO {
                 .withPosition(motorAngle)
                 .withLimitReverseMotion(!m_armLimitSwitch.get())
             );
+
     }
 
     @Override

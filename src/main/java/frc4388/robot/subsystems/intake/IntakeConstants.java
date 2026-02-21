@@ -33,7 +33,7 @@ public class IntakeConstants {
     // public static final Angle ARM_LIMIT_LOWER = Degrees.of(90);
     // public static final Angle ARM_LIMIT_UPPER = Degrees.of(-90);
 
-    public static final ConfigurableDouble ARM_LIMIT_RETRACTED = new ConfigurableDouble("Arm angle retracted", 0);
+    public static final ConfigurableDouble ARM_LIMIT_RETRACTED = new ConfigurableDouble("Arm angle retracted", 0.1);
     public static final ConfigurableDouble ARM_LIMIT_EXTENDED = new ConfigurableDouble("Arm angle extended", 0.3);
     public static final ConfigurableDouble ARM_EXTEND_PERCENT_OUTPUT = new ConfigurableDouble("Arm extend % output", 0.2);
     public static final ConfigurableDouble ARM_RETRACT_PERCENT_OUTPUT = new ConfigurableDouble("Arm retract % output", -0.4);
@@ -45,13 +45,13 @@ public class IntakeConstants {
 
 
     public static final Slot0Configs ARM_PID = new Slot0Configs()
-        .withKP(0.2)
+        .withKP(0.1)
         .withKI(0.0)
         .withKD(0.0);
 
     
 
-    public static ConfigurableDouble arm_kP = new ConfigurableDouble("ARM KP", 0.1);
+    public static ConfigurableDouble arm_kP = new ConfigurableDouble("ARM KP", 0.05);
     public static ConfigurableDouble arm_kI = new ConfigurableDouble("ARM KI", 0);
     public static ConfigurableDouble arm_kD = new ConfigurableDouble("ARM KD", 0);
     

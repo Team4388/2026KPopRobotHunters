@@ -50,7 +50,7 @@ public class SwerveDrive extends SubsystemBase implements Queryable {
 
     public double lastOdomSpeed;
 
-    public Pose2d initalPose2d = new Pose2d();
+    public Pose2d initalPose2d = new Pose2d(); // Mira aqui
 
 
     public double rotTarget = 0.0;
@@ -330,7 +330,7 @@ public class SwerveDrive extends SubsystemBase implements Queryable {
 
             Rotation2d heading = new Rotation2d(rightStick.getX(), rightStick.getY());//.r otateBy(Rotation2d.fromDegrees(90));
 
-            heading = heading.rotateBy(Rotation2d.fromDegrees(90));
+            heading = heading.rotateBy(Rotation2d.fromDegrees(-90));
             rotTarget = heading.getDegrees();
 
             driveFieldAngle(leftStick, heading);

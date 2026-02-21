@@ -119,6 +119,9 @@ public class RobotContainer {
         DeferredBlock.addBlock(() -> {
             TimesNegativeOne.update();
             FieldPositions.update();
+
+            m_robotIntake.io.updateGains();
+            m_robotShooter.io.updateGains();
         }, true);
 
 
@@ -269,7 +272,16 @@ public class RobotContainer {
         new JoystickButton(getDeadbandedOperatorController(), XboxController.LEFT_BUMPER_BUTTON)
             .onTrue(new InstantCommand(() -> {
                 m_robotShooter.setShooterReady();
+                m_robotIntake.setMode(IntakeMode.Idle);
             }));
+            
+        new JoystickButton(getDeadbandedOperatorController(), XboxController.A_BUTTON)
+            .onTrue(new InstantCommand(() -> {
+                m_robotShooter.setShooterShoot();
+            })).onFalse(new InstantCommand(() -> {
+                m_robotShooter.setShooterNOTShoot();
+            }));
+    
 
         new JoystickButton(getDeadbandedOperatorController(), XboxController.Y_BUTTON)
             .onTrue(new InstantCommand(() -> {
