@@ -251,6 +251,31 @@ public class SwerveDrive extends SubsystemBase implements Queryable {
         io.setControl(ctrl);
     }
 
+    public void driveIntakeOrientation(Translation2d leftStick, Translation2d rightStick){
+        // if (invert){
+        //     Translation2d stick = new Translation2d(-leftStick.getX(), -leftStick.getY());
+        //     driveFieldAngle(stick, heading);
+
+        // } else{
+        //     driveFieldAngle(leftStick, heading);
+        // }
+        double speed = rightStick.getNorm();
+
+        if(speed < 0.3) {
+            driveWithInput(leftStick, new Translation2d(), true);
+        } else {
+
+
+
+            Rotation2d heading = new Rotation2d(rightStick.getX(), rightStick.getY());//.r otateBy(Rotation2d.fromDegrees(90));
+
+            heading = heading.rotateBy(Rotation2d.fromDegrees(90));
+            rotTarget = heading.getDegrees();
+
+            driveFieldAngle(leftStick, heading);
+        }
+    }
+
     public void driveFieldAngle(Translation2d leftStick, Rotation2d heading) {
         if (leftStick.getNorm() < 0.05) // if no imput and the swerve drive is still going:
             stopModules(); // stop the swerve
