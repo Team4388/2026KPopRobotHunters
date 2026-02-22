@@ -179,43 +179,13 @@ public class RobotContainer {
         new JoystickButton(getDeadbandedDriverController(), XboxController.A_BUTTON)
             .onTrue(new InstantCommand(() -> m_robotSwerveDrive.resetGyro()));
 
-            
-        // new JoystickButton(getDeadbandedDriverController(), XboxController.X_BUTTON)
-        //     .onTrue(new RotTo45(m_robotSwerveDrive));
-
-        // new Trigger(() -> getDeadbandedDriverController().getRightTriggerAxis() >= 0.8 && !operatorManualMode)
-        //     .onTrue(RobotShoot)
-        //     .onFalse(new InstantCommand(() -> m_robotShooter.setMode(Shooter.ShooterMode.Resting), m_robotShooter));
-
-        // new Trigger(() -> getDeadbandedDriverController().getLeftTriggerAxis() >= 0.8 && !operatorManualMode)
-        //     .onTrue(RobotIntake)
-        //     .onFalse(new InstantCommand(() -> m_robotIntake.setMode(Intake.IntakeMode.Up), m_robotShooter));
-            
-        // new JoystickButton(getDeadbandedDriverController(), XboxController.B_BUTTON)
-        //     .onTrue(new InstantCommand(() -> {m_robotSwerveDrive.softStop();}, m_robotSwerveDrive)); 
-
         new JoystickButton(getDeadbandedDriverController(), XboxController.RIGHT_BUMPER_BUTTON)
             .onTrue(new InstantCommand(()  -> m_robotSwerveDrive.shiftUp()));
         
         new JoystickButton(getDeadbandedDriverController(), XboxController.LEFT_BUMPER_BUTTON)
             .onTrue(new InstantCommand(() -> m_robotSwerveDrive.shiftDown()));
 
-       
-        
-        // new JoystickButton(getDeadbandedDriverController(), XboxController.Y_BUTTON)
-        //     .onTrue(new InstantCommand(() -> {m_robotShooter.setMode(ShooterMode.Active);}, m_robotShooter)); 
-        // new JoystickButton(getDeadbandedDriverController(), XboxController.B_BUTTON)
-        //     .onTrue(new InstantCommand(() -> {m_robotShooter.setMode(ShooterMode.Inactive);}, m_robotShooter)); 
-            
-        // new JoystickButton(getDeadbandedDriverController(), XboxController.X_BUTTON)
-        //     .onTrue(new InstantCommand(() -> {;}, m_robotIntake)); 
-        // new JoystickButton(getDeadbandedDriverController(), XboxController.A_BUTTON)
-        //     .onTrue(new InstantCommand(() -> {m_robotIntake.setMode(IntakeMode.Retracted);}, m_robotIntake)); 
-
-
-
-        // new JoystickButton(getDeadbandedDriverController(), XboxController.START_BUTTON)
-        //     .onTrue(new InstantCommand(()  -> m_robotSwerveDrive.activateLuigiMode()));
+    
         
         new JoystickButton(getDeadbandedDriverController(), XboxController.BACK_BUTTON)
             .onTrue(new InstantCommand(()  -> {
@@ -237,9 +207,6 @@ public class RobotContainer {
             .onFalse(new InstantCommand(() -> {
                 m_robotSwerveDrive.softStop();
             }));
-            // .onTrue(new InstantCommand(() -> {
-            //     m_robotIntake.setMode(IntakeMode.Extended);
-            // }))
 
         // IF the driver is holding the aim button, aim the robot towards the hub and shooter ready
         new Trigger(() -> getDeadbandedDriverController().getRightTriggerAxis() >= 0.5)
@@ -252,15 +219,6 @@ public class RobotContainer {
                     );
                 }, m_robotSwerveDrive)
             );
-            // .onTrue(new InstantCommand(() -> {
-            //     // When Right trigger is pressed, 
-            //     m_robotShooter.setShooterReady();
-            // }))
-            // .onFalse(new InstantCommand(() -> {
-            //     m_robotIntake.setMode(IntakeMode.Retracted);
-            //     m_robotShooter.setShooterNotReady();
-            // }));
-
 
         // D-PAD fine alignment
         new Trigger(() -> getDeadbandedDriverController().getPOV() != -1)
@@ -302,7 +260,14 @@ public class RobotContainer {
             })).onFalse(new InstantCommand(() -> {
                 m_robotShooter.setShooterNOTShoot();
             }));
-    
+
+        new JoystickButton(getDeadbandedOperatorController(), XboxController.X_BUTTON)
+            .onTrue(new InstantCommand(() -> {
+                m_robotIntake.setMode(IntakeMode.Extending);
+            }))
+            .onFalse(new InstantCommand(() -> {
+                m_robotIntake.setMode(IntakeMode.Idle);
+            }));
 
         new JoystickButton(getDeadbandedOperatorController(), XboxController.Y_BUTTON)
             .onTrue(new InstantCommand(() -> {
@@ -312,13 +277,10 @@ public class RobotContainer {
                 m_robotIntake.setMode(IntakeMode.Idle);
             }));
 
-        new JoystickButton(getDeadbandedOperatorController(), XboxController.X_BUTTON)
-            .onTrue(new InstantCommand(() -> {
-                m_robotIntake.setMode(IntakeMode.Extending);
-            }))
-            .onFalse(new InstantCommand(() -> {
-                m_robotIntake.setMode(IntakeMode.Idle);
-            }));
+        // new JoystickButton(getDeadbandedOperatorController(), XboxController.B_BUTTON)
+        //     .onTrue(new InstantCommand(() -> {
+        //         m_robotClimber.toggleDeployed();
+        //     }));
 
 
    }

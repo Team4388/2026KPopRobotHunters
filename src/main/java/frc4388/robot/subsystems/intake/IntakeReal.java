@@ -19,7 +19,7 @@ public class IntakeReal implements IntakeIO {
     DigitalInput m_armLimitSwitch;
 
     PositionDutyCycle armPosition = new PositionDutyCycle(0);
-    // VelocityDutyCycle rollerVelocity = new VelocityDutyCycle(0);
+    DutyCycleOut armPercentOutput = new DutyCycleOut(0);
 
     public IntakeReal(
         DigitalInput armLimitSwitch,
@@ -94,9 +94,8 @@ public class IntakeReal implements IntakeIO {
 
     @Override
     public void armOutput(double percentOutput){
-        var d = new DutyCycleOut(0);
         m_armMotor.setControl(
-            d.withOutput(percentOutput)
+            armPercentOutput.withOutput(percentOutput)
                 .withLimitReverseMotion(!m_armLimitSwitch.get())
             );
     }

@@ -1,50 +1,58 @@
 package frc4388.robot.subsystems.climber;
 
+import static edu.wpi.first.units.Units.Inches;
+
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Climber extends SubsystemBase {
-    ClimberIO io;
+    public ClimberIO io;
     ClimberStateAutoLogged state = new ClimberStateAutoLogged();
-
-    // Supplier<Pose2d> m_swervePoseSupplier;
 
     public Climber(
         ClimberIO io
-        // Supplier<Pose2d> swervePoseSupplier
     ) {
         this.io = io;
-        // this.m_swervePoseSupplier = swervePoseSupplier;
     }
 
-    // public enum ClimberMode {
-    //     Up,
-    //     Down,
-    // }
+    ClimberMode mode = ClimberMode.Retracting;
 
-    // public void setMode(IntakeMode mode) {
-    //     switch (mode) {
-    //         case Up:
-    //             io.setArmAngle(state, IntakeConstants.ARM_LIMIT_UPPER);
-    //             io.setRollerVelocity(state, IntakeConstants.ROLLER_STOP);
-    //             break;
-    //         case Down:
-    //             io.setArmAngle(state, IntakeConstants.ARM_LIMIT_LOWER);
-    //             io.setRollerVelocity(state, IntakeConstants.ROLLER_MAX_VELOCITY);
-    //             break;
-    //     }
-    // }
+    public enum ClimberMode {
+        Extended,
+        Retracting,
+    }
 
+    public void deploy() {
+        mode = ClimberMode.Extended;
+    }
 
+    public void retract() {
+        mode = ClimberMode.Retracting;
+    }
+
+    public void toggleDeployed() {
+        switch (mode) {
+            case Extended:
+                mode = ClimberMode.Retracting;
+                break;
+            case Retracting:
+                mode = ClimberMode.Extended;
+                break;
+        }
+    }    
 
     @Override
     public void periodic() {
         
-        
-
-        // FaultReporter.register(this); // TODO Implement fault reporter
-
+        switch (mode) {
+            case Extended:
+                io.setClimberDistance(state, Inches.of(ClimberConstants.CLIMBER_RETRACT_SPEED.get()));
+                break;
+            case Retracting:
+                io.setPercentOutput(state, ClimberConstants.CLIMBER_RETRACT_SPEED.get());
+                break;
+        }
 
         Logger.processInputs("Climber", state);
 

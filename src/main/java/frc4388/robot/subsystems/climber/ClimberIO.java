@@ -14,23 +14,13 @@ public interface ClimberIO {
         Distance climberDistance = Inches.of(0);
         Distance climberTargetDistance = Inches.of(0);
         Current climberMotorCurrent = Amps.of(0);
-
-        // Distance shooterPitch = Rotations.of(0);
-        // Angle shooterTargetPitch = Rotations.of(0);
-        // Current pitchMotorCurrent = Amps.of(0);
-
-        // AngularVelocity rollerVelocity = RotationsPerSecond.of(0);
-        // AngularVelocity rollerTargetVelocity = RotationsPerSecond.of(0);
-        // Current rollerMotorCurrent = Amps.of(0);
-
-        // LinearVelocity feederVelocity = InchesPerSecond.of(0);
-        // LinearVelocity feederTargetVelocity = InchesPerSecond.of(0);
-        // Current feederMotorCurrent = Amps.of(0);
+        boolean climberLimit = false;
     }
 
-    // public default void setShooterAngle(ShooterState state, Angle angle) {}
-    // public default void setShooterPitch(ShooterState state, Angle angle) {}
     public default void setClimberDistance(ClimberState state, Distance distance) {}
+    public default void setPercentOutput(ClimberState state, double percent) {}
 
     public default void updateInputs(ClimberState state) {}
+
+    public default void updateGains() {}
 }

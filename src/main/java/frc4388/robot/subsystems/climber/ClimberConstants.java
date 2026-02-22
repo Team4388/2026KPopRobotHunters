@@ -8,36 +8,32 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.units.measure.Distance;
+import frc4388.utility.configurable.ConfigurableDouble;
+import frc4388.utility.status.CanDevice;
 
 public class ClimberConstants {
     // Motor conversions
-
-    public static final double CLIMBER_MOTOR_GEAR_RATIO = 1.;
+    public static final double CLIMBER_MOTOR_GEAR_RATIO = 1.; // dimentionless
+    public static final double CLIMBER_SPOOL_DIAMETER = 1.; // in
+    public static final double CLIMBER_REVS_PER_INCH = CLIMBER_MOTOR_GEAR_RATIO / (Math.PI * CLIMBER_SPOOL_DIAMETER); // in
 
     //IDs
+    public static final CanDevice CLIMBER_MOTOR = new CanDevice("Climber Motor", 30);
+    public static final int CLIMBER_LIMIT_SWITCH_CHANNEL = 8;
 
-
-    // public static final CanDevice CLIMBER_ID   = new CanDevice("SHOOTER 1", 20);
-        
-    // Limits
-
-    // 0 is the forward angle on the robot.
-    // negative is left, positive is right
-    // public static final Angle L1 = Degrees.of(-180);
-    // public static final Angle ARM_LIMIT_UPPER = Degrees.of(180);
+    // Constants
     public static final Distance CLIMBER_LIMIT_LOWER = Inches.of(0);
-
-    public static final Distance CLIMBER_LIMIT_UPPER = Inches.of(0);
-
+    public static final ConfigurableDouble CLIMBER_LIMIT_UPPER = new ConfigurableDouble("Climber Height in", 6.);
+    public static final ConfigurableDouble CLIMBER_RETRACT_SPEED = new ConfigurableDouble("Climber retract %", 0.3);
 
     public static final Slot0Configs CLIMBER_PID = new Slot0Configs()
-        .withKP(2.0)
+        .withKP(0.3)
         .withKI(0.0)
-        .withKD(10.0);
+        .withKD(0.0);
 
-    // 0 is paralell to the ground, 90 is directly up
-    // public static final Angle PITCH_LIMIT_UPPER = Degrees.of(90);
-    // public static final Angle PITCH_LIMIT_LOWER = Degrees.of(0);
+    public static final ConfigurableDouble CLIMBER_kP = new ConfigurableDouble("Climber kP", 0.3);
+    public static final ConfigurableDouble CLIMBER_kI = new ConfigurableDouble("Climber kI", 0.);
+    public static final ConfigurableDouble CLIMBER_kD = new ConfigurableDouble("Climber kD", 0.);
     
     // Motor configs
     public static final TalonFXConfiguration CLIMBER_MOTOR_CONFIG = new TalonFXConfiguration()
@@ -51,17 +47,3 @@ public class ClimberConstants {
                     .withDutyCycleNeutralDeadband(0.04) // TODO: Figure out what this means
     );
 }
-
-    // public static final class IDs {
-    //     public static final CanDevice FLYWHEEK_CAN_DEVICE = new CanDevice("Flywheel", 22);
-    // }
-    // public static final TalonFXConfiguration ARM_MOTOR_CONFIG = new TalonFXConfiguration()
-    //     .withCurrentLimits(
-    //         new CurrentLimitsConfigs()
-    //             .withStatorCurrentLimit(40) // TODO: tune???
-    //             .withStatorCurrentLimitEnable(true) // TODO: Figure out what this means
-    //         ).withMotorOutput(
-    //             new MotorOutputConfigs()
-    //                 .withNeutralMode(NeutralModeValue.Brake) // Brake so it stop
-    //                 .withDutyCycleNeutralDeadband(0.04) // TODO: Figure out what this means
-    // );
