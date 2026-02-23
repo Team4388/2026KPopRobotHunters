@@ -243,6 +243,9 @@ public class RobotContainer {
                 m_robotIntake.setMode(IntakeMode.Retracted);
             }));
 
+
+
+
         new Trigger(() -> getDeadbandedOperatorController().getLeftTriggerAxis() >= 0.5)
             .onTrue(new InstantCommand(() -> {
                 m_robotShooter.setShooterNotReady();
@@ -253,7 +256,16 @@ public class RobotContainer {
                 m_robotShooter.setShooterReady();
                 m_robotIntake.setMode(IntakeMode.Idle);
             }));
+
+        new JoystickButton(getDeadbandedOperatorController(), XboxController.BACK_BUTTON)
+            .onTrue(new InstantCommand(() -> {
+                m_robotShooter.setShooterReadyFeeder();
+            }));
+
             
+
+
+
         new JoystickButton(getDeadbandedOperatorController(), XboxController.A_BUTTON)
             .onTrue(new InstantCommand(() -> {
                 m_robotShooter.setShooterShoot();

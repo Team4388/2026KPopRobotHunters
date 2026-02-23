@@ -101,7 +101,7 @@ public final class Constants {
 
         public static final LEDPatterns DEFAULT_PATTERN = LEDPatterns.FOREST_RAINBOW;
 
-        // // LED color for when the intake is out
+        // // // LED color for when the intake is out
         // public static final LEDPatterns INTAKE_OUT = LEDPatterns.SOLID_RED;
         // // LED color for when the intake is out, but the driver conditions are bad
         // public static final LEDPatterns INTAKE_OUT_BADPHYS = LEDPatterns.RED_STROBE;
@@ -116,6 +116,10 @@ public final class Constants {
         public static final LEDPatterns OPREADY = LEDPatterns.SOLID_WHITE;
         // Operator ready to shoot, but the driver conditions are bad
         public static final LEDPatterns OPREADY_BADPHYS = LEDPatterns.WHITE_STROBE;
+
+
+        public static final LEDPatterns OPREADY_FEED = LEDPatterns.SOLID_BLUE;
+        public static final LEDPatterns OPREADY_FEED_BADPHYS = LEDPatterns.BLUE_STROBE;
     }
 
     public static final class OIConstants {

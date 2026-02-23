@@ -1,5 +1,6 @@
 package frc4388.robot.subsystems.shooter;
 
+import static edu.wpi.first.units.Units.Rotation;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 
 import org.littletonrobotics.junction.AutoLogOutput;
@@ -53,6 +54,10 @@ public class Shooter extends SubsystemBase {
         Shooting,
         // Shooter is going to fire soon
         Ready,
+
+        ShootingFeeder,
+        ReadyFeeder,
+
         // Not ready to shoot
         NotReady,
     }
@@ -61,20 +66,22 @@ public class Shooter extends SubsystemBase {
     private boolean shooterButtonReady = false;
 
     public void setShooterReady() {
-        if(this.mode == ShooterMode.NotReady) {
-            this.mode = ShooterMode.Ready;
-        }
+        this.mode = ShooterMode.Ready;
+    }
+
+    public void setShooterReadyFeeder() {
+        this.mode = ShooterMode.ReadyFeeder;
     }
     
     public void setShooterNotReady() {
         this.mode = ShooterMode.NotReady;
     }
 
+
     public void setShooterShoot() {
         shooterButtonReady = true;
     }
 
-    
     public void setShooterNOTShoot() {
         shooterButtonReady = false;
     }
@@ -119,8 +126,8 @@ public class Shooter extends SubsystemBase {
             boolean badShooterVelocity = Math.abs(shooterSpeed - shooterSpeedTarget) > ShooterConstants.SHOOTER_SPEED_TOLERANCE.get();
         //     boolean intakeBad = m_Intake.getMode() == IntxakeMode.Extended;
 
-            
-            int bitmask = (driverError ? 1 : 0) + (badShooterVelocity ? 2 : 0);// + (intakeBad ? 4 : 0);
+
+            int bitmask = (driverError ? 1 : 0) + (badShooterVelocity ? 2 : 0) + (this.mode == ShooterMode.ReadyFeeder ? 4 : 0);
             switch (bitmask) {
                 case 0b000: // No Errors
                     m_robotLED.setMode(Constants.LEDConstants.OPREADY);
@@ -128,24 +135,23 @@ public class Shooter extends SubsystemBase {
                 case 0b001: // No op err, yes driver err
                     m_robotLED.setMode(Constants.LEDConstants.OPREADY_BADPHYS);
                     break;
-                case 0b010: // Bad flywheel, no driver err
+
+                case 0b010:
+                case 0b110: // Bad flywheel, no driver err
                     m_robotLED.setMode(Constants.LEDConstants.BAD_FLYWEEL);
                     break;
-                case 0b011: // Bad flywheel, yes driver err
+
+                case 0b011:
+                case 0b111: // Bad flywheel, yes driver err
                     m_robotLED.setMode(Constants.LEDConstants.BAD_FLYWEEL_BADPHYS);
                     break;
-                // case 0b100: // Bad intake, no driver err
-                //     m_robotLED.setMode(Constants.LEDConstants.INTAKE_OUT);
-                //     break;
-                // case 0b101: // Bad intake, yes driver err
-                //     m_robotLED.setMode(Constants.LEDConstants.INTAKE_OUT_BADPHYS);
-                //     break;
-                // case 0b110: // Bad intake and shooter (intake is more important), no driver err
-                //     m_robotLED.setMode(Constants.LEDConstants.INTAKE_OUT);
-                //     break;
-                // case 0b111: // Bad intake and shooter (intake is more important), yes driver err
-                //     m_robotLED.setMode(Constants.LEDConstants.INTAKE_OUT_BADPHYS);
-                //     break;
+
+                case 0b100:
+                    m_robotLED.setMode(Constants.LEDConstants.OPREADY_FEED);
+                    break;
+                case 0b101:
+                    m_robotLED.setMode(Constants.LEDConstants.OPREADY_FEED_BADPHYS);
+                    break;
             }
 
         //     // We set the shooter mode to ready if there are no errors
@@ -165,18 +171,35 @@ public class Shooter extends SubsystemBase {
 
         switch (mode) {
             case Shooting:
+                io.setShooterVelocity(state, ShooterConstants.getTargetShooterSpeed(distanceToHub));
+
                 if(shooterButtonReady) {
-                    io.setShooterVelocity(state, ShooterConstants.getTargetShooterSpeed(distanceToHub));
                     io.setIndexerOutput(state, ShooterConstants.INDEXER_FORWARD_OUTPUT.get());
                 } else {
-                    io.setShooterVelocity(state, ShooterConstants.getTargetShooterSpeed(distanceToHub));
                     io.setIndexerOutput(state, ShooterConstants.INDEXER_REVERSE_OUTPUT.get());
                 }
                 break;
+
             case Ready:
                 io.setShooterVelocity(state, ShooterConstants.getTargetShooterSpeed(distanceToHub));
                 io.setIndexerOutput(state, ShooterConstants.INDEXER_REVERSE_OUTPUT.get());
                 break;
+
+            case ShootingFeeder:
+                io.setShooterVelocity(state, RotationsPerSecond.of(ShooterConstants.SHOOTER_FEED_VELOCITY.get()));
+                
+                if(shooterButtonReady) {
+                    io.setIndexerOutput(state, ShooterConstants.INDEXER_FORWARD_OUTPUT.get());
+                } else {
+                    io.setIndexerOutput(state, ShooterConstants.INDEXER_REVERSE_OUTPUT.get());
+                }
+                break;
+
+            case ReadyFeeder:
+                io.setShooterVelocity(state, ShooterConstants.getTargetShooterSpeed(distanceToHub));
+                io.setIndexerOutput(state, ShooterConstants.INDEXER_REVERSE_OUTPUT.get());
+                break;
+
             case NotReady:
                 io.setShooterVelocity(state, RotationsPerSecond.of(ShooterConstants.SHOOTER_RESTING_VELOCITY.get()));
                 io.setIndexerOutput(state, ShooterConstants.INDEXER_REVERSE_OUTPUT.get());
