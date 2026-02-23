@@ -101,10 +101,10 @@ public final class Constants {
 
         public static final LEDPatterns DEFAULT_PATTERN = LEDPatterns.FOREST_RAINBOW;
 
-        // LED color for when the intake is out
-        public static final LEDPatterns INTAKE_OUT = LEDPatterns.SOLID_RED;
-        // LED color for when the intake is out, but the driver conditions are bad
-        public static final LEDPatterns INTAKE_OUT_BADPHYS = LEDPatterns.RED_STROBE;
+        // // LED color for when the intake is out
+        // public static final LEDPatterns INTAKE_OUT = LEDPatterns.SOLID_RED;
+        // // LED color for when the intake is out, but the driver conditions are bad
+        // public static final LEDPatterns INTAKE_OUT_BADPHYS = LEDPatterns.RED_STROBE;
 
         
         // LED color for when the flywheel speed isn't in tolarance

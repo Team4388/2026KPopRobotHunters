@@ -1,7 +1,6 @@
 package frc4388.robot.subsystems.intake;
 
 import static edu.wpi.first.units.Units.Rotations;
-import static edu.wpi.first.units.Units.RotationsPerSecond;
 import java.util.function.Supplier;
 
 import org.littletonrobotics.junction.Logger;

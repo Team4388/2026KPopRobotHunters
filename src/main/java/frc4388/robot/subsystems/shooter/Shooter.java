@@ -6,14 +6,11 @@ import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc4388.robot.constants.Constants;
 import frc4388.robot.subsystems.LED;
 import frc4388.robot.subsystems.intake.Intake;
-import frc4388.robot.subsystems.intake.Intake.IntakeMode;
 import frc4388.robot.subsystems.swerve.SwerveDrive;
 import frc4388.utility.compute.FieldPositions;
 
@@ -137,18 +134,18 @@ public class Shooter extends SubsystemBase {
                 case 0b011: // Bad flywheel, yes driver err
                     m_robotLED.setMode(Constants.LEDConstants.BAD_FLYWEEL_BADPHYS);
                     break;
-                case 0b100: // Bad intake, no driver err
-                    m_robotLED.setMode(Constants.LEDConstants.INTAKE_OUT);
-                    break;
-                case 0b101: // Bad intake, yes driver err
-                    m_robotLED.setMode(Constants.LEDConstants.INTAKE_OUT_BADPHYS);
-                    break;
-                case 0b110: // Bad intake and shooter (intake is more important), no driver err
-                    m_robotLED.setMode(Constants.LEDConstants.INTAKE_OUT);
-                    break;
-                case 0b111: // Bad intake and shooter (intake is more important), yes driver err
-                    m_robotLED.setMode(Constants.LEDConstants.INTAKE_OUT_BADPHYS);
-                    break;
+                // case 0b100: // Bad intake, no driver err
+                //     m_robotLED.setMode(Constants.LEDConstants.INTAKE_OUT);
+                //     break;
+                // case 0b101: // Bad intake, yes driver err
+                //     m_robotLED.setMode(Constants.LEDConstants.INTAKE_OUT_BADPHYS);
+                //     break;
+                // case 0b110: // Bad intake and shooter (intake is more important), no driver err
+                //     m_robotLED.setMode(Constants.LEDConstants.INTAKE_OUT);
+                //     break;
+                // case 0b111: // Bad intake and shooter (intake is more important), yes driver err
+                //     m_robotLED.setMode(Constants.LEDConstants.INTAKE_OUT_BADPHYS);
+                //     break;
             }
 
         //     // We set the shooter mode to ready if there are no errors
