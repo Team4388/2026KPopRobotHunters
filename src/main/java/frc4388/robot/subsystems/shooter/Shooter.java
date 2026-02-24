@@ -1,5 +1,6 @@
 package frc4388.robot.subsystems.shooter;
 
+import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Rotation;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 
@@ -7,8 +8,10 @@ import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc4388.robot.constants.Constants;
 import frc4388.robot.subsystems.LED;
@@ -59,24 +62,24 @@ public class Shooter extends SubsystemBase {
     private ShooterMode mode = ShooterMode.Idle;
     private boolean shooterButtonReady = false;
 
-    public void setShooterShooting() {
+    public void spinUpShooting() {
         this.mode = ShooterMode.Shooting;
     }
 
-    public void setShooterFeeding() {
+    public void spinUpFeeding() {
         this.mode = ShooterMode.Feeding;
     }
     
-    public void setShooterIdle() {
+    public void spinUpIdle() {
         this.mode = ShooterMode.Idle;
     }
 
 
-    public void setShooterShoot() {
+    public void allowShooting() {
         shooterButtonReady = true;
     }
 
-    public void setShooterNOTShoot() {
+    public void denyShooting() {
         shooterButtonReady = false;
     }
 
@@ -95,17 +98,29 @@ public class Shooter extends SubsystemBase {
         io.updateInputs(state);
 
 
-        ChassisSpeeds speed = m_SwerveDrive.chassisSpeeds;
-        double XYSpeed = Math.sqrt(Math.pow(speed.vxMetersPerSecond,2) + Math.pow(speed.vyMetersPerSecond,2));
-        double AngSpeed  = Math.abs(speed.omegaRadiansPerSecond * (180/Math.PI));
+        // Get robot positon and speeds
+        ChassisSpeeds chassisSpeeds = m_SwerveDrive.chassisSpeeds;
+        double XYSpeed = Math.sqrt(Math.pow(chassisSpeeds.vxMetersPerSecond,2) + Math.pow(chassisSpeeds.vyMetersPerSecond,2));
+        double AngSpeed  = Math.abs(chassisSpeeds.omegaRadiansPerSecond * (180/Math.PI));
 
         Pose2d robotPose2d = m_SwerveDrive.getPose2d();
-        //
-        double distanceToHub = (robotPose2d.getTranslation().minus(FieldPositions.HUB_POSITION).getNorm());
+
+
+        // Calculate aim lead
+        // Get the current speed of the robot
+        Translation2d robotSpeed = new Translation2d(
+            chassisSpeeds.vxMetersPerSecond, 
+            chassisSpeeds.vyMetersPerSecond
+        );
+
+        // Calculate a point to aim ahead of the actual position.
+        Translation2d fieldPosLead = robotSpeed.times(ShooterConstants.AIM_LEAD_TIME.get()).plus(robotPose2d.getTranslation());
+
+        // Get the robot's aim distance to hub
+        double distanceToHub = (fieldPosLead.minus(FieldPositions.HUB_POSITION).getNorm());
+
         //Center of hub to cameras in inches
         Logger.recordOutput("Hub Dist", distanceToHub);
-
-
 
         boolean driverError = 
             // XYSpeed <= ShooterConstants.ROBOT_SPEED_TOLERANCE.get() |
@@ -199,7 +214,13 @@ public class Shooter extends SubsystemBase {
 
                 break;
             case Idle:
-                io.setShooterVelocity(state, RotationsPerSecond.of(ShooterConstants.SHOOTER_RESTING_VELOCITY.get()));
+
+                io.setShooterCurrentLimitSpeed(
+                    state, 
+                    ShooterConstants.SHOOTER_IDLE_PERCENT_OUTPUT.get(), 
+                    Amps.of(ShooterConstants.SHOOTER_IDLE_MAX_CURRENT.get()), 
+                    RotationsPerSecond.of(ShooterConstants.INDEXER_REVERSE_OUTPUT.get())
+                );
                 io.setIndexerOutput(state, ShooterConstants.INDEXER_REVERSE_OUTPUT.get());
                 m_robotLED.setMode(Constants.LEDConstants.DEFAULT_PATTERN);
                 break;

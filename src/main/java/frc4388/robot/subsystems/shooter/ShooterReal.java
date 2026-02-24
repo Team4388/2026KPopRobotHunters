@@ -1,9 +1,13 @@
 package frc4388.robot.subsystems.shooter;
 
+import static edu.wpi.first.units.Units.Amps;
+import static edu.wpi.first.units.Units.RotationsPerSecond;
+
 import com.ctre.phoenix6.controls.VelocityDutyCycle;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.units.measure.Current;
 
 public class ShooterReal implements ShooterIO {
 
@@ -52,6 +56,31 @@ public class ShooterReal implements ShooterIO {
 
         m_shooter1Motor.setControl(shooter1Velocity.withVelocity(motorRps));
         m_shooter2Motor.setControl(shooter2Velocity.withVelocity(motorRps));
+    }
+
+    @Override
+    public void setShooterCurrentLimitSpeed(
+        ShooterState state, 
+        double percentOutput,
+        Current currentLimit,
+        AngularVelocity targetVelocity
+    ) {
+        state.motor1TargetVelocity = targetVelocity;
+        state.motor2TargetVelocity = targetVelocity;
+
+        double current = Math.abs(state.motor1Current.in(Amps)) + Math.abs(state.motor2Current.in(Amps));
+        double velocity = (Math.abs(state.motor1Velocity.in(RotationsPerSecond)) + Math.abs(state.motor2Velocity.in(RotationsPerSecond))) / 2;
+
+        if(
+            Math.abs(currentLimit.in(Amps)) > current &&
+            Math.abs(targetVelocity.in(RotationsPerSecond)) > velocity
+        ) {
+            m_shooter1Motor.set(percentOutput);
+            m_shooter2Motor.set(percentOutput);
+        } else {
+            m_shooter1Motor.set(0);
+            m_shooter2Motor.set(0);
+        }
     }
 
     @Override
