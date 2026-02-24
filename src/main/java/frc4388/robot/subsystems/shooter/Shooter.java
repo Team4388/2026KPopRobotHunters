@@ -1,5 +1,6 @@
 package frc4388.robot.subsystems.shooter;
 
+import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Rotation;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 
@@ -7,7 +8,10 @@ import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc4388.robot.constants.Constants;
 import frc4388.robot.subsystems.LED;
@@ -50,41 +54,35 @@ public class Shooter extends SubsystemBase {
 
     
     public enum ShooterMode {
-        // Shooter is actively shooting
         Shooting,
-        // Shooter is going to fire soon
-        Ready,
-
-        ShootingFeeder,
-        ReadyFeeder,
-
-        // Not ready to shoot
-        NotReady,
+        Feeding,
+        Idle
     }
 
-    private ShooterMode mode = ShooterMode.NotReady;
+    private ShooterMode mode = ShooterMode.Idle;
     private boolean shooterButtonReady = false;
 
-    public void setShooterReady() {
-        this.mode = ShooterMode.Ready;
+    public void spinUpShooting() {
+        this.mode = ShooterMode.Shooting;
     }
 
-    public void setShooterReadyFeeder() {
-        this.mode = ShooterMode.ReadyFeeder;
+    public void spinUpFeeding() {
+        this.mode = ShooterMode.Feeding;
     }
     
-    public void setShooterNotReady() {
-        this.mode = ShooterMode.NotReady;
+    public void spinUpIdle() {
+        this.mode = ShooterMode.Idle;
     }
 
 
-    public void setShooterShoot() {
+    public void allowShooting() {
         shooterButtonReady = true;
     }
 
-    public void setShooterNOTShoot() {
+    public void denyShooting() {
         shooterButtonReady = false;
     }
+
 
     @AutoLogOutput
     public ShooterMode getMode() {
@@ -100,125 +98,133 @@ public class Shooter extends SubsystemBase {
         io.updateInputs(state);
 
 
-        ChassisSpeeds speed = m_SwerveDrive.chassisSpeeds;
-        double XYSpeed = Math.sqrt(Math.pow(speed.vxMetersPerSecond,2) + Math.pow(speed.vyMetersPerSecond,2));
-        double AngSpeed  = Math.abs(speed.omegaRadiansPerSecond * (180/Math.PI));
+        // Get robot positon and speeds
+        ChassisSpeeds chassisSpeeds = m_SwerveDrive.chassisSpeeds;
+        double XYSpeed = Math.sqrt(Math.pow(chassisSpeeds.vxMetersPerSecond,2) + Math.pow(chassisSpeeds.vyMetersPerSecond,2));
+        double AngSpeed  = Math.abs(chassisSpeeds.omegaRadiansPerSecond * (180/Math.PI));
 
         Pose2d robotPose2d = m_SwerveDrive.getPose2d();
-        //
-        double distanceToHub = (robotPose2d.getTranslation().minus(FieldPositions.HUB_POSITION).getNorm());
+
+
+        // Calculate aim lead
+        // Get the current speed of the robot
+        Translation2d robotSpeed = new Translation2d(
+            chassisSpeeds.vxMetersPerSecond, 
+            chassisSpeeds.vyMetersPerSecond
+        );
+
+        // Calculate a point to aim ahead of the actual position.
+        Translation2d fieldPosLead = robotSpeed.times(ShooterConstants.AIM_LEAD_TIME.get()).plus(robotPose2d.getTranslation());
+
+        // Get the robot's aim distance to hub
+        double distanceToHub = (fieldPosLead.minus(FieldPositions.HUB_POSITION).getNorm());
+
         //Center of hub to cameras in inches
         Logger.recordOutput("Hub Dist", distanceToHub);
 
+        boolean driverError = 
+            // XYSpeed <= ShooterConstants.ROBOT_SPEED_TOLERANCE.get() |
+            // AngSpeed <= ShooterConstants.ROBOT_ANG_SPEED_TOLERANCE.get() |
+            distanceToHub <= ShooterConstants.ROBOT_MIN_HUB.get() | 
+            distanceToHub >= ShooterConstants.ROBOT_MAX_HUB.get();
 
-        if(this.mode != ShooterMode.NotReady) {
-            // TODO: get if the robot is within the angle of the hub
 
-            boolean driverError = 
-                // XYSpeed <= ShooterConstants.ROBOT_SPEED_TOLERANCE.get() |
-                // AngSpeed <= ShooterConstants.ROBOT_ANG_SPEED_TOLERANCE.get() |
-                distanceToHub <= ShooterConstants.ROBOT_MIN_HUB.get() | 
-                distanceToHub >= ShooterConstants.ROBOT_MAX_HUB.get();
+        double shooterSpeed = Math.abs(state.motor1Velocity.in(RotationsPerSecond) + state.motor2Velocity.in(RotationsPerSecond)) / 2;
+        double shooterSpeedTarget = Math.abs(state.motor1TargetVelocity.in(RotationsPerSecond) + state.motor2TargetVelocity.in(RotationsPerSecond)) / 2;
 
-            double shooterSpeed = Math.abs(state.motor1Velocity.in(RotationsPerSecond) + state.motor2Velocity.in(RotationsPerSecond)) / 2;
-            double shooterSpeedTarget = Math.abs(state.motor1TargetVelocity.in(RotationsPerSecond) + state.motor2TargetVelocity.in(RotationsPerSecond)) / 2;
-
-            boolean badShooterVelocity = Math.abs(shooterSpeed - shooterSpeedTarget) > ShooterConstants.SHOOTER_SPEED_TOLERANCE.get();
-        //     boolean intakeBad = m_Intake.getMode() == IntxakeMode.Extended;
-
-            boolean feedMdoe = this.mode == ShooterMode.ReadyFeeder |
-                this.mode == ShooterMode.ShootingFeeder;
-
-            int bitmask = (driverError ? 1 : 0) + (badShooterVelocity ? 2 : 0) + (
-                (feedMdoe) ? 4 : 0);
-            switch (bitmask) {
-                case 0b000: // No Errors
-                    m_robotLED.setMode(Constants.LEDConstants.OPREADY);
-                    break;
-                case 0b001: // No op err, yes driver err
-                    m_robotLED.setMode(Constants.LEDConstants.OPREADY_BADPHYS);
-                    break;
-
-                case 0b010:
-                case 0b110: // Bad flywheel, no driver err
-                    m_robotLED.setMode(Constants.LEDConstants.BAD_FLYWEEL);
-                    break;
-
-                case 0b011:
-                case 0b111: // Bad flywheel, yes driver err
-                    m_robotLED.setMode(Constants.LEDConstants.BAD_FLYWEEL_BADPHYS);
-                    break;
-
-                case 0b100:
-                case 0b101:
-                    m_robotLED.setMode(Constants.LEDConstants.OPREADY_FEED);
-                    break;
-            }
-
-        //     // We set the shooter mode to ready if there are no errors
-            
-            if (!feedMdoe) {
-                mode = (
-                    bitmask == 0 ?
-                    ShooterMode.Shooting :
-                    ShooterMode.Ready
-                );
-            } else {
-
-                if(bitmask == 0b100 |
-                bitmask == 0b101) {
-                    mode = ShooterMode.ShootingFeeder;
-
-                } else {
-                    mode = ShooterMode.ReadyFeeder;
-                }
-                
-            }
-
-        } else {
-            m_robotLED.setMode(Constants.LEDConstants.DEFAULT_PATTERN);
-
-        }
-        
-        
-
+        boolean badShooterVelocity = Math.abs(shooterSpeed - shooterSpeedTarget) > ShooterConstants.SHOOTER_SPEED_TOLERANCE.get();
 
         switch (mode) {
             case Shooting:
                 io.setShooterVelocity(state, ShooterConstants.getTargetShooterSpeed(distanceToHub));
 
-                if(shooterButtonReady) {
-                    io.setIndexerOutput(state, ShooterConstants.INDEXER_FORWARD_OUTPUT.get());
-                } else {
-                    io.setIndexerOutput(state, ShooterConstants.INDEXER_REVERSE_OUTPUT.get());
+                int bitmask = (
+                    (shooterButtonReady ? 1 : 0) +
+                    (badShooterVelocity ? 2 : 0) +
+                    (driverError ? 4 : 0)
+                );
+
+                switch (bitmask) {
+                    case 0b000: // No errors but button is not pressed
+                        io.setIndexerOutput(state, ShooterConstants.INDEXER_REVERSE_OUTPUT.get());
+                        m_robotLED.setMode(Constants.LEDConstants.OPREADY);
+                        break;
+
+                    case 0b001: // No errors and shoot button is pressed
+                        io.setIndexerOutput(state, ShooterConstants.INDEXER_FORWARD_OUTPUT.get());
+                        m_robotLED.setMode(Constants.LEDConstants.OPREADY);
+                        break;
+
+                    case 0b010: // Bad shooter velocity, button is not pressed
+                    case 0b011: // Bad shooter velocty, button is pressed
+                        io.setIndexerOutput(state, ShooterConstants.INDEXER_REVERSE_OUTPUT.get());
+                        m_robotLED.setMode(Constants.LEDConstants.BAD_FLYWEEL);
+                        break;
+
+                    case 0b100: // Driver error, button is not pressed
+                    case 0b101: // Driver error, button is pressed
+                        io.setIndexerOutput(state, ShooterConstants.INDEXER_REVERSE_OUTPUT.get());
+                        m_robotLED.setMode(Constants.LEDConstants.OPREADY_BADPHYS);
+                        break;
+
+                    case 0b110: // Driver error, bad shooter vel, button is not pressed
+                    case 0b111: // Driver error, bad shooter vel, button is pressed
+                        io.setIndexerOutput(state, ShooterConstants.INDEXER_REVERSE_OUTPUT.get());
+                        m_robotLED.setMode(Constants.LEDConstants.BAD_FLYWEEL_BADPHYS);
+                        break;
                 }
                 break;
-
-            case Ready:
-                io.setShooterVelocity(state, ShooterConstants.getTargetShooterSpeed(distanceToHub));
-                io.setIndexerOutput(state, ShooterConstants.INDEXER_REVERSE_OUTPUT.get());
-                break;
-
-            case ShootingFeeder:
+            case Feeding:
                 io.setShooterVelocity(state, RotationsPerSecond.of(ShooterConstants.SHOOTER_FEED_VELOCITY.get()));
-                
-                if(shooterButtonReady) {
-                    io.setIndexerOutput(state, ShooterConstants.INDEXER_FORWARD_OUTPUT.get());
-                } else {
-                    io.setIndexerOutput(state, ShooterConstants.INDEXER_REVERSE_OUTPUT.get());
+
+                int bitmask2 = (
+                    (shooterButtonReady ? 1 : 0) +
+                    (badShooterVelocity ? 2 : 0)
+                );
+
+                switch (bitmask2) {
+                    case 0b000: // No errors but button is not pressed
+                        io.setIndexerOutput(state, ShooterConstants.INDEXER_REVERSE_OUTPUT.get());
+                        m_robotLED.setMode(Constants.LEDConstants.OPREADY_FEED);
+                        break;
+
+                    case 0b001: // No errors and shoot button is pressed
+                        io.setIndexerOutput(state, ShooterConstants.INDEXER_FORWARD_OUTPUT.get());
+                        m_robotLED.setMode(Constants.LEDConstants.OPREADY_FEED);
+                        break;
+
+                    case 0b010: // Bad shooter velocity, button is not pressed
+                    case 0b011: // Bad shooter velocty, button is pressed
+                        io.setIndexerOutput(state, ShooterConstants.INDEXER_REVERSE_OUTPUT.get());
+                        m_robotLED.setMode(Constants.LEDConstants.BAD_FLYWEEL);
+                        break;
+
+                    // case 0b100: // Driver error, button is not pressed
+                    // case 0b101: // Driver error, button is pressed
+                    //     m_robotLED.setMode(Constants.LEDConstants.BAD_FLYWEEL);
+                    //     io.setIndexerOutput(state, ShooterConstants.INDEXER_REVERSE_OUTPUT.get());
+                    //     break;
+
+                    // case 0b110: // Driver error, bad shooter vel, button is not pressed
+                    // case 0b111: // Driver error, bad shooter vel, button is pressed
+                    //     m_robotLED.setMode(Constants.LEDConstants.BAD_FLYWEEL_BADPHYS);
+                    //     io.setIndexerOutput(state, ShooterConstants.INDEXER_REVERSE_OUTPUT.get());
+                    //     break;
                 }
-                break;
 
-            case ReadyFeeder:
-                io.setShooterVelocity(state, RotationsPerSecond.of(ShooterConstants.SHOOTER_FEED_VELOCITY.get()));
-                io.setIndexerOutput(state, ShooterConstants.INDEXER_REVERSE_OUTPUT.get());
                 break;
+            case Idle:
 
-            case NotReady:
-                io.setShooterVelocity(state, RotationsPerSecond.of(ShooterConstants.SHOOTER_RESTING_VELOCITY.get()));
+                io.setShooterCurrentLimitSpeed(
+                    state, 
+                    ShooterConstants.SHOOTER_IDLE_PERCENT_OUTPUT.get(), 
+                    Amps.of(ShooterConstants.SHOOTER_IDLE_MAX_CURRENT.get()), 
+                    RotationsPerSecond.of(ShooterConstants.INDEXER_REVERSE_OUTPUT.get())
+                );
                 io.setIndexerOutput(state, ShooterConstants.INDEXER_REVERSE_OUTPUT.get());
+                m_robotLED.setMode(Constants.LEDConstants.DEFAULT_PATTERN);
                 break;
-        }
+            }
 
     }
 }

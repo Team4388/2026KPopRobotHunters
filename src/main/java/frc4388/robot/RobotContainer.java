@@ -99,7 +99,7 @@ public class RobotContainer {
     );
     
     private Command RobotShoot = new SequentialCommandGroup(
-        new InstantCommand(() -> m_robotShooter.setShooterReady()),
+        new InstantCommand(() -> m_robotShooter.spinUpShooting()),
         new RunCommand(
                 () -> {
                 m_robotSwerveDrive.driveFacingPosition(
@@ -110,9 +110,9 @@ public class RobotContainer {
                 }, m_robotSwerveDrive),
         new InstantCommand(()->m_robotIntake.setMode(IntakeMode.Idle)),
         new WaitCommand(5),
-        new InstantCommand(()->m_robotShooter.setShooterShoot()),
+        new InstantCommand(()->m_robotShooter.allowShooting()),
         new WaitCommand(10),
-        new InstantCommand(()->m_robotShooter.setShooterNOTShoot())
+        new InstantCommand(()->m_robotShooter.denyShooting())
     );
 
     // private Command RobotShoot = new SequentialCommandGroup(
@@ -256,18 +256,18 @@ public class RobotContainer {
 
         new Trigger(() -> getDeadbandedOperatorController().getLeftTriggerAxis() >= 0.5)
             .onTrue(new InstantCommand(() -> {
-                m_robotShooter.setShooterNotReady();
+                m_robotShooter.spinUpIdle();
             }));
         
         new JoystickButton(getDeadbandedOperatorController(), XboxController.LEFT_BUMPER_BUTTON)
             .onTrue(new InstantCommand(() -> {
-                m_robotShooter.setShooterReady();
+                m_robotShooter.spinUpShooting();
                 m_robotIntake.setMode(IntakeMode.Idle);
             }));
 
         new JoystickButton(getDeadbandedOperatorController(), XboxController.BACK_BUTTON)
             .onTrue(new InstantCommand(() -> {
-                m_robotShooter.setShooterReadyFeeder();
+                m_robotShooter.spinUpFeeding();
             }));
 
         
@@ -275,9 +275,9 @@ public class RobotContainer {
 
         new JoystickButton(getDeadbandedOperatorController(), XboxController.A_BUTTON)
             .onTrue(new InstantCommand(() -> {
-                m_robotShooter.setShooterShoot();
+                m_robotShooter.allowShooting();
             })).onFalse(new InstantCommand(() -> {
-                m_robotShooter.setShooterNOTShoot();
+                m_robotShooter.denyShooting();
             }));
 
         new JoystickButton(getDeadbandedOperatorController(), XboxController.X_BUTTON)
