@@ -101,6 +101,7 @@ public class RobotContainer {
     );
 
     private Command LidarIntake = new SequentialCommandGroup(
+        RobotIntakeDown,
         new RunCommand(
         () -> m_robotSwerveDrive.driveWithInputRotation(
                 m_lidar.getClosestBall(),
