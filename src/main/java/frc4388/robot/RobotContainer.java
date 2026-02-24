@@ -35,6 +35,7 @@ import frc4388.robot.constants.Constants.OIConstants;
 import frc4388.robot.constants.Constants.SimConstants.Mode;
 // Subsystems
 import frc4388.robot.subsystems.LED;
+import frc4388.robot.subsystems.Lidar;
 import frc4388.robot.subsystems.intake.Intake;
 import frc4388.robot.subsystems.intake.Intake.IntakeMode;
 import frc4388.robot.subsystems.shooter.Shooter;
@@ -65,6 +66,7 @@ public class RobotContainer {
     // public final DigitalInput m_armLimitSwitch = new DigitalInput(9);
 
     /* Subsystems */
+    public final Lidar m_lidar = new Lidar();
     public final LED m_robotLED = new LED(Constants.LEDConstants.LED_SPARK_ID);
     //Testing of Colors
     public final Vision m_vision = new Vision(m_robotMap.rightCamera, m_robotMap.leftCamera);
@@ -97,7 +99,19 @@ public class RobotContainer {
     private Command RobotIntakeDown = new SequentialCommandGroup(
         new InstantCommand(() -> m_robotIntake.setMode(IntakeMode.Extended))
     );
-    
+
+    private Command LidarIntake = new SequentialCommandGroup(
+        new RunCommand(
+        () -> m_robotSwerveDrive.driveWithInputRotation(
+                m_lidar.getClosestBall(),
+                m_lidar.getLatestBallAngle()
+            ),
+            m_robotSwerveDrive
+        )
+        .withTimeout(10.0)
+        .andThen(new InstantCommand(() -> m_robotSwerveDrive.softStop(), m_robotSwerveDrive))
+    );
+
     private Command RobotShoot = new SequentialCommandGroup(
         new InstantCommand(() -> m_robotShooter.setShooterReady()),
         new InstantCommand(()->m_robotIntake.setMode(IntakeMode.Idle)),
@@ -143,6 +157,7 @@ public class RobotContainer {
         }, true);
 
         NamedCommands.registerCommand("Robot Shoot", RobotShoot);
+        NamedCommands.registerCommand("Lidar Intake", LidarIntake);
         NamedCommands.registerCommand("Robot Intake Down", RobotIntakeDown);
 
 
