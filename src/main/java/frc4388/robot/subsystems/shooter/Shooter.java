@@ -126,8 +126,11 @@ public class Shooter extends SubsystemBase {
             boolean badShooterVelocity = Math.abs(shooterSpeed - shooterSpeedTarget) > ShooterConstants.SHOOTER_SPEED_TOLERANCE.get();
         //     boolean intakeBad = m_Intake.getMode() == IntxakeMode.Extended;
 
+            boolean feedMdoe = this.mode == ShooterMode.ReadyFeeder |
+                this.mode == ShooterMode.ShootingFeeder;
 
-            int bitmask = (driverError ? 1 : 0) + (badShooterVelocity ? 2 : 0) + (this.mode == ShooterMode.ReadyFeeder ? 4 : 0);
+            int bitmask = (driverError ? 1 : 0) + (badShooterVelocity ? 2 : 0) + (
+                (feedMdoe) ? 4 : 0);
             switch (bitmask) {
                 case 0b000: // No Errors
                     m_robotLED.setMode(Constants.LEDConstants.OPREADY);
@@ -147,19 +150,30 @@ public class Shooter extends SubsystemBase {
                     break;
 
                 case 0b100:
-                    m_robotLED.setMode(Constants.LEDConstants.OPREADY_FEED);
-                    break;
                 case 0b101:
-                    m_robotLED.setMode(Constants.LEDConstants.OPREADY_FEED_BADPHYS);
+                    m_robotLED.setMode(Constants.LEDConstants.OPREADY_FEED);
                     break;
             }
 
         //     // We set the shooter mode to ready if there are no errors
-            mode = (
-                bitmask == 0 ?
-                ShooterMode.Shooting :
-                ShooterMode.Ready
-            );
+            
+            if (!feedMdoe) {
+                mode = (
+                    bitmask == 0 ?
+                    ShooterMode.Shooting :
+                    ShooterMode.Ready
+                );
+            } else {
+
+                if(bitmask == 0b100 |
+                bitmask == 0b101) {
+                    mode = ShooterMode.ShootingFeeder;
+
+                } else {
+                    mode = ShooterMode.ReadyFeeder;
+                }
+                
+            }
 
         } else {
             m_robotLED.setMode(Constants.LEDConstants.DEFAULT_PATTERN);
@@ -196,7 +210,7 @@ public class Shooter extends SubsystemBase {
                 break;
 
             case ReadyFeeder:
-                io.setShooterVelocity(state, ShooterConstants.getTargetShooterSpeed(distanceToHub));
+                io.setShooterVelocity(state, RotationsPerSecond.of(ShooterConstants.SHOOTER_FEED_VELOCITY.get()));
                 io.setIndexerOutput(state, ShooterConstants.INDEXER_REVERSE_OUTPUT.get());
                 break;
 

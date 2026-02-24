@@ -3,41 +3,41 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.48951566951567,
+        "x": 3.605428571428572,
         "y": 5.107378917378918
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.908105413105413,
-        "y": 6.205598290598291
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 1.616082621082621,
+        "x": 2.6073542083177803,
         "y": 5.107378917378918
       },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.2557261904761914,
+        "y": 4.801630952380952
+      },
       "prevControl": {
-        "x": 0.44392059766331804,
-        "y": 6.342550994319343
+        "x": 2.5688571428571443,
+        "y": 5.4170952380952375
       },
       "nextControl": {
-        "x": 2.234130952380953,
-        "y": 4.456107142857142
+        "x": 1.848588583599833,
+        "y": 4.00139496645156
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.8064047619047625,
-        "y": 3.8622380952380952
+        "x": 2.2557261904761914,
+        "y": 4.035
       },
       "prevControl": {
-        "x": 2.8172023809523816,
-        "y": 4.132178571428572
+        "x": 2.2665238095238105,
+        "y": 4.304940476190477
       },
       "nextControl": null,
       "isLocked": false,
@@ -46,18 +46,7 @@
   ],
   "rotationTargets": [],
   "constraintZones": [],
-  "pointTowardsZones": [
-    {
-      "fieldPosition": {
-        "x": 4.612,
-        "y": 4.0213534
-      },
-      "rotationOffset": 0.0,
-      "minWaypointRelativePos": 0.9140287769784197,
-      "maxWaypointRelativePos": 2,
-      "name": "Point Towards Zone"
-    }
-  ],
+  "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 0.5,
@@ -69,7 +58,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -1.591140271194531
+    "rotation": 180.0
   },
   "reversed": false,
   "folder": null,

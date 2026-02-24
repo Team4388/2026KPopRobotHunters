@@ -100,6 +100,14 @@ public class RobotContainer {
     
     private Command RobotShoot = new SequentialCommandGroup(
         new InstantCommand(() -> m_robotShooter.setShooterReady()),
+        new RunCommand(
+                () -> {
+                m_robotSwerveDrive.driveFacingPosition(
+                    getDeadbandedDriverController().getLeft(),
+                    FieldPositions.HUB_POSITION,
+                    ShooterConstants.AIM_LEAD_TIME.get()
+                    );
+                }, m_robotSwerveDrive),
         new InstantCommand(()->m_robotIntake.setMode(IntakeMode.Idle)),
         new WaitCommand(5),
         new InstantCommand(()->m_robotShooter.setShooterShoot()),
@@ -262,8 +270,7 @@ public class RobotContainer {
                 m_robotShooter.setShooterReadyFeeder();
             }));
 
-            
-
+        
 
 
         new JoystickButton(getDeadbandedOperatorController(), XboxController.A_BUTTON)
