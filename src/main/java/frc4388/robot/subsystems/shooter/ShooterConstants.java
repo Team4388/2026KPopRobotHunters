@@ -21,7 +21,7 @@ public class    ShooterConstants {
     // public static final ConfigurableDouble SHOOTER_ACTIVE_VELOCITY = new ConfigurableDouble("Shooter Active Velocity", -40);
     public static final ConfigurableDouble SHOOTER_MAX_VELOCITY = new ConfigurableDouble("Shooter MAX Velocity", 60);
     public static final ConfigurableDouble SHOOTER_RESTING_VELOCITY = new ConfigurableDouble("Shooter Resting Velocity", 0.0);
-    public static final ConfigurableDouble SHOOTER_FEED_VELOCITY = new ConfigurableDouble("Shooter Feed Velocity", 35);
+    public static final ConfigurableDouble SHOOTER_FEED_VELOCITY = new ConfigurableDouble("Shooter Feed Velocity", -35);
     
     public static final ConfigurableDouble INDEXER_FORWARD_OUTPUT = new ConfigurableDouble("Indexer FWD % Output", -0.4);
     public static final ConfigurableDouble INDEXER_REVERSE_OUTPUT = new ConfigurableDouble("Indexer reverse % Output", 0.0);
