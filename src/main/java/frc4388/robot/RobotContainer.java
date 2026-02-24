@@ -101,6 +101,7 @@ public class RobotContainer {
     );
 
     private Command LidarIntake = new SequentialCommandGroup(
+        // Right now this will just go to the closest ball constantly updating - need to make it so it locks on one ball
         RobotIntakeDown,
         new RunCommand(
         () -> m_robotSwerveDrive.driveWithInputRotation(

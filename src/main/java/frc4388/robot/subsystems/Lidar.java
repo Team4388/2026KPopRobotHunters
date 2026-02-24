@@ -64,6 +64,11 @@ public class Lidar extends SubsystemBase implements ScanListener {
     public Rotation2d getLatestBallAngle() {
         return latestBallAngleDeg;
     }
+
+    public boolean outOfBounds(Translation2d closestBall){
+        // Make sure robot doesn't go off the earth
+        return true;
+    }
     
 
     @Override
@@ -237,19 +242,14 @@ public class Lidar extends SubsystemBase implements ScanListener {
         }
 
         if (closestBallPrior != null) {
-            if (closestBall.getDistance(closestBallPrior) < 0.1){
+            if (closestBall.getDistance(closestBallPrior) < 0.1 && outOfBounds(closestBall)){
 
-                Point scaledPoint = new Point( (WIDTH/2) + (closestBall.getX() / scale), (WIDTH/2) + (closestBall.getY() / scale));
-
-                Imgproc.circle(mat, scaledPoint, (int) (RADIUS_OFFSET / scale), new Scalar(200, 25, 52), -1);
-
-                // System.out.println("Drive "+ Units.metersToInches(closestBall.x) + " inches forward and " + Units.metersToInches(closestBall.y) + "inches to the right");
+                // Point scaledPoint = new Point( (WIDTH/2) + (closestBall.getX() / scale), (WIDTH/2) + (closestBall.getY() / scale));
+                // Imgproc.circle(mat, scaledPoint, (int) (RADIUS_OFFSET / scale), new Scalar(200, 25, 52), -1);
                 latestBallAngleDeg = new Rotation2d(Math.atan((closestBall.getY())/(closestBall.getX()))/Math.PI*180);
-                System.out.println("!!" + latestBallAngleDeg);
-
             } else {
-                Point scaledPoint = new Point( (WIDTH/2) + (closestBallPrior.getX() / scale), (WIDTH/2) + (closestBallPrior.getX() / scale));
-                Imgproc.circle(mat, scaledPoint, (int) (RADIUS_OFFSET / scale), new Scalar(200, 25, 52), -1);
+                // Point scaledPoint = new Point( (WIDTH/2) + (closestBallPrior.getX() / scale), (WIDTH/2) + (closestBallPrior.getX() / scale));
+                // Imgproc.circle(mat, scaledPoint, (int) (RADIUS_OFFSET / scale), new Scalar(200, 25, 52), -1);
             }
         }
 

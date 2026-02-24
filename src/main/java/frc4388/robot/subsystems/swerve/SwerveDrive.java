@@ -405,20 +405,13 @@ public class SwerveDrive extends SubsystemBase implements Queryable {
     }
 
     public void driveWithInputRotation(Translation2d leftStick, Rotation2d rot) {
-        // if (leftStick.getNorm() < 0.05 && stopped == false) // if no imput and the
-        // swerve drive is still going:
-        // stopModules(); // stop the swerve
-
-        // if (leftStick.getNorm() < 0.05) //if no imput
-        // return; // don't bother doing swerve drive math and return early.
-
+    
         leftStick = leftStick.rotateBy(TimesNegativeOne.ForwardOffset);
 
         io.setControl(new SwerveRequest.FieldCentricFacingAngle()
                 .withVelocityX(leftStick.getX() * -speedAdjust)
                 .withVelocityY(leftStick.getY() * speedAdjust)
                 .withTargetDirection(rot));
-        // double
     }
 
     public double getGyroAngle() {
