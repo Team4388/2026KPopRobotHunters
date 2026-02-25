@@ -47,7 +47,7 @@ public final class Constants {
 
     public static final class AutoConstants {
         // public static final Gains XY_GAINS = new Gains(5,0.6,0.0);
-        public static final Gains XY_GAINS = new Gains(8,0,0.0);
+        public static final Gains ROT_GAINS = new Gains(8,0,0.0);
         // public static final ConfigurableDouble P_XY_GAINS = new ConfigurableDouble("P_XY_GAINS", XY_GAINS.kP);
         // public static final ConfigurableDouble I_XY_GAINS = new ConfigurableDouble("I_XY_GAINS", XY_GAINS.kI);
         // public static final ConfigurableDouble D_XY_GAINS = new ConfigurableDouble("D_XY_GAINS", XY_GAINS.kD);
@@ -61,7 +61,7 @@ public final class Constants {
         public static final Trim Y_OFFSET_TRIM =        new Trim("Y Offset Trim",        Double.MAX_VALUE, -Double.MAX_VALUE, 0.5, 0);
          
         public static final double XY_TOLERANCE = 0.07; // Meters
-        public static final double ROT_TOLERANCE = 5; // Degrees
+        public static final double ROT_TOLERANCE = 10; // Degrees
 
         public static final double MIN_XY_PID_OUTPUT = 0.0;
         public static final double MIN_ROT_PID_OUTPUT = 0.0;

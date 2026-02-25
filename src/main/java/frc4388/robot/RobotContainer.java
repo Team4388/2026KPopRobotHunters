@@ -11,9 +11,7 @@ import java.io.File;
 
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
-import com.pathplanner.lib.trajectory.PathPlannerTrajectory;
 
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -29,7 +27,6 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc4388.robot.commands.MoveForTimeCommand;
 import frc4388.robot.commands.alignment.AutoAlign;
 import frc4388.robot.constants.Constants;
 import frc4388.robot.constants.Constants.OIConstants;
@@ -41,7 +38,6 @@ import frc4388.robot.subsystems.intake.Intake;
 import frc4388.robot.subsystems.intake.Intake.IntakeMode;
 import frc4388.robot.subsystems.shooter.Shooter;
 import frc4388.robot.subsystems.shooter.ShooterConstants;
-import frc4388.robot.subsystems.shooter.Shooter.ShooterMode;
 import frc4388.robot.subsystems.swerve.SwerveDrive;
 import frc4388.robot.subsystems.vision.Vision;
 import frc4388.utility.DeferredBlock;
@@ -124,8 +120,8 @@ public class RobotContainer {
     );
 
     private Command RobotShoot = new SequentialCommandGroup(
-        new InstantCommand(() -> 
-                new AutoAlign(m_robotSwerveDrive, m_vision, true)),
+        // TEST NEW AUTO ALIGN
+        //new AutoAlign(m_robotSwerveDrive, m_vision),
         new InstantCommand(()-> m_robotShooter.setShooterShoot(), m_robotShooter),
         new InstantCommand(()-> m_robotShooter.setShooterReady(), m_robotShooter),
         new WaitCommand(3),

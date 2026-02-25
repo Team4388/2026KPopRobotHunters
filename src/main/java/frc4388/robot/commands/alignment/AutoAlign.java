@@ -14,100 +14,58 @@ import frc4388.utility.structs.Gains;
 
 public class AutoAlign extends Command {
 
-    private PID xPID = new PID(AutoConstants.XY_GAINS, 0);
-    private PID yPID = new PID(AutoConstants.XY_GAINS, 0);
+    private PID rotPID = new PID(AutoConstants.ROT_GAINS, 0);
     private Pose2d targetpos;
 
     SwerveDrive swerveDrive;
     Vision vision;
-    boolean waitVelocityZero;
 
-    public AutoAlign(SwerveDrive swerveDrive, Vision vision, boolean waitVelocityZero) {
+    public AutoAlign(SwerveDrive swerveDrive, Vision vision) {
         this.swerveDrive = swerveDrive;
         this.vision = vision;
-        this.waitVelocityZero = waitVelocityZero && false;
         addRequirements(swerveDrive);
-    }
-
-    public static double tagRelativeXError = -1;
-    private static void setTagRelativeXError(double val){
-        tagRelativeXError = val;
     }
 
     @Override
     public void initialize() {
-        xPID.initialize();
-        yPID.initialize();
+        rotPID.initialize();
         this.targetpos = new Pose2d(FieldPositions.HUB_POSITION, new Rotation2d(0));
     }
     
-    double xerr;
-    double yerr;
+
     double roterr;
 
-    double xoutput;
-    double youtput;
     double rotoutput;
 
     @Override
     public void execute() {
-        xerr = TimesNegativeOne.invert(targetpos.getX() - vision.getPose2d().getX(), TimesNegativeOne.XAxis);
-        yerr = TimesNegativeOne.invert(targetpos.getY() - vision.getPose2d().getY(), !TimesNegativeOne.YAxis);
-        
-        roterr = ((targetpos.getRotation().getDegrees() - vision.getPose2d().getRotation().getDegrees()));
 
-        if(roterr > 180){
-            roterr -= 360;
-        }else if(roterr < -180){
-            roterr += 360;
-        }
 
-    
+        Pose2d robotPose = vision.getPose2d();
+        if (robotPose == null) return;
 
-        SmartDashboard.putNumber("PID X Error", xerr);
-        SmartDashboard.putNumber("PID Y Error", yerr);
+        double dx = targetpos.getX() - robotPose.getX();
+        double dy = targetpos.getY() - robotPose.getY();
+
+        Rotation2d desiredHeading = new Rotation2d(Math.atan2(dy, dx));
+
+        roterr = desiredHeading.getDegrees() - robotPose.getRotation().getDegrees();
+        if (roterr > 180) roterr -= 360;
+        if (roterr < -180) roterr += 360;
+
         SmartDashboard.putNumber("PID Rot Error", roterr);
 
-        xoutput = xPID.update(xerr);
-        youtput = yPID.update(yerr);
-
-        xoutput *= Math.abs(xerr) < AutoConstants.XY_TOLERANCE ? 0 : 1;
-        youtput *= Math.abs(yerr) < AutoConstants.XY_TOLERANCE ? 0 : 1;
-        
-
-
-        Translation2d leftStick = new Translation2d(
-            Math.max(Math.min(-youtput, 1), -1),
-            Math.max(Math.min(-xoutput, 1), -1)
-        );
-
-        
-
-        setTagRelativeXError(
-            new Translation2d(xerr, yerr).getAngle()
-            .rotateBy(targetpos.getRotation())
-            .getCos());
-
-        swerveDrive.driveRelativeAngle(leftStick, targetpos.getRotation());
-    }
+        swerveDrive.driveRelativeAngle(new Translation2d(0.0, 0.0), desiredHeading);
+     }
 
     @Override
     public final boolean isFinished() {
-        boolean finished = (
-            (Math.abs(xerr) < AutoConstants.XY_TOLERANCE || Math.abs(xoutput) <= AutoConstants.MIN_XY_PID_OUTPUT) && 
-            (Math.abs(yerr) < AutoConstants.XY_TOLERANCE || Math.abs(youtput) <= AutoConstants.MIN_XY_PID_OUTPUT) && 
-            (Math.abs(roterr) < AutoConstants.ROT_TOLERANCE) &&
-            (!waitVelocityZero || swerveDrive.lastOdomSpeed < AutoConstants.VELOCITY_THRESHHOLD)
-        );
-
-        if(finished)
+        boolean finished = Math.abs(roterr) < AutoConstants.ROT_TOLERANCE;
+        if (finished) {
             swerveDrive.softStop();
-
+        }
         return finished;
     }
-
-
-
 
     private class PID {
         protected Gains  gains;
