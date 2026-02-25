@@ -69,6 +69,7 @@ public class Shooter extends SubsystemBase {
         this.mode = ShooterMode.Ready;
     }
 
+
     public void setShooterReadyFeeder() {
         this.mode = ShooterMode.ReadyFeeder;
     }

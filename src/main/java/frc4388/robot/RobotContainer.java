@@ -30,6 +30,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc4388.robot.commands.MoveForTimeCommand;
+import frc4388.robot.commands.alignment.AutoAlign;
 import frc4388.robot.constants.Constants;
 import frc4388.robot.constants.Constants.OIConstants;
 import frc4388.robot.constants.Constants.SimConstants.Mode;
@@ -98,7 +99,7 @@ public class RobotContainer {
 
 
     private Command RobotIntakeDown = new SequentialCommandGroup(
-        new InstantCommand(() -> m_robotIntake.setMode(IntakeMode.Extended))
+        new InstantCommand(() -> m_robotIntake.setMode(IntakeMode.Extended), m_robotIntake)
     );
 
     private Command LidarIntake = new SequentialCommandGroup(
@@ -117,34 +118,24 @@ public class RobotContainer {
         .andThen(new InstantCommand(() -> m_robotSwerveDrive.softStop(), m_robotSwerveDrive))
     );
 
-    private Command RobotShoot = new SequentialCommandGroup(
-        new InstantCommand(() -> m_robotIntake.setMode(IntakeMode.Retracted)),
-        new InstantCommand(() -> m_robotShooter.setShooterReady()),
-        new InstantCommand(()->m_robotIntake.setMode(IntakeMode.Idle)),
-        new WaitCommand(3),
-        new InstantCommand(()->m_robotShooter.setShooterShoot()),
-        new WaitCommand(5),
-        new InstantCommand(()->m_robotShooter.setShooterNOTShoot()),
-        new InstantCommand(() -> m_robotShooter.setShooterNotReady())
+    private Command RobotReadyToShoot = new SequentialCommandGroup(
+        new InstantCommand(()-> m_robotIntake.setMode(IntakeMode.Idle),  m_robotIntake),
+        new InstantCommand(() -> m_robotShooter.setShooterReady(), m_robotShooter)
     );
 
-    // private Command RobotShoot = new SequentialCommandGroup(
-    //     new InstantCommand(() -> System.out.println(m_robotLED.getMode())),
-    //     new InstantCommand(() -> m_robotLED.setMode(LEDPatterns.PARTY_TWINKLES), m_robotLED),
-    //     new InstantCommand(() -> System.out.println(m_robotLED.getMode())),
-    //     new WaitCommand(5),
-    //     new InstantCommand(() -> m_robotLED.setMode(LEDPatterns.SOLID_RED), m_robotLED),
-    //     new InstantCommand(() -> System.out.println(m_robotLED.getMode()))
-    // );
+    private Command RobotShoot = new SequentialCommandGroup(
+        new InstantCommand(() -> 
+                new AutoAlign(m_robotSwerveDrive, m_vision, true)),
+        new InstantCommand(()-> m_robotShooter.setShooterShoot(), m_robotShooter),
+        new InstantCommand(()-> m_robotShooter.setShooterReady(), m_robotShooter),
+        new WaitCommand(3),
+        new InstantCommand(() -> m_robotIntake.setMode(IntakeMode.Retracted), m_robotIntake),
+        new WaitCommand(2),
+        new InstantCommand(()->m_robotShooter.setShooterNOTShoot(), m_robotShooter),
+        new InstantCommand(() -> m_robotShooter.setShooterNotReady(), m_robotShooter)
+    );
 
-    // private Command RobotShoot = new SequentialCommandGroup(
-    //     new InstantCommand(() -> m_robotShooter.setMode(Shooter.ShooterMode.Active), m_robotShooter)
-    // );
-
-    // private Command RobotIntake = new SequentialCommandGroup(
-    //     new InstantCommand(() -> m_robotIntake.setMode(Intake.IntakeMode.Down), m_robotIntake)
-    // );
-
+    
     public RobotContainer() {
         
         configureButtonBindings();
@@ -163,6 +154,7 @@ public class RobotContainer {
             m_robotShooter.io.updateGains();
         }, true);
 
+        NamedCommands.registerCommand("Robot Rev Up", RobotReadyToShoot);
         NamedCommands.registerCommand("Robot Shoot", RobotShoot);
         NamedCommands.registerCommand("Lidar Intake", LidarIntake);
         NamedCommands.registerCommand("Robot Intake Down", RobotIntakeDown);
