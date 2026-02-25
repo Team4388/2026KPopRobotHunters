@@ -241,21 +241,36 @@ public class RobotContainer {
             .onFalse(new InstantCommand(() -> m_robotSwerveDrive.softStop(), m_robotSwerveDrive));
         
         //Operator Controls
+        // new Trigger(() -> getDeadbandedOperatorController().getRightTriggerAxis() >= 0.5)
+        //     .onTrue(new InstantCommand(() -> {
+        //         m_robotIntake.setMode(IntakeMode.Extended);
+        //     }));
+
+
+        //allow shooting with right trigger
         new Trigger(() -> getDeadbandedOperatorController().getRightTriggerAxis() >= 0.5)
+            .onTrue(new InstantCommand(() -> {
+                m_robotShooter.allowShooting();
+            })).onFalse(new InstantCommand(() -> {
+                m_robotShooter.denyShooting();
+            }));
+        
+
+
+        new JoystickButton(getDeadbandedOperatorController(), XboxController.RIGHT_BUMPER_BUTTON)
             .onTrue(new InstantCommand(() -> {
                 m_robotIntake.setMode(IntakeMode.Extended);
             }));
-        
-        new JoystickButton(getDeadbandedOperatorController(), XboxController.RIGHT_BUMPER_BUTTON)
-            .onTrue(new InstantCommand(() -> {
-                m_robotIntake.setMode(IntakeMode.Retracted);
-            }));
 
 
-
-
+        //set shooter ready (rev) with left trigger hold
         new Trigger(() -> getDeadbandedOperatorController().getLeftTriggerAxis() >= 0.5)
             .onTrue(new InstantCommand(() -> {
+                m_robotShooter.spinUpShooting();
+                m_robotIntake.setMode(IntakeMode.Idle);
+                m_robotIntake.rollerStop();
+            }))
+            .onFalse(new InstantCommand(() -> {
                 m_robotShooter.spinUpIdle();
             }));
         
@@ -275,9 +290,7 @@ public class RobotContainer {
 
         new JoystickButton(getDeadbandedOperatorController(), XboxController.A_BUTTON)
             .onTrue(new InstantCommand(() -> {
-                m_robotShooter.allowShooting();
-            })).onFalse(new InstantCommand(() -> {
-                m_robotShooter.denyShooting();
+                m_robotIntake.setMode(IntakeMode.Retracted);
             }));
 
         new JoystickButton(getDeadbandedOperatorController(), XboxController.X_BUTTON)
