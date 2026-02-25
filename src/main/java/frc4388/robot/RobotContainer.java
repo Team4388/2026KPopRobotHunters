@@ -40,6 +40,7 @@ import frc4388.robot.subsystems.intake.Intake;
 import frc4388.robot.subsystems.intake.Intake.IntakeMode;
 import frc4388.robot.subsystems.shooter.Shooter;
 import frc4388.robot.subsystems.shooter.ShooterConstants;
+import frc4388.robot.subsystems.shooter.Shooter.ShooterMode;
 import frc4388.robot.subsystems.swerve.SwerveDrive;
 import frc4388.robot.subsystems.vision.Vision;
 import frc4388.utility.DeferredBlock;
@@ -103,24 +104,28 @@ public class RobotContainer {
     private Command LidarIntake = new SequentialCommandGroup(
         // Right now this will just go to the closest ball constantly updating - need to make it so it locks on one ball
         RobotIntakeDown,
+        new WaitCommand(1),
         new RunCommand(
-        () -> m_robotSwerveDrive.driveWithInputRotation(
+        () -> m_robotSwerveDrive.driveWithInput(
                 m_lidar.getClosestBall(),
-                m_lidar.getLatestBallAngle()
+                new Translation2d(m_lidar.getLatestBallAngle().getCos() * 0.1, 0),
+                false
             ),
             m_robotSwerveDrive
         )
-        .withTimeout(10.0)
+        .withTimeout(5.0)
         .andThen(new InstantCommand(() -> m_robotSwerveDrive.softStop(), m_robotSwerveDrive))
     );
 
     private Command RobotShoot = new SequentialCommandGroup(
+        new InstantCommand(() -> m_robotIntake.setMode(IntakeMode.Retracted)),
         new InstantCommand(() -> m_robotShooter.setShooterReady()),
         new InstantCommand(()->m_robotIntake.setMode(IntakeMode.Idle)),
-        new WaitCommand(5),
+        new WaitCommand(3),
         new InstantCommand(()->m_robotShooter.setShooterShoot()),
-        new WaitCommand(10),
-        new InstantCommand(()->m_robotShooter.setShooterNOTShoot())
+        new WaitCommand(5),
+        new InstantCommand(()->m_robotShooter.setShooterNOTShoot()),
+        new InstantCommand(() -> m_robotShooter.setShooterNotReady())
     );
 
     // private Command RobotShoot = new SequentialCommandGroup(
@@ -365,7 +370,7 @@ public class RobotContainer {
 
         autoChooser.onChange((filename) -> {
             autoChooserUpdated = true;
-            // if (filename.equals("Taxi")) {
+            // if (filename.equals("Taxi%")) {
             //     autoCommand = new SequentialCommandGroup(
             //         new MoveForTimeCommand(m_robotSwerveDrive, 
             //             new Translation2d(0, -1), 

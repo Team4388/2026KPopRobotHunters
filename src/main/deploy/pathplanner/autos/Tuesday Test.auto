@@ -5,18 +5,6 @@
     "data": {
       "commands": [
         {
-          "type": "path",
-          "data": {
-            "pathName": "Quick Shoot"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Robot Shoot"
-          }
-        },
-        {
           "type": "named",
           "data": {
             "name": "Lidar Intake"
