@@ -31,7 +31,7 @@ public class Lidar extends SubsystemBase implements ScanListener {
     // private final Spark m_motor;
     private final RPLidarA1 lidar;
 
-    private ConfigurableDouble speed = new ConfigurableDouble("LiDAR speed", 0.7);
+    private ConfigurableDouble speed = new ConfigurableDouble("LiDAR speed", 0.2);
 
     static
     {
@@ -85,7 +85,7 @@ public class Lidar extends SubsystemBase implements ScanListener {
     private static final double RADIUS_X_COEFF = Units.inchesToMeters(0);
     private static final double RADIUS_Y_COEFF = Units.inchesToMeters(0);
     private static final double RADIUS_OFFSET = Units.inchesToMeters(3);
-    private static final double RADIUS_TOLERANCE = Units.inchesToMeters(0.8);
+    private static final double RADIUS_TOLERANCE = Units.inchesToMeters(3);
 
     private static boolean radiusInTolerance(double x, double y, double radius) {
         double rad_at_position = RADIUS_X_COEFF*x + RADIUS_Y_COEFF*y + RADIUS_OFFSET;
@@ -122,20 +122,24 @@ public class Lidar extends SubsystemBase implements ScanListener {
 
         System.out.println("SCAN: " + scan.size());
 
-        double scale = 0.006;
+        double scale = 0.009;
 
         List<Translation2d> circlePoints = new ArrayList<>();
 
-        Mat mat = Mat.zeros(WIDTH, HEIGHT, CvType.CV_8UC3);
+        // Mat mat = Mat.zeros(WIDTH, HEIGHT, CvType.CV_8UC3);
 
         for(PolarPoint point_polar : scan) {
+            if(!(point_polar.angle < 30 || point_polar.angle > 330)) {
+                continue;
+            }
+
             double ang_rad = Math.toRadians(point_polar.angle); 
             double x = point_polar.distance * Math.cos(ang_rad);
             double y = point_polar.distance * Math.sin(ang_rad);
 
             // Point point_xy = new Point((WIDTH/2) + (x/scale), (HEIGHT/2) + (y/scale));
             Point point_xy = new Point(x, y);
-
+            
             if(
                 Math.abs(last_ang - point_polar.angle) > ANG_MAX_GAP ||
                 Math.abs(last_dist - point_polar.distance) > DIST_MAX_GAP
@@ -211,15 +215,15 @@ public class Lidar extends SubsystemBase implements ScanListener {
             last_ang = point_polar.angle;
             last_dist = point_polar.distance;
 
-            Point scaledPoint = new Point((WIDTH/2) + (point_xy.x / scale), (WIDTH/2) + (point_xy.y / scale));
-            Imgproc.circle(mat, scaledPoint, POINT_RAD, new Scalar(127,127,127));
+            // Point scaledPoint = new Point((WIDTH/2) + (point_xy.x / scale), (WIDTH/2) + (point_xy.y / scale));
+            // Imgproc.circle(mat, scaledPoint, POINT_RAD, new Scalar(127,127,127));
         }
 
-        for(Translation2d circle : circlePoints) {
-            Point scaledPoint = new Point( (WIDTH/2) + (circle.getX() / scale), (WIDTH/2) + (circle.getY() / scale));
-            Imgproc.circle(mat, scaledPoint, (int) (RADIUS_OFFSET / scale), new Scalar(0,255,255));
-            // System.out.println(circle.x + " - " + circle.y);
-        }
+        // for(Translation2d circle : circlePoints) {
+        //     Point scaledPoint = new Point( (WIDTH/2) + (circle.getX() / scale), (WIDTH/2) + (circle.getY() / scale));
+        //     Imgproc.circle(mat, scaledPoint, (int) (RADIUS_OFFSET / scale), new Scalar(0,255,255));
+        //     // System.out.println(circle.x + " - " + circle.y);
+        // }
         
     
 
@@ -248,7 +252,7 @@ public class Lidar extends SubsystemBase implements ScanListener {
                 // Imgproc.circle(mat, scaledPoint, (int) (RADIUS_OFFSET / scale), new Scalar(200, 25, 52), -1);
                 latestBallAngleDeg = new Rotation2d(Math.atan((closestBall.getY())/(closestBall.getX()))/Math.PI*180);
             } else {
-                // Point scaledPoint = new Point( (WIDTH/2) + (closestBallPrior.getX() / scale), (WIDTH/2) + (closestBallPrior.getX() / scale));
+                // Point scaledPoint = new Point( (WIDTH/2) + (closestBallPrior.getX() / scale), (WIDTH/2) + (closestBallPrior.getY() / scale));
                 // Imgproc.circle(mat, scaledPoint, (int) (RADIUS_OFFSET / scale), new Scalar(200, 25, 52), -1);
             }
         }
@@ -257,12 +261,12 @@ public class Lidar extends SubsystemBase implements ScanListener {
 
 
 
-        Imgproc.circle(mat, LIDAR, (int) (RADIUS_OFFSET / scale), new Scalar(255,255,255), -1);
+        // Imgproc.circle(mat, LIDAR, (int) (RADIUS_OFFSET / scale), new Scalar(255,255,255), -1);
         
         // System.o
         
 
-        showWindow(mat);
+        // showWindow(mat);
     }
 
     private static void showWindow(Mat img) {
