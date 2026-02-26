@@ -65,7 +65,7 @@ public class RobotContainer {
     // public final DigitalInput m_armLimitSwitch = new DigitalInput(9);
 
     /* Subsystems */
-    public final Lidar m_lidar = new Lidar();
+    // public final Lidar m_lidar = new Lidar();
     public final LED m_robotLED = new LED(Constants.LEDConstants.LED_SPARK_ID);
     //Testing of Colors
     public final Vision m_vision = new Vision(m_robotMap.rightCamera, m_robotMap.leftCamera);
@@ -99,24 +99,24 @@ public class RobotContainer {
         new InstantCommand(() -> m_robotIntake.setMode(IntakeMode.Extended), m_robotIntake)
     );
 
-    private Command LidarIntake = new SequentialCommandGroup(
-        // Right now this will just go to the closest ball constantly updating - need to make it so it locks on one ball
-        // RobotIntakeDown,
-        // new WaitCommand(1),
-        // new InstantCommand(() -> System.out.println("Closest Ball: " + m_lidar.getClosestBall())),
-        new AutoAlign(m_robotSwerveDrive, m_vision, m_lidar, true)
+    // private Command LidarIntake = new SequentialCommandGroup(
+    //     // Right now this will just go to the closest ball constantly updating - need to make it so it locks on one ball
+    //     // RobotIntakeDown,
+    //     // new WaitCommand(1),
+    //     // new InstantCommand(() -> System.out.println("Closest Ball: " + m_lidar.getClosestBall())),
+    //     new AutoAlign(m_robotSwerveDrive, m_vision, m_lidar, true)
 
-        // new RunCommand(
-        // () -> m_robotSwerveDrive.driveWithInput(
-        //         m_lidar.getClosestBall(),
-        //         new Translation2d(m_lidar.getLatestBallAngle().getCos() * 0.1, 0),
-        //         false
-        //     ),
-        //     m_robotSwerveDrive
-        // )
-        // .withTimeout(5.0)
-        // .andThen(new InstantCommand(() -> m_robotSwerveDrive.softStop(), m_robotSwerveDrive))
-    );
+    //     // new RunCommand(
+    //     // () -> m_robotSwerveDrive.driveWithInput(
+    //     //         m_lidar.getClosestBall(),
+    //     //         new Translation2d(m_lidar.getLatestBallAngle().getCos() * 0.1, 0),
+    //     //         false
+    //     //     ),
+    //     //     m_robotSwerveDrive
+    //     // )
+    //     // .withTimeout(5.0)
+    //     // .andThen(new InstantCommand(() -> m_robotSwerveDrive.softStop(), m_robotSwerveDrive))
+    // );
 
     private Command RobotReadyToShoot = new SequentialCommandGroup(
         new InstantCommand(()-> m_robotIntake.setMode(IntakeMode.Idle),  m_robotIntake),
@@ -161,7 +161,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("Robot Rev Up", RobotReadyToShoot);
         NamedCommands.registerCommand("Intake Retracted", IntakeRetracted);
         NamedCommands.registerCommand("Robot Shoot", RobotShoot);
-        NamedCommands.registerCommand("Lidar Intake", LidarIntake);
+        // NamedCommands.registerCommand("Lidar Intake", LidarIntake);
         NamedCommands.registerCommand("Robot Intake Down", RobotIntakeDown);
 
 
