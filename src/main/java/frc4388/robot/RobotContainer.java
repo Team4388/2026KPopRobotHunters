@@ -101,10 +101,10 @@ public class RobotContainer {
 
     private Command LidarIntake = new SequentialCommandGroup(
         // Right now this will just go to the closest ball constantly updating - need to make it so it locks on one ball
-        RobotIntakeDown,
-        new WaitCommand(1),
-        new InstantCommand(() -> System.out.println("Closest Ball: " + m_lidar.getClosestBall())),
-        new AutoAlign(m_robotSwerveDrive, m_vision, new Pose2d(m_lidar.getClosestBall(), new Rotation2d(0)), true)
+        // RobotIntakeDown,
+        // new WaitCommand(1),
+        // new InstantCommand(() -> System.out.println("Closest Ball: " + m_lidar.getClosestBall())),
+        new AutoAlign(m_robotSwerveDrive, m_vision, m_lidar, true)
 
         // new RunCommand(
         // () -> m_robotSwerveDrive.driveWithInput(
@@ -123,14 +123,18 @@ public class RobotContainer {
         new InstantCommand(() -> m_robotShooter.setShooterReady(), m_robotShooter)
     );
 
+    private Command IntakeRetracted = new SequentialCommandGroup(
+        new InstantCommand(() -> m_robotIntake.setMode(IntakeMode.Retracted), m_robotIntake)
+    );
+
     private Command RobotShoot = new SequentialCommandGroup(
         // TEST NEW AUTO ALIGN
         //new AutoAlign(m_robotSwerveDrive, m_vision, new Pose2d(FieldPositions.HUB_POSITION,  new Rotation2d(0)), false),
         new InstantCommand(()-> m_robotShooter.setShooterShoot(), m_robotShooter),
         new InstantCommand(()-> m_robotShooter.setShooterReady(), m_robotShooter),
-        new WaitCommand(3),
-        new InstantCommand(() -> m_robotIntake.setMode(IntakeMode.Retracted), m_robotIntake),
         new WaitCommand(2),
+        IntakeRetracted,
+        new WaitCommand(3),
         new InstantCommand(()->m_robotShooter.setShooterNOTShoot(), m_robotShooter),
         new InstantCommand(() -> m_robotShooter.setShooterNotReady(), m_robotShooter)
     );
@@ -155,6 +159,7 @@ public class RobotContainer {
         }, true);
 
         NamedCommands.registerCommand("Robot Rev Up", RobotReadyToShoot);
+        NamedCommands.registerCommand("Intake Retracted", IntakeRetracted);
         NamedCommands.registerCommand("Robot Shoot", RobotShoot);
         NamedCommands.registerCommand("Lidar Intake", LidarIntake);
         NamedCommands.registerCommand("Robot Intake Down", RobotIntakeDown);

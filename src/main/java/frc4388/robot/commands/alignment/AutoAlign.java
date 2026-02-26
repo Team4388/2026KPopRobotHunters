@@ -6,6 +6,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc4388.robot.constants.Constants.AutoConstants;
+import frc4388.robot.subsystems.Lidar;
 import frc4388.robot.subsystems.swerve.SwerveDrive;
 import frc4388.robot.subsystems.vision.Vision;
 import frc4388.utility.compute.FieldPositions;
@@ -14,15 +15,19 @@ import frc4388.utility.structs.Gains;
 public class AutoAlign extends Command {
 
     private PID rotPID = new PID(AutoConstants.ROT_GAINS, 0);
-    private Pose2d targetpos;
+    private Lidar lidar;
     private boolean isLidar;
+
+    private Pose2d targetpos;
+    private double targetRotation;
+
     SwerveDrive swerveDrive;
     Vision vision;
 
-    public AutoAlign(SwerveDrive swerveDrive, Vision vision, Pose2d targetpos, boolean isLidar) {
+    public AutoAlign(SwerveDrive swerveDrive, Vision vision, Lidar lidar, boolean isLidar) {
         this.swerveDrive = swerveDrive;
         this.vision = vision;
-        this.targetpos = targetpos;
+        this.lidar = lidar;
         this.isLidar = isLidar;
         addRequirements(swerveDrive);
     }
@@ -30,6 +35,7 @@ public class AutoAlign extends Command {
     @Override
     public void initialize() {
         rotPID.initialize();
+        this.targetRotation = swerveDrive.getPose2d().getRotation().getDegrees();
         //this.targetpos = new Pose2d(FieldPositions.HUB_POSITION, new Rotation2d(0));
     }
     
@@ -40,36 +46,43 @@ public class AutoAlign extends Command {
 
     @Override
     public void execute() {
-        Rotation2d desiredHeading;
-        Pose2d robotPose = vision.getPose2d();
-        if (robotPose == null) return;
+        double desiredHeading;
+        // Pose2d robotPose = vision.getPose2d();
+        targetpos = new Pose2d(lidar.getClosestBall(), new Rotation2d(0));
+        // if (robotPose == null) return;
+        if (targetpos == null) return;
+        if (targetpos.getTranslation() == null) return;
 
-        double dx = targetpos.getX() - robotPose.getX();
-        double dy = targetpos.getY() - robotPose.getY();
+
+        double dx = targetpos.getX();// - robotPose.getX();
+        double dy = targetpos.getY();// - robotPose.getY();
 
         if (!isLidar){
-            desiredHeading = new Rotation2d(Math.atan2(dy, dx)+ Math.PI);
+            desiredHeading = (Math.atan2(dy, dx)+ Math.PI) * (180. / Math.PI) + 180;
         }else{
-            desiredHeading = new Rotation2d(Math.atan2(dx, dy));
+            desiredHeading = (Math.atan2(dx, dy)) * (180. / Math.PI);// + 180;
         }
 
 
-        roterr = desiredHeading.getDegrees() - robotPose.getRotation().getDegrees();
-        if (roterr > 180) roterr -= 360;
-        if (roterr < -180) roterr += 360;
+        targetRotation = swerveDrive.getPose2d().getRotation().getDegrees() - desiredHeading;
 
-        SmartDashboard.putNumber("PID Rot Error", roterr);
-        System.out.println("Target: " + targetpos + "Heading: " + desiredHeading + "Error: " + roterr);
-        swerveDrive.driveRelativeAngle(new Translation2d(0.0, 0.0), desiredHeading);
+        // roterr = desiredHeading.getDegrees() - robotPose.getRotation().getDegrees();
+        // if (roterr > 180) roterr -= 360;
+        // if (roterr < -180) roterr += 360;
+
+        SmartDashboard.putNumber("Target Rotation!", targetRotation);
+        // System.out.println("Target: " + targetpos + "Heading: " + desiredHeading + "Error: " + roterr);
+        swerveDrive.driveRelativeAngle(new Translation2d(0.0, 0.0), Rotation2d.fromDegrees(targetRotation));
     }
 
     @Override
     public final boolean isFinished() {
-        boolean finished = Math.abs(roterr) < AutoConstants.ROT_TOLERANCE;
-        if (finished) {
-            swerveDrive.softStop();
-        }
-        return finished;
+        // boolean finished = Math.abs(roterr) < AutoConstants.ROT_TOLERANCE;
+        // if (finished) {
+        //     swerveDrive.softStop();
+        // }
+        // return finished;
+        return false;
     }
 
     private class PID {
