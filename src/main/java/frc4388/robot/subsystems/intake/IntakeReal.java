@@ -56,12 +56,6 @@ public class IntakeReal implements IntakeIO {
     @Override
     public void setRollerOutput(IntakeState state, double rollerOutput) {
         state.rollerTargetOutput = rollerOutput;
-
-
-        if(rollerOutput == 0) {
-            m_rollerMotor.set(0);
-            return;
-        }
         m_rollerMotor.set(rollerOutput);
     }
 

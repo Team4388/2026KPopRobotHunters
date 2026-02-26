@@ -86,15 +86,6 @@ public class ShooterReal implements ShooterIO {
     @Override
     public void setIndexerOutput(ShooterState state, double percentOutput) {
         state.indexerTargetOutput = percentOutput;
-
-        if(percentOutput == 0) {
-            m_indexerMotor.set(0);
-            return;
-        }
-
-
-
-        // AngularVelocity motorRps = target.times(ShooterConstants.INDEXER_GEAR_RATIO);
         m_indexerMotor.set(percentOutput);
     }
 

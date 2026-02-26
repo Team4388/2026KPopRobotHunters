@@ -257,8 +257,13 @@ public class RobotContainer {
         
 
 
-        new JoystickButton(getDeadbandedOperatorController(), XboxController.RIGHT_BUMPER_BUTTON)
+        new JoystickButton(getDeadbandedOperatorController(), XboxController.LEFT_BUMPER_BUTTON)
             .onTrue(new InstantCommand(() -> {
+                m_robotShooter.spinUpFeeding();
+                m_robotIntake.rollerStop();
+            }))
+            .onFalse(new InstantCommand(() -> {
+                m_robotShooter.spinUpIdle();
                 m_robotIntake.setMode(IntakeMode.Extended);
             }));
 
@@ -267,30 +272,21 @@ public class RobotContainer {
         new Trigger(() -> getDeadbandedOperatorController().getLeftTriggerAxis() >= 0.5)
             .onTrue(new InstantCommand(() -> {
                 m_robotShooter.spinUpShooting();
-                m_robotIntake.setMode(IntakeMode.Idle);
                 m_robotIntake.rollerStop();
             }))
             .onFalse(new InstantCommand(() -> {
                 m_robotShooter.spinUpIdle();
+                m_robotIntake.setMode(IntakeMode.Extended);
             }));
         
-        new JoystickButton(getDeadbandedOperatorController(), XboxController.LEFT_BUMPER_BUTTON)
+        new JoystickButton(getDeadbandedOperatorController(), XboxController.RIGHT_BUMPER_BUTTON)
             .onTrue(new InstantCommand(() -> {
-                m_robotShooter.spinUpShooting();
-                m_robotIntake.setMode(IntakeMode.Idle);
+                m_robotIntake.setMode(IntakeMode.Retracted);
             }));
-
-        new JoystickButton(getDeadbandedOperatorController(), XboxController.BACK_BUTTON)
-            .onTrue(new InstantCommand(() -> {
-                m_robotShooter.spinUpFeeding();
-            }));
-
-        
-
 
         new JoystickButton(getDeadbandedOperatorController(), XboxController.A_BUTTON)
             .onTrue(new InstantCommand(() -> {
-                m_robotIntake.setMode(IntakeMode.Retracted);
+                m_robotIntake.setMode(IntakeMode.Extended);
             }));
 
         new JoystickButton(getDeadbandedOperatorController(), XboxController.X_BUTTON)
