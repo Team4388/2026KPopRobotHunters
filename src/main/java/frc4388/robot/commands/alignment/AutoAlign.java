@@ -40,13 +40,19 @@ public class AutoAlign extends Command {
 
     @Override
     public void execute() {
+        Rotation2d desiredHeading;
         Pose2d robotPose = vision.getPose2d();
         if (robotPose == null) return;
 
         double dx = targetpos.getX() - robotPose.getX();
         double dy = targetpos.getY() - robotPose.getY();
 
-        Rotation2d desiredHeading = new Rotation2d(Math.atan2(dy, dx));
+        if (!isLidar){
+            desiredHeading = new Rotation2d(Math.atan2(dy, dx)+ Math.PI);
+        }else{
+            desiredHeading = new Rotation2d(Math.atan2(dy, dx));
+        }
+
 
         roterr = desiredHeading.getDegrees() - robotPose.getRotation().getDegrees();
         if (roterr > 180) roterr -= 360;
