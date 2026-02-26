@@ -103,16 +103,19 @@ public class RobotContainer {
         // Right now this will just go to the closest ball constantly updating - need to make it so it locks on one ball
         RobotIntakeDown,
         new WaitCommand(1),
-        new RunCommand(
-        () -> m_robotSwerveDrive.driveWithInput(
-                m_lidar.getClosestBall(),
-                new Translation2d(m_lidar.getLatestBallAngle().getCos() * 0.1, 0),
-                false
-            ),
-            m_robotSwerveDrive
-        )
-        .withTimeout(5.0)
-        .andThen(new InstantCommand(() -> m_robotSwerveDrive.softStop(), m_robotSwerveDrive))
+        new InstantCommand(() -> System.out.println("Closest Ball: " + m_lidar.getClosestBall())),
+        new AutoAlign(m_robotSwerveDrive, m_vision, new Pose2d(m_lidar.getClosestBall(), new Rotation2d(0)), true)
+
+        // new RunCommand(
+        // () -> m_robotSwerveDrive.driveWithInput(
+        //         m_lidar.getClosestBall(),
+        //         new Translation2d(m_lidar.getLatestBallAngle().getCos() * 0.1, 0),
+        //         false
+        //     ),
+        //     m_robotSwerveDrive
+        // )
+        // .withTimeout(5.0)
+        // .andThen(new InstantCommand(() -> m_robotSwerveDrive.softStop(), m_robotSwerveDrive))
     );
 
     private Command RobotReadyToShoot = new SequentialCommandGroup(
@@ -122,7 +125,7 @@ public class RobotContainer {
 
     private Command RobotShoot = new SequentialCommandGroup(
         // TEST NEW AUTO ALIGN
-        new AutoAlign(m_robotSwerveDrive, m_vision, new Pose2d(FieldPositions.HUB_POSITION,  new Rotation2d(0))),
+        new AutoAlign(m_robotSwerveDrive, m_vision, new Pose2d(FieldPositions.HUB_POSITION,  new Rotation2d(0)), false),
         new InstantCommand(()-> m_robotShooter.setShooterShoot(), m_robotShooter),
         new InstantCommand(()-> m_robotShooter.setShooterReady(), m_robotShooter),
         new WaitCommand(3),

@@ -15,14 +15,15 @@ public class AutoAlign extends Command {
 
     private PID rotPID = new PID(AutoConstants.ROT_GAINS, 0);
     private Pose2d targetpos;
-
+    private boolean isLidar;
     SwerveDrive swerveDrive;
     Vision vision;
 
-    public AutoAlign(SwerveDrive swerveDrive, Vision vision, Pose2d targetpos) {
+    public AutoAlign(SwerveDrive swerveDrive, Vision vision, Pose2d targetpos, boolean isLidar) {
         this.swerveDrive = swerveDrive;
         this.vision = vision;
         this.targetpos = targetpos;
+        this.isLidar = isLidar;
         addRequirements(swerveDrive);
     }
 
@@ -39,8 +40,6 @@ public class AutoAlign extends Command {
 
     @Override
     public void execute() {
-
-
         Pose2d robotPose = vision.getPose2d();
         if (robotPose == null) return;
 
@@ -54,9 +53,9 @@ public class AutoAlign extends Command {
         if (roterr < -180) roterr += 360;
 
         SmartDashboard.putNumber("PID Rot Error", roterr);
-
+        System.out.println("Target: " + targetpos + "Heading: " + desiredHeading + "Error: " + roterr);
         swerveDrive.driveRelativeAngle(new Translation2d(0.0, 0.0), desiredHeading);
-     }
+    }
 
     @Override
     public final boolean isFinished() {
