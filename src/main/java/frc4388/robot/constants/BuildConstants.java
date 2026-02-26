@@ -5,15 +5,15 @@ package frc4388.robot.constants;
  */
 public final class BuildConstants {
   public static final String MAVEN_GROUP = "";
-  public static final String MAVEN_NAME = "2026KPopRobotHunters";
+  public static final String MAVEN_NAME = "2026KPopRobotHunters-new";
   public static final String VERSION = "unspecified";
-  public static final int GIT_REVISION = 85;
-  public static final String GIT_SHA = "3197a3dce03bf34c001ef4009de3e7d98a181536";
-  public static final String GIT_DATE = "2026-02-24 22:17:58 MST";
+  public static final int GIT_REVISION = 106;
+  public static final String GIT_SHA = "1c27b1ec8090b8d6e78af857c2aa7592b6f36e2b";
+  public static final String GIT_DATE = "2026-02-26 15:15:12 MST";
   public static final String GIT_BRANCH = "reveal-night";
-  public static final String BUILD_DATE = "2026-02-25 16:32:13 MST";
-  public static final long BUILD_UNIX_TIME = 1772062333884L;
-  public static final int DIRTY = 1;
+  public static final String BUILD_DATE = "2026-02-26 15:16:04 MST";
+  public static final long BUILD_UNIX_TIME = 1772144164051L;
+  public static final int DIRTY = 0;
 
   private BuildConstants(){}
 }

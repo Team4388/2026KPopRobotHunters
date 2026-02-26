@@ -120,7 +120,7 @@ public class RobotContainer {
 
     private Command RobotReadyToShoot = new SequentialCommandGroup(
         new InstantCommand(()-> m_robotIntake.setMode(IntakeMode.Idle),  m_robotIntake),
-        new InstantCommand(() -> m_robotShooter.setShooterReady(), m_robotShooter)
+        new InstantCommand(() -> m_robotShooter.spinUpShooting(), m_robotShooter)
     );
 
     private Command IntakeRetracted = new SequentialCommandGroup(
@@ -130,13 +130,13 @@ public class RobotContainer {
     private Command RobotShoot = new SequentialCommandGroup(
         // TEST NEW AUTO ALIGN
         //new AutoAlign(m_robotSwerveDrive, m_vision, new Pose2d(FieldPositions.HUB_POSITION,  new Rotation2d(0)), false),
-        new InstantCommand(()-> m_robotShooter.setShooterShoot(), m_robotShooter),
-        new InstantCommand(()-> m_robotShooter.setShooterReady(), m_robotShooter),
+        new InstantCommand(()-> m_robotShooter.spinUpShooting(), m_robotShooter),
+        new InstantCommand(()-> m_robotShooter.allowShooting(), m_robotShooter),
         new WaitCommand(2),
         IntakeRetracted,
         new WaitCommand(3),
-        new InstantCommand(()->m_robotShooter.setShooterNOTShoot(), m_robotShooter),
-        new InstantCommand(() -> m_robotShooter.setShooterNotReady(), m_robotShooter)
+        new InstantCommand(()->m_robotShooter.spinUpIdle(), m_robotShooter),
+        new InstantCommand(() -> m_robotShooter.denyShooting(), m_robotShooter)
     );
 
     
