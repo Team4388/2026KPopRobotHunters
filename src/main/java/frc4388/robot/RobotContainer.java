@@ -12,6 +12,7 @@ import java.io.File;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -121,7 +122,7 @@ public class RobotContainer {
 
     private Command RobotShoot = new SequentialCommandGroup(
         // TEST NEW AUTO ALIGN
-        //new AutoAlign(m_robotSwerveDrive, m_vision),
+        new AutoAlign(m_robotSwerveDrive, m_vision, new Pose2d(FieldPositions.HUB_POSITION,  new Rotation2d(0))),
         new InstantCommand(()-> m_robotShooter.setShooterShoot(), m_robotShooter),
         new InstantCommand(()-> m_robotShooter.setShooterReady(), m_robotShooter),
         new WaitCommand(3),

@@ -9,7 +9,6 @@ import frc4388.robot.constants.Constants.AutoConstants;
 import frc4388.robot.subsystems.swerve.SwerveDrive;
 import frc4388.robot.subsystems.vision.Vision;
 import frc4388.utility.compute.FieldPositions;
-import frc4388.utility.compute.TimesNegativeOne;
 import frc4388.utility.structs.Gains;
 
 public class AutoAlign extends Command {
@@ -20,16 +19,17 @@ public class AutoAlign extends Command {
     SwerveDrive swerveDrive;
     Vision vision;
 
-    public AutoAlign(SwerveDrive swerveDrive, Vision vision) {
+    public AutoAlign(SwerveDrive swerveDrive, Vision vision, Pose2d targetpos) {
         this.swerveDrive = swerveDrive;
         this.vision = vision;
+        this.targetpos = targetpos;
         addRequirements(swerveDrive);
     }
 
     @Override
     public void initialize() {
         rotPID.initialize();
-        this.targetpos = new Pose2d(FieldPositions.HUB_POSITION, new Rotation2d(0));
+        //this.targetpos = new Pose2d(FieldPositions.HUB_POSITION, new Rotation2d(0));
     }
     
 
