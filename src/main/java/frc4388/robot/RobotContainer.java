@@ -11,7 +11,6 @@ import java.io.File;
 
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
-import com.pathplanner.lib.trajectory.PathPlannerTrajectory;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -29,12 +28,13 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc4388.robot.commands.MoveForTimeCommand;
+import frc4388.robot.commands.alignment.AutoAlign;
 import frc4388.robot.constants.Constants;
 import frc4388.robot.constants.Constants.OIConstants;
 import frc4388.robot.constants.Constants.SimConstants.Mode;
 // Subsystems
 import frc4388.robot.subsystems.LED;
+import frc4388.robot.subsystems.Lidar;
 import frc4388.robot.subsystems.intake.Intake;
 import frc4388.robot.subsystems.intake.Intake.IntakeMode;
 import frc4388.robot.subsystems.shooter.Shooter;
@@ -65,6 +65,7 @@ public class RobotContainer {
     // public final DigitalInput m_armLimitSwitch = new DigitalInput(9);
 
     /* Subsystems */
+    public final Lidar m_lidar = new Lidar();
     public final LED m_robotLED = new LED(Constants.LEDConstants.LED_SPARK_ID);
     //Testing of Colors
     public final Vision m_vision = new Vision(m_robotMap.rightCamera, m_robotMap.leftCamera);
@@ -95,43 +96,50 @@ public class RobotContainer {
 
 
     private Command RobotIntakeDown = new SequentialCommandGroup(
-        new InstantCommand(() -> m_robotIntake.setMode(IntakeMode.Extended))
+        new InstantCommand(() -> m_robotIntake.setMode(IntakeMode.Extended), m_robotIntake)
     );
-    
+
+    private Command LidarIntake = new SequentialCommandGroup(
+        // Right now this will just go to the closest ball constantly updating - need to make it so it locks on one ball
+        // RobotIntakeDown,
+        // new WaitCommand(1),
+        // new InstantCommand(() -> System.out.println("Closest Ball: " + m_lidar.getClosestBall())),
+        new AutoAlign(m_robotSwerveDrive, m_vision, m_lidar, true)
+
+        // new RunCommand(
+        // () -> m_robotSwerveDrive.driveWithInput(
+        //         m_lidar.getClosestBall(),
+        //         new Translation2d(m_lidar.getLatestBallAngle().getCos() * 0.1, 0),
+        //         false
+        //     ),
+        //     m_robotSwerveDrive
+        // )
+        // .withTimeout(5.0)
+        // .andThen(new InstantCommand(() -> m_robotSwerveDrive.softStop(), m_robotSwerveDrive))
+    );
+
+    private Command RobotReadyToShoot = new SequentialCommandGroup(
+        new InstantCommand(()-> m_robotIntake.setMode(IntakeMode.Idle),  m_robotIntake),
+        new InstantCommand(() -> m_robotShooter.setShooterReady(), m_robotShooter)
+    );
+
+    private Command IntakeRetracted = new SequentialCommandGroup(
+        new InstantCommand(() -> m_robotIntake.setMode(IntakeMode.Retracted), m_robotIntake)
+    );
+
     private Command RobotShoot = new SequentialCommandGroup(
-        new InstantCommand(() -> m_robotShooter.spinUpShooting()),
-        new RunCommand(
-                () -> {
-                m_robotSwerveDrive.driveFacingPosition(
-                    getDeadbandedDriverController().getLeft(),
-                    FieldPositions.HUB_POSITION,
-                    ShooterConstants.AIM_LEAD_TIME.get()
-                    );
-                }, m_robotSwerveDrive),
-        new InstantCommand(()->m_robotIntake.setMode(IntakeMode.Idle)),
-        new WaitCommand(5),
-        new InstantCommand(()->m_robotShooter.allowShooting()),
-        new WaitCommand(10),
-        new InstantCommand(()->m_robotShooter.denyShooting())
+        // TEST NEW AUTO ALIGN
+        //new AutoAlign(m_robotSwerveDrive, m_vision, new Pose2d(FieldPositions.HUB_POSITION,  new Rotation2d(0)), false),
+        new InstantCommand(()-> m_robotShooter.setShooterShoot(), m_robotShooter),
+        new InstantCommand(()-> m_robotShooter.setShooterReady(), m_robotShooter),
+        new WaitCommand(2),
+        IntakeRetracted,
+        new WaitCommand(3),
+        new InstantCommand(()->m_robotShooter.setShooterNOTShoot(), m_robotShooter),
+        new InstantCommand(() -> m_robotShooter.setShooterNotReady(), m_robotShooter)
     );
 
-    // private Command RobotShoot = new SequentialCommandGroup(
-    //     new InstantCommand(() -> System.out.println(m_robotLED.getMode())),
-    //     new InstantCommand(() -> m_robotLED.setMode(LEDPatterns.PARTY_TWINKLES), m_robotLED),
-    //     new InstantCommand(() -> System.out.println(m_robotLED.getMode())),
-    //     new WaitCommand(5),
-    //     new InstantCommand(() -> m_robotLED.setMode(LEDPatterns.SOLID_RED), m_robotLED),
-    //     new InstantCommand(() -> System.out.println(m_robotLED.getMode()))
-    // );
-
-    // private Command RobotShoot = new SequentialCommandGroup(
-    //     new InstantCommand(() -> m_robotShooter.setMode(Shooter.ShooterMode.Active), m_robotShooter)
-    // );
-
-    // private Command RobotIntake = new SequentialCommandGroup(
-    //     new InstantCommand(() -> m_robotIntake.setMode(Intake.IntakeMode.Down), m_robotIntake)
-    // );
-
+    
     public RobotContainer() {
         
         configureButtonBindings();
@@ -150,7 +158,10 @@ public class RobotContainer {
             m_robotShooter.io.updateGains();
         }, true);
 
+        NamedCommands.registerCommand("Robot Rev Up", RobotReadyToShoot);
+        NamedCommands.registerCommand("Intake Retracted", IntakeRetracted);
         NamedCommands.registerCommand("Robot Shoot", RobotShoot);
+        NamedCommands.registerCommand("Lidar Intake", LidarIntake);
         NamedCommands.registerCommand("Robot Intake Down", RobotIntakeDown);
 
 
@@ -355,7 +366,7 @@ public class RobotContainer {
 
         autoChooser.onChange((filename) -> {
             autoChooserUpdated = true;
-            // if (filename.equals("Taxi")) {
+            // if (filename.equals("Taxi%")) {
             //     autoCommand = new SequentialCommandGroup(
             //         new MoveForTimeCommand(m_robotSwerveDrive, 
             //             new Translation2d(0, -1), 

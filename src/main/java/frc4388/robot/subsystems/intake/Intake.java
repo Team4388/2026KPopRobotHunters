@@ -40,6 +40,10 @@ public class Intake extends SubsystemBase {
         return mode;
     }
 
+    public void rollerStop(){
+        io.setRollerOutput(state, 0);
+    }
+
 
     // public enum FieldZone {
     //     // The robot should aim at the hub
