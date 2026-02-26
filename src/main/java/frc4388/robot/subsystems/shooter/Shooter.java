@@ -217,9 +217,9 @@ public class Shooter extends SubsystemBase {
 
                 io.setShooterCurrentLimitSpeed(
                     state, 
-                    ShooterConstants.SHOOTER_IDLE_PERCENT_OUTPUT.get(), 
-                    Amps.of(ShooterConstants.SHOOTER_IDLE_MAX_CURRENT.get()), 
-                    RotationsPerSecond.of(ShooterConstants.INDEXER_REVERSE_OUTPUT.get())
+                    ShooterConstants.SHOOTER_IDLE_PERCENT_OUTPUT.get()
+                    // Amps.of(ShooterConstants.SHOOTER_IDLE_MAX_CURRENT.get()), 
+                    // RotationsPerSecond.of(ShooterConstants.INDEXER_REVERSE_OUTPUT.get())
                 );
                 io.setIndexerOutput(state, ShooterConstants.INDEXER_REVERSE_OUTPUT.get());
                 m_robotLED.setMode(Constants.LEDConstants.DEFAULT_PATTERN);

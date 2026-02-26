@@ -61,26 +61,26 @@ public class ShooterReal implements ShooterIO {
     @Override
     public void setShooterCurrentLimitSpeed(
         ShooterState state, 
-        double percentOutput,
-        Current currentLimit,
-        AngularVelocity targetVelocity
+        double percentOutput
+        // Current currentLimit,
+        // AngularVelocity targetVelocity
     ) {
-        state.motor1TargetVelocity = targetVelocity;
-        state.motor2TargetVelocity = targetVelocity;
+        // state.motor1TargetVelocity = targetVelocity;
+        // state.motor2TargetVelocity = targetVelocity;
 
-        double current = Math.abs(state.motor1Current.in(Amps)) + Math.abs(state.motor2Current.in(Amps));
-        double velocity = (Math.abs(state.motor1Velocity.in(RotationsPerSecond)) + Math.abs(state.motor2Velocity.in(RotationsPerSecond))) / 2;
+        // double current = Math.abs(state.motor1Current.in(Amps)) + Math.abs(state.motor2Current.in(Amps));
+        // double velocity = (Math.abs(state.motor1Velocity.in(RotationsPerSecond)) + Math.abs(state.motor2Velocity.in(RotationsPerSecond))) / 2;
 
-        if(
-            Math.abs(currentLimit.in(Amps)) > current &&
-            Math.abs(targetVelocity.in(RotationsPerSecond)) > velocity
-        ) {
+        // if(
+        //     Math.abs(currentLimit.in(Amps)) > current &&
+        //     Math.abs(targetVelocity.in(RotationsPerSecond)) > velocity
+        // ) {
             m_shooter1Motor.set(percentOutput);
             m_shooter2Motor.set(percentOutput);
-        } else {
-            m_shooter1Motor.set(0);
-            m_shooter2Motor.set(0);
-        }
+        // } else {
+        //     m_shooter1Motor.set(0);
+        //     m_shooter2Motor.set(0);
+        // }
     }
 
     @Override
