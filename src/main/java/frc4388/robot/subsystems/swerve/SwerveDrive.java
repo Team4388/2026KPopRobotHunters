@@ -4,6 +4,8 @@
 
 package frc4388.robot.subsystems.swerve;
 
+import static edu.wpi.first.units.Units.Rotations;
+
 import java.util.function.Supplier;
 
 import org.littletonrobotics.junction.AutoLogOutput;
@@ -244,6 +246,10 @@ public class SwerveDrive extends SubsystemBase implements Queryable {
             return; // don't bother doing swerve drive math and return early.
 
         leftStick.rotateBy(TimesNegativeOne.ForwardOffset);
+
+        if(!TimesNegativeOne.isRed) {
+            leftStick.rotateBy(new Rotation2d(Math.PI/2.));
+        }
 
         io.setControl(new SwerveRequest.FieldCentricFacingAngle()
                 .withVelocityX(leftStick.getX() * speedAdjust)

@@ -267,29 +267,28 @@ public class RobotContainer {
 
         new Trigger(() -> getDeadbandedOperatorController().getLeftTriggerAxis() >= 0.5)
             .onTrue(new InstantCommand(() -> {
-                m_robotShooter.setShooterNotReady();
+                m_robotShooter.spinUpIdle();
             }));
         
         new JoystickButton(getDeadbandedOperatorController(), XboxController.LEFT_BUMPER_BUTTON)
             .onTrue(new InstantCommand(() -> {
-                m_robotShooter.setShooterReady();
+                m_robotShooter.spinUpShooting();
                 m_robotIntake.setMode(IntakeMode.Idle);
             }));
 
         new JoystickButton(getDeadbandedOperatorController(), XboxController.BACK_BUTTON)
             .onTrue(new InstantCommand(() -> {
-                m_robotShooter.setShooterReadyFeeder();
+                m_robotShooter.spinUpFeeding();
             }));
 
-            
-
+        
 
 
         new JoystickButton(getDeadbandedOperatorController(), XboxController.A_BUTTON)
             .onTrue(new InstantCommand(() -> {
-                m_robotShooter.setShooterShoot();
+                m_robotShooter.allowShooting();
             })).onFalse(new InstantCommand(() -> {
-                m_robotShooter.setShooterNOTShoot();
+                m_robotShooter.denyShooting();
             }));
 
         new JoystickButton(getDeadbandedOperatorController(), XboxController.X_BUTTON)

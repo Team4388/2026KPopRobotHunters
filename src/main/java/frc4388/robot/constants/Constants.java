@@ -119,7 +119,7 @@ public final class Constants {
 
 
         public static final LEDPatterns OPREADY_FEED = LEDPatterns.SOLID_BLUE;
-        public static final LEDPatterns OPREADY_FEED_BADPHYS = LEDPatterns.BLUE_STROBE;
+        // public static final LEDPatterns OPREADY_FEED_BADPHYS = LEDPatterns.BLUE_STROBE;
     }
 
     public static final class OIConstants {

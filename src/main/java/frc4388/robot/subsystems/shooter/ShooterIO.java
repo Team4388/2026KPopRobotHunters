@@ -38,6 +38,12 @@ public interface ShooterIO {
     // public default void setShooterAngle(ShooterState state, Angle angle) {}
     // public default void setShooterPitch(ShooterState state, Angle angle) {}
     public default void setShooterVelocity(ShooterState state, AngularVelocity angularVelocity) {}
+    public default void setShooterCurrentLimitSpeed(
+        ShooterState state, 
+        double percentOutput
+        // Current currentLimit,
+        // AngularVelocity targetVelocity
+    ) {}
     // public default void setMotor2Velocity(ShooterState state, AngularVelocity angularVelocity) {}
     public default void setIndexerOutput(ShooterState state, double percentOutput) {}
 
