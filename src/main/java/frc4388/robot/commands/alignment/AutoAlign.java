@@ -50,7 +50,7 @@ public class AutoAlign extends Command {
         if (!isLidar){
             desiredHeading = new Rotation2d(Math.atan2(dy, dx)+ Math.PI);
         }else{
-            desiredHeading = new Rotation2d(Math.atan2(dy, dx));
+            desiredHeading = new Rotation2d(Math.atan2(dx, dy));
         }
 
 
