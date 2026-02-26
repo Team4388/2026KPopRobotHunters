@@ -125,7 +125,7 @@ public class RobotContainer {
 
     private Command RobotShoot = new SequentialCommandGroup(
         // TEST NEW AUTO ALIGN
-        new AutoAlign(m_robotSwerveDrive, m_vision, new Pose2d(FieldPositions.HUB_POSITION,  new Rotation2d(0)), false),
+        //new AutoAlign(m_robotSwerveDrive, m_vision, new Pose2d(FieldPositions.HUB_POSITION,  new Rotation2d(0)), false),
         new InstantCommand(()-> m_robotShooter.setShooterShoot(), m_robotShooter),
         new InstantCommand(()-> m_robotShooter.setShooterReady(), m_robotShooter),
         new WaitCommand(3),
