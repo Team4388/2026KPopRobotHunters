@@ -7,19 +7,25 @@
         {
           "type": "named",
           "data": {
-            "name": "Robot Rev Up"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Intake Retracted"
+            "name": "Intake Extended"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Quick Shoot"
+            "pathName": "HubFarRight-NeutralZone"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Robot Rev Up"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "HubFarLeft-Shoot"
           }
         },
         {

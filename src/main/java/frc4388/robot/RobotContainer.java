@@ -95,7 +95,7 @@ public class RobotContainer {
     private Command autoCommand;
 
 
-    private Command RobotIntakeDown = new SequentialCommandGroup(
+    private Command IntakeExtended = new SequentialCommandGroup(
         new InstantCommand(() -> m_robotIntake.setMode(IntakeMode.Extended), m_robotIntake)
     );
 
@@ -162,7 +162,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("Intake Retracted", IntakeRetracted);
         NamedCommands.registerCommand("Robot Shoot", RobotShoot);
         // NamedCommands.registerCommand("Lidar Intake", LidarIntake);
-        NamedCommands.registerCommand("Robot Intake Down", RobotIntakeDown);
+        NamedCommands.registerCommand("Intake Extended", IntakeExtended);
 
 
         DriverStation.silenceJoystickConnectionWarning(true);
