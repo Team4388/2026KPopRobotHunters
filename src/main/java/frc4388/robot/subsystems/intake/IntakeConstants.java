@@ -51,9 +51,9 @@ public class IntakeConstants {
 
     
 
-    public static ConfigurableDouble arm_kP = new ConfigurableDouble("ARM KP", 0.03);
+    public static ConfigurableDouble arm_kP = new ConfigurableDouble("ARM KP", 0.08);
     public static ConfigurableDouble arm_kI = new ConfigurableDouble("ARM KI", 0);
-    public static ConfigurableDouble arm_kD = new ConfigurableDouble("ARM KD", 0);
+    public static ConfigurableDouble arm_kD = new ConfigurableDouble("ARM KD", 0.1);
     
 
 
