@@ -7,13 +7,13 @@
         {
           "type": "named",
           "data": {
-            "name": "Robot Rev Up"
+            "name": "Intake Extended"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "Intake Retracted"
+            "name": "Robot Rev Up"
           }
         },
         {
