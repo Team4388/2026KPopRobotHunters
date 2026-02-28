@@ -7,13 +7,19 @@
         {
           "type": "named",
           "data": {
-            "name": "Robot Intake Down"
+            "name": "Robot Rev Up"
           }
         },
         {
           "type": "path",
           "data": {
             "pathName": "Quick Shoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Test - Robot Align"
           }
         },
         {

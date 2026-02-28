@@ -45,13 +45,13 @@ public class IntakeConstants {
 
 
     public static final Slot0Configs ARM_PID = new Slot0Configs()
-        .withKP(0.1)
+        .withKP(0.03)
         .withKI(0.0)
         .withKD(0.0);
 
     
 
-    public static ConfigurableDouble arm_kP = new ConfigurableDouble("ARM KP", 0.05);
+    public static ConfigurableDouble arm_kP = new ConfigurableDouble("ARM KP", 0.03);
     public static ConfigurableDouble arm_kI = new ConfigurableDouble("ARM KI", 0);
     public static ConfigurableDouble arm_kD = new ConfigurableDouble("ARM KD", 0);
     
