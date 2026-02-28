@@ -282,8 +282,8 @@ public class RobotContainer {
         //set shooter ready (rev) with left trigger hold
         new Trigger(() -> getDeadbandedOperatorController().getLeftTriggerAxis() >= 0.5)
             .onTrue(new InstantCommand(() -> {
-                m_robotShooter.spinUpShooting();
                 m_robotIntake.rollerStop();
+                m_robotShooter.spinUpShooting();
             }))
             .onFalse(new InstantCommand(() -> {
                 m_robotShooter.spinUpIdle();
