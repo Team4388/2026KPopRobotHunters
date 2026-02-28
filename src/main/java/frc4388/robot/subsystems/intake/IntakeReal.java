@@ -89,7 +89,7 @@ public class IntakeReal implements IntakeIO {
     }
 
     @Override
-    public void testSetArmAgle(IntakeState state, Angle angle){
+    public void testSetArmAngle(IntakeState state, Angle angle){
         state.armTargetAngle = angle;
         Angle motorAngle = angle.times(IntakeConstants.ARM_MOTOR_GEAR_RATIO);
 
