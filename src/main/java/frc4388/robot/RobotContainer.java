@@ -26,6 +26,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc4388.robot.commands.alignment.AutoAlign;
@@ -95,7 +96,7 @@ public class RobotContainer {
     private Command autoCommand;
 
 
-    private Command RobotIntakeDown = new SequentialCommandGroup(
+    private Command RobotIntakeExtended = new SequentialCommandGroup(
         new InstantCommand(() -> m_robotIntake.setMode(IntakeMode.Extended), m_robotIntake)
     );
 
@@ -118,25 +119,24 @@ public class RobotContainer {
     //     // .andThen(new InstantCommand(() -> m_robotSwerveDrive.softStop(), m_robotSwerveDrive))
     // );
 
-    private Command RobotReadyToShoot = new SequentialCommandGroup(
-        new InstantCommand(()-> m_robotIntake.setMode(IntakeMode.Idle),  m_robotIntake),
-        new InstantCommand(() -> m_robotShooter.spinUpShooting(), m_robotShooter)
+    private Command RobotRev = new SequentialCommandGroup(
+        new InstantCommand(() -> m_robotShooter.spinUpShooting(), m_robotShooter),
+        new InstantCommand(() -> m_robotIntake.setMode(IntakeMode.Extended), m_robotIntake),
+        new InstantCommand(() -> m_robotIntake.rollerStop(), m_robotIntake)
     );
 
-    private Command IntakeRetracted = new SequentialCommandGroup(
+    private Command RobotIntakeRetracted = new SequentialCommandGroup(
         new InstantCommand(() -> m_robotIntake.setMode(IntakeMode.Retracted), m_robotIntake)
     );
 
     private Command RobotShoot = new SequentialCommandGroup(
         // TEST NEW AUTO ALIGN
         //new AutoAlign(m_robotSwerveDrive, m_vision, new Pose2d(FieldPositions.HUB_POSITION,  new Rotation2d(0)), false),
-        new InstantCommand(()-> m_robotShooter.spinUpShooting(), m_robotShooter),
+        new WaitUntilCommand(m_robotShooter::isShooterUpToSpeed),
         new InstantCommand(()-> m_robotShooter.allowShooting(), m_robotShooter),
-        new WaitCommand(2),
-        IntakeRetracted,
-        new WaitCommand(3),
-        new InstantCommand(()->m_robotShooter.spinUpIdle(), m_robotShooter),
-        new InstantCommand(() -> m_robotShooter.denyShooting(), m_robotShooter)
+        new WaitCommand(5),
+        new InstantCommand(() -> m_robotShooter.denyShooting(), m_robotShooter),
+        new InstantCommand(()->m_robotShooter.spinUpIdle(), m_robotShooter)
     );
 
     
@@ -158,12 +158,11 @@ public class RobotContainer {
             m_robotShooter.io.updateGains();
         }, true);
 
-        NamedCommands.registerCommand("Robot Rev Up", RobotReadyToShoot);
-        NamedCommands.registerCommand("Intake Retracted", IntakeRetracted);
+        NamedCommands.registerCommand("Robot Rev Up", RobotRev);
+        NamedCommands.registerCommand("Robot Intake Retracted", RobotIntakeRetracted);
         NamedCommands.registerCommand("Robot Shoot", RobotShoot);
         // NamedCommands.registerCommand("Lidar Intake", LidarIntake);
-        NamedCommands.registerCommand("Robot Intake Down", RobotIntakeDown);
-
+        NamedCommands.registerCommand("Robot Intake Extended", RobotIntakeExtended);
 
         DriverStation.silenceJoystickConnectionWarning(true);
 

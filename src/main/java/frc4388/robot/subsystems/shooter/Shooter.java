@@ -29,6 +29,7 @@ public class Shooter extends SubsystemBase {
     
 
     // Supplier<Pose2d> m_swervePoseSupplier;
+    public boolean badShooterVelocity;
 
 
     public Shooter(
@@ -75,6 +76,7 @@ public class Shooter extends SubsystemBase {
     }
 
 
+
     public void allowShooting() {
         shooterButtonReady = true;
     }
@@ -88,6 +90,12 @@ public class Shooter extends SubsystemBase {
     public ShooterMode getMode() {
         return mode;
     }
+
+    @AutoLogOutput
+    public boolean isShooterUpToSpeed() {
+        return !badShooterVelocity;
+    }
+
 
 
     @Override
@@ -132,7 +140,8 @@ public class Shooter extends SubsystemBase {
         double shooterSpeed = Math.abs(state.motor1Velocity.in(RotationsPerSecond) + state.motor2Velocity.in(RotationsPerSecond)) / 2;
         double shooterSpeedTarget = Math.abs(state.motor1TargetVelocity.in(RotationsPerSecond) + state.motor2TargetVelocity.in(RotationsPerSecond)) / 2;
 
-        boolean badShooterVelocity = Math.abs(shooterSpeed - shooterSpeedTarget) > ShooterConstants.SHOOTER_SPEED_TOLERANCE.get();
+        badShooterVelocity = Math.abs(shooterSpeed - shooterSpeedTarget) > ShooterConstants.SHOOTER_SPEED_TOLERANCE.get();
+
 
         switch (mode) {
             case Shooting:
