@@ -5,7 +5,7 @@ package frc4388.robot.constants;
  */
 public final class BuildConstants {
   public static final String MAVEN_GROUP = "";
-  public static final String MAVEN_NAME = "2026KPopRobotHunters";
+  public static final String MAVEN_NAME = "2026KPopRobotHunters-new";
   public static final String VERSION = "unspecified";
   public static final int GIT_REVISION = 85;
   public static final String GIT_SHA = "3d22607e5a8805f6bafa42d0e8ae41a719741842";
