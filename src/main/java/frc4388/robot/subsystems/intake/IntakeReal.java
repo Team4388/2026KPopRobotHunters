@@ -1,16 +1,18 @@
 package frc4388.robot.subsystems.intake;
 
-import static edu.wpi.first.units.Units.Degrees;
-import static edu.wpi.first.units.Units.Rotation;
+import static edu.wpi.first.units.Units.Rotations;
 
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.PositionDutyCycle;
-import com.ctre.phoenix6.controls.VelocityDutyCycle;
+import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 
-import edu.wpi.first.units.measure.*;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.measure.Acceleration;
+import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.Velocity;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.DigitalOutput;
 
 public class IntakeReal implements IntakeIO {
 
@@ -56,6 +58,12 @@ public class IntakeReal implements IntakeIO {
     @Override
     public void setRollerOutput(IntakeState state, double rollerOutput) {
         state.rollerTargetOutput = rollerOutput;
+
+
+        if(rollerOutput == 0) {
+            m_rollerMotor.set(0);
+            return;
+        }
         m_rollerMotor.set(rollerOutput);
     }
 
@@ -81,6 +89,32 @@ public class IntakeReal implements IntakeIO {
     }
 
     @Override
+    public void testSetArmAgle(IntakeState state, Angle angle){
+        state.armTargetAngle = angle;
+        Angle motorAngle = angle.times(IntakeConstants.ARM_MOTOR_GEAR_RATIO);
+
+        final TrapezoidProfile m_profile = new TrapezoidProfile(
+            new TrapezoidProfile.Constraints(80, 160)
+        );
+
+        // Final target of motorAngle rot, 0 rps
+        // Convert the Angle to a numeric degree value before creating the profile state
+        TrapezoidProfile.State m_goal = new TrapezoidProfile.State(motorAngle.in(Rotations), 0);
+        TrapezoidProfile.State m_setpoint = new TrapezoidProfile.State();
+
+        // create a position closed-loop request, voltage output, slot 0 configs
+        final PositionVoltage m_request = new PositionVoltage(0).withSlot(0);
+
+        // calculate the next profile setpoint
+        m_setpoint = m_profile.calculate(0.020, m_setpoint, m_goal);
+
+        // send the request to the device
+        m_request.Position = m_setpoint.position;
+        m_request.Velocity = m_setpoint.velocity;
+        m_armMotor.setControl(m_request);
+    }
+
+    @Override
     public void stopArm(){
         m_armMotor.set(0);
         // m_rollerMotor.set(0);
@@ -94,6 +128,7 @@ public class IntakeReal implements IntakeIO {
             );
     }
 
+    @SuppressWarnings("rawtypes")
     @Override
     public void updateInputs(IntakeState state) {
         state.armAngle = m_armMotor.getPosition().getValue().div(IntakeConstants.ARM_MOTOR_GEAR_RATIO);
@@ -101,6 +136,9 @@ public class IntakeReal implements IntakeIO {
         state.rollerOutput = m_rollerMotor.get();
         state.rollerMotorCurrent = m_rollerMotor.getStatorCurrent().getValue();
         state.retractedLimit = !m_armLimitSwitch.get();
+        
+        state.armMotorVelocity = (Velocity) m_armMotor.getVelocity();
+        state.armMotorAcceleration = (Acceleration) m_armMotor.getAcceleration();
 
         if(state.retractedLimit) {
             // Set the arm motor to be zero if the limit switch is pressed
