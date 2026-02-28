@@ -3,13 +3,14 @@ package frc4388.robot.subsystems.intake;
 import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Rotations;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
+import static edu.wpi.first.units.Units.RotationsPerSecondPerSecond;
 
 import org.littletonrobotics.junction.AutoLog;
 
-import edu.wpi.first.units.measure.Acceleration;
 import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.AngularAcceleration;
+import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
-import edu.wpi.first.units.measure.Velocity;
 
 public interface IntakeIO {
     @AutoLog
@@ -19,10 +20,8 @@ public interface IntakeIO {
         Angle armTargetAngle = Rotations.of(0);
         Current armMotorCurrent = Amps.of(0);
 
-        @SuppressWarnings("rawtypes")
-        Velocity armMotorVelocity;
-        @SuppressWarnings("rawtypes")
-        Acceleration armMotorAcceleration;
+        AngularVelocity armMotorVelocity = RotationsPerSecond.of(0);
+        AngularAcceleration armMotorAcceleration = RotationsPerSecondPerSecond.of(0);
 
         // Angle shooterPitch = Rotations.of(0);
         // Angle shooterTargetPitch = Rotations.of(0);
@@ -40,7 +39,7 @@ public interface IntakeIO {
     // public default void setShooterAngle(ShooterState state, Angle angle) {}
     // public default void setShooterPitch(ShooterState state, Angle angle) {}
     public default void setArmAngle(IntakeState state, Angle angle) {}
-    public default void testSetArmAgle(IntakeState state, Angle angle){}
+    public default void testSetArmAngle(IntakeState state, Angle angle){}
     public default void stopArm() {}
     public default void setRollerOutput(IntakeState state, double rollerOutput) {}
     public default void armOutput(double percentOutput) {}

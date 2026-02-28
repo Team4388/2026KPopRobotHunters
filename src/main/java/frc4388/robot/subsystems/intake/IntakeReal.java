@@ -89,7 +89,7 @@ public class IntakeReal implements IntakeIO {
     }
 
     @Override
-    public void testSetArmAgle(IntakeState state, Angle angle){
+    public void testSetArmAngle(IntakeState state, Angle angle){
         state.armTargetAngle = angle;
         Angle motorAngle = angle.times(IntakeConstants.ARM_MOTOR_GEAR_RATIO);
 
@@ -128,7 +128,6 @@ public class IntakeReal implements IntakeIO {
             );
     }
 
-    @SuppressWarnings("rawtypes")
     @Override
     public void updateInputs(IntakeState state) {
         state.armAngle = m_armMotor.getPosition().getValue().div(IntakeConstants.ARM_MOTOR_GEAR_RATIO);
@@ -137,8 +136,8 @@ public class IntakeReal implements IntakeIO {
         state.rollerMotorCurrent = m_rollerMotor.getStatorCurrent().getValue();
         state.retractedLimit = !m_armLimitSwitch.get();
         
-        // state.armMotorVelocity = (Velocity) m_armMotor.getVelocity();
-        // state.armMotorAcceleration = (Acceleration) m_armMotor.getAcceleration();
+        state.armMotorVelocity = m_armMotor.getVelocity().getValue();
+        state.armMotorAcceleration = m_armMotor.getAcceleration().getValue();
 
         if(state.retractedLimit) {
             // Set the arm motor to be zero if the limit switch is pressed
