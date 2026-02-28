@@ -49,12 +49,6 @@
         {
           "type": "named",
           "data": {
-            "name": "Intake Retracted"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
             "name": "Robot Rev Up"
           }
         },

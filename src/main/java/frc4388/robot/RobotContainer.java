@@ -129,12 +129,18 @@ public class RobotContainer {
         new InstantCommand(() -> m_robotIntake.setMode(IntakeMode.Retracted), m_robotIntake)
     );
 
+    private Command RobotRollerOff = new SequentialCommandGroup(
+        new InstantCommand(() -> m_robotIntake.rollerStop(), m_robotIntake)
+    );
+
     private Command RobotShoot = new SequentialCommandGroup(
         // TEST NEW AUTO ALIGN
         //new AutoAlign(m_robotSwerveDrive, m_vision, new Pose2d(FieldPositions.HUB_POSITION,  new Rotation2d(0)), false),
         new WaitUntilCommand(m_robotShooter::isShooterUpToSpeed),
         new InstantCommand(()-> m_robotShooter.allowShooting(), m_robotShooter),
-        new WaitCommand(5),
+        new WaitCommand(3),
+        RobotIntakeRetracted,
+        new WaitCommand(2),
         new InstantCommand(() -> m_robotShooter.denyShooting(), m_robotShooter),
         new InstantCommand(()->m_robotShooter.spinUpIdle(), m_robotShooter)
     );
@@ -161,6 +167,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("Robot Rev Up", RobotRev);
         NamedCommands.registerCommand("Robot Intake Retracted", RobotIntakeRetracted);
         NamedCommands.registerCommand("Robot Shoot", RobotShoot);
+        NamedCommands.registerCommand("Robot Roller Off", RobotRollerOff);
         // NamedCommands.registerCommand("Lidar Intake", LidarIntake);
         NamedCommands.registerCommand("Intake Extended", IntakeExtended);
 
