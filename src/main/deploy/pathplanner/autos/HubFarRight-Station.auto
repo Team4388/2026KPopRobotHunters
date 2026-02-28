@@ -5,15 +5,15 @@
     "data": {
       "commands": [
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "Intake Extended"
+            "pathName": "HubFarRight-PlayerStation"
           }
         },
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "HubFarRight-NeutralZone"
+            "name": "Intake Extended"
           }
         }
       ]
