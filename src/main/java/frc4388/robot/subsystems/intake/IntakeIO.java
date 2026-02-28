@@ -8,6 +8,8 @@ import org.littletonrobotics.junction.AutoLog;
 
 import edu.wpi.first.units.measure.Acceleration;
 import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.AngularAcceleration;
+import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Velocity;
 
@@ -19,10 +21,8 @@ public interface IntakeIO {
         Angle armTargetAngle = Rotations.of(0);
         Current armMotorCurrent = Amps.of(0);
 
-        @SuppressWarnings("rawtypes")
-        Velocity armMotorVelocity;
-        @SuppressWarnings("rawtypes")
-        Acceleration armMotorAcceleration;
+        AngularVelocity armMotorVelocity;
+        AngularAcceleration armMotorAcceleration;
 
         // Angle shooterPitch = Rotations.of(0);
         // Angle shooterTargetPitch = Rotations.of(0);
