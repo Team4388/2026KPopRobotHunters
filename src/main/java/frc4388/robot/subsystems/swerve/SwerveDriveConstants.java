@@ -162,7 +162,7 @@ public final class SwerveDriveConstants {
 
 
         // TODO: Replace this with a static constant
-        public static final ConfigurableDouble AIM_kP = new ConfigurableDouble("Aim kP", 15);
+        public static final ConfigurableDouble AIM_kP = new ConfigurableDouble("Aim kP", 12);
         public static final ConfigurableDouble AIM_kI = new ConfigurableDouble("Aim kI", 0);
         public static final ConfigurableDouble AIM_kD = new ConfigurableDouble("Aim kD", 0.1);
         // public static final Gains AIM_GAINS = new Gains(2.5, 0, 0.1);

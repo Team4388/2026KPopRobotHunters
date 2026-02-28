@@ -282,6 +282,7 @@ public class SwerveDrive extends SubsystemBase implements Queryable {
         leftStick = leftStick.rotateBy(TimesNegativeOne.ForwardOffset);
         leftStick = TimesNegativeOne.invert(leftStick, TimesNegativeOne.XAxis, TimesNegativeOne.YAxis);
 
+        rotTarget = heading.getDegrees();
 
         var ctrl = new SwerveRequest.FieldCentricFacingAngle()
             .withVelocityX(leftStick.getX() * speedAdjust)
