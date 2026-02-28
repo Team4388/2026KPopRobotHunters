@@ -344,7 +344,12 @@ public class SwerveDrive extends SubsystemBase implements Queryable {
 
             Rotation2d heading = new Rotation2d(rightStick.getX(), rightStick.getY());//.r otateBy(Rotation2d.fromDegrees(90));
 
-            heading = heading.rotateBy(Rotation2d.fromDegrees(-90));
+            if(TimesNegativeOne.isRed) {
+                heading = heading.rotateBy(Rotation2d.fromDegrees(-90));
+            } else {
+                heading = heading.rotateBy(Rotation2d.fromDegrees(90));
+            }
+            
             rotTarget = heading.getDegrees();
 
             driveFieldAngle(leftStick, heading);

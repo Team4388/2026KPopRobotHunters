@@ -11,15 +11,15 @@
           }
         },
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "Quick Shoot"
+            "name": "Intake Retracted"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Test - Robot Align"
+            "pathName": "Center-Hub-Shoot"
           }
         },
         {
