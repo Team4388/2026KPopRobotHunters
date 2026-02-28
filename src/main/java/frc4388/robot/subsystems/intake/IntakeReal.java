@@ -137,8 +137,8 @@ public class IntakeReal implements IntakeIO {
         state.rollerMotorCurrent = m_rollerMotor.getStatorCurrent().getValue();
         state.retractedLimit = !m_armLimitSwitch.get();
         
-        state.armMotorVelocity = (Velocity) m_armMotor.getVelocity();
-        state.armMotorAcceleration = (Acceleration) m_armMotor.getAcceleration();
+        // state.armMotorVelocity = (Velocity) m_armMotor.getVelocity();
+        // state.armMotorAcceleration = (Acceleration) m_armMotor.getAcceleration();
 
         if(state.retractedLimit) {
             // Set the arm motor to be zero if the limit switch is pressed

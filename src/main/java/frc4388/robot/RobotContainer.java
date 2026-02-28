@@ -274,7 +274,6 @@ public class RobotContainer {
             }))
             .onFalse(new InstantCommand(() -> {
                 m_robotShooter.spinUpIdle();
-                m_robotIntake.setMode(IntakeMode.Extended);
             }));
 
 
@@ -286,7 +285,6 @@ public class RobotContainer {
             }))
             .onFalse(new InstantCommand(() -> {
                 m_robotShooter.spinUpIdle();
-                m_robotIntake.setMode(IntakeMode.Extended);
             }));
         
         new JoystickButton(getDeadbandedOperatorController(), XboxController.RIGHT_BUMPER_BUTTON)
