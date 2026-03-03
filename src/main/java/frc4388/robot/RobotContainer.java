@@ -120,7 +120,7 @@ public class RobotContainer {
     // );
 
     private Command RobotRev = new SequentialCommandGroup(
-        new InstantCommand(() -> m_robotIntake.rollerStop(), m_robotIntake),
+        new InstantCommand(() -> m_robotIntake.setMode(IntakeMode.RollerStop), m_robotIntake),
         new InstantCommand(() -> m_robotShooter.spinUpShooting(), m_robotShooter)
     );
 
@@ -135,7 +135,7 @@ public class RobotContainer {
         new InstantCommand(()-> m_robotShooter.allowShooting(), m_robotShooter),
         new WaitCommand(2),
         RobotIntakeRetracted,
-        new WaitCommand(4),
+        new WaitCommand(5),
         new InstantCommand(() -> m_robotShooter.denyShooting(), m_robotShooter),
         new InstantCommand(()->m_robotShooter.spinUpIdle(), m_robotShooter)
     );

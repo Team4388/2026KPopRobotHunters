@@ -1,0 +1,55 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake Extended"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Robot Rev Up"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Center-Hub-Shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Robot Shoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Center-NeutralR"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake Extended"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "HubFarRight-NeutralZone"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": "HubCenter",
+  "choreoAuto": false
+}

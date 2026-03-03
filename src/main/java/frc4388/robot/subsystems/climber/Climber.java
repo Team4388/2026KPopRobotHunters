@@ -20,7 +20,7 @@ public class Climber extends SubsystemBase {
 
     public enum ClimberMode {
         Extended,
-        Retracting,
+        Retracting
     }
 
     public void deploy() {
