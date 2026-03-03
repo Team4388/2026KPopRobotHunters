@@ -1,0 +1,73 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake Extended"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Robot Rev Up"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "HubRight-Shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Robot Shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake Extended"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ToPlayerStation"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 8.0
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Robot Rev Up"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "PlayerStation-Shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Robot Shoot"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": "HubRight",
+  "choreoAuto": false
+}

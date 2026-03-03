@@ -3,40 +3,40 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.636650602416003,
-        "y": 0.7129759036212555
+        "x": 3.5838333333333345,
+        "y": 1.5515476190476192
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.3894165141989285,
-        "y": 0.7500610168538175
+        "x": 3.3365992451162603,
+        "y": 1.5886327322801814
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 1.593168674698795,
-        "y": 0.8768915662650603
-      },
-      "prevControl": {
-        "x": 2.244948841688057,
-        "y": 0.8496302325934687
-      },
-      "nextControl": {
-        "x": 0.941388507709533,
-        "y": 0.9041528999366517
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 0.61,
+        "x": 1.5754761904761914,
         "y": 1.0
       },
       "prevControl": {
-        "x": 0.8597421350529089,
+        "x": 2.2272563574654534,
+        "y": 0.9727386663284083
+      },
+      "nextControl": {
+        "x": 0.9236960234869294,
+        "y": 1.0272613336715914
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 0.45,
+        "y": 1.0
+      },
+      "prevControl": {
+        "x": 0.6997421350529089,
         "y": 0.9886480847776856
       },
       "nextControl": null,
@@ -49,21 +49,21 @@
   "pointTowardsZones": [
     {
       "fieldPosition": {
-        "x": 8.0,
-        "y": 1.0
+        "x": 0.0,
+        "y": 0.7
       },
-      "rotationOffset": 0.0,
-      "minWaypointRelativePos": 0.0,
+      "rotationOffset": 180.0,
+      "minWaypointRelativePos": 0.6,
       "maxWaypointRelativePos": 1.0956834532374118,
       "name": "Point Towards Zone"
     }
   ],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 0.4,
+    "maxVelocity": 0.5,
     "maxAcceleration": 1.0,
     "maxAngularVelocity": 500.0,
-    "maxAngularAcceleration": 700.0,
+    "maxAngularAcceleration": 750.0,
     "nominalVoltage": 12.0,
     "unlimited": false
   },

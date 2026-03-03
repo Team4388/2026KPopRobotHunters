@@ -7,7 +7,7 @@
         {
           "type": "named",
           "data": {
-            "name": "Intake Retracted"
+            "name": "Intake Extended"
           }
         },
         {
@@ -31,7 +31,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Center-ToDepot"
+            "pathName": "CenterToPlayerPath"
           }
         },
         {
@@ -43,13 +43,25 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Depot-Intake-Shoot (side)"
+            "pathName": "ToPlayerStation"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 8.0
           }
         },
         {
           "type": "named",
           "data": {
             "name": "Robot Rev Up"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "PlayerStation-Shoot"
           }
         },
         {
@@ -62,6 +74,6 @@
     }
   },
   "resetOdom": true,
-  "folder": null,
+  "folder": "HubCenter",
   "choreoAuto": false
 }
