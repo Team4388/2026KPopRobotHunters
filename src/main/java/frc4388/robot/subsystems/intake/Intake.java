@@ -27,8 +27,7 @@ public class Intake extends SubsystemBase {
         Retracted,
         Extending,
         Retracting,
-        Idle,
-        RollerStop
+        Idle
     }
 
     private IntakeMode mode = IntakeMode.Idle;
@@ -90,9 +89,6 @@ public class Intake extends SubsystemBase {
                 break;
             case Idle:
                 io.stopArm();
-                break;
-            case RollerStop:
-                io.setRollerOutput(state, 0);
                 break;
         }
         // if (state.retractedLimit){
