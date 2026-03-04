@@ -19,7 +19,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "HubRight-Shoot"
+            "pathName": "HubLeft-Shoot"
           }
         },
         {
@@ -32,6 +32,6 @@
     }
   },
   "resetOdom": true,
-  "folder": "HubRight",
+  "folder": "HubLeft",
   "choreoAuto": false
 }
