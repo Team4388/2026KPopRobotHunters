@@ -19,7 +19,8 @@ public class    ShooterConstants {
     public static final double INDEXER_GEAR_RATIO = 1.;
 
     public static final ConfigurableDouble SHOOTER_MAX_VELOCITY = new ConfigurableDouble("Shooter MAX Velocity", 60);
-    public static final ConfigurableDouble SHOOTER_FEED_VELOCITY = new ConfigurableDouble("Shooter Feed Velocity", -35);
+    public static final ConfigurableDouble SHOOTER_OVERRIDE_VELOCITY = new ConfigurableDouble("Shooter OVERRIDE Velocity", -40.25);
+    // public static final ConfigurableDouble SHOOTER_FEED_VELOCITY = new ConfigurableDouble("Shooter Feed Velocity", -35);
     // public static final ConfigurableDouble SHOOTER_RESTING_VELOCITY = new ConfigurableDouble("Shooter Resting Velocity", 0.0);
     
     public static final ConfigurableDouble SHOOTER_IDLE_PERCENT_OUTPUT = new ConfigurableDouble("Shooter idle % output", -0.15);

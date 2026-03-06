@@ -2,6 +2,7 @@ package frc4388.robot.subsystems.shooter;
 
 import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Rotation;
+import static edu.wpi.first.units.Units.Rotations;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 
 import org.littletonrobotics.junction.AutoLogOutput;
@@ -56,7 +57,7 @@ public class Shooter extends SubsystemBase {
     
     public enum ShooterMode {
         Shooting,
-        Feeding,
+        ManualShoot,
         Idle
     }
 
@@ -68,7 +69,7 @@ public class Shooter extends SubsystemBase {
     }
 
     public void spinUpFeeding() {
-        this.mode = ShooterMode.Feeding;
+        this.mode = ShooterMode.ManualShoot;
     }
     
     public void spinUpIdle() {
@@ -183,8 +184,8 @@ public class Shooter extends SubsystemBase {
                         break;
                 }
                 break;
-            case Feeding:
-                io.setShooterVelocity(state, RotationsPerSecond.of(ShooterConstants.SHOOTER_FEED_VELOCITY.get()));
+            case ManualShoot:
+                io.setShooterVelocity(state, RotationsPerSecond.of(ShooterConstants.SHOOTER_OVERRIDE_VELOCITY.get()));
 
                 int bitmask2 = (
                     (shooterButtonReady ? 1 : 0) +
@@ -233,6 +234,8 @@ public class Shooter extends SubsystemBase {
                 io.setIndexerOutput(state, ShooterConstants.INDEXER_REVERSE_OUTPUT.get());
                 m_robotLED.setMode(Constants.LEDConstants.DEFAULT_PATTERN);
                 break;
+            
+
             }
 
     }
