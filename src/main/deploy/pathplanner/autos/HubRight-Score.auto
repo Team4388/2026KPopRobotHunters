@@ -27,24 +27,6 @@
           "data": {
             "name": "Robot Shoot"
           }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Intake Extended"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "ReadyPush"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "HubFarRight-NeutralZone"
-          }
         }
       ]
     }

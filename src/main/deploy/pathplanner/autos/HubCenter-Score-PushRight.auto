@@ -29,12 +29,6 @@
           }
         },
         {
-          "type": "path",
-          "data": {
-            "pathName": "Center-NeutralR"
-          }
-        },
-        {
           "type": "named",
           "data": {
             "name": "Intake Extended"
@@ -43,7 +37,25 @@
         {
           "type": "path",
           "data": {
-            "pathName": "HubFarRight-NeutralZone"
+            "pathName": "Center-NeutralR"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "HubFarRight-NeutralZone 1-2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake Retracted"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "HubFarRight-NeutralZone 2-2"
           }
         }
       ]

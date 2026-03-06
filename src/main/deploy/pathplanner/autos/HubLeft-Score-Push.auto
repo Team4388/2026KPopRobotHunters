@@ -43,7 +43,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "HubFarLeft-NeutralZone"
+            "pathName": "HubFarLeft-NeutralZone 1-2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake Retracted"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "HubFarLeft-NeutralZone 2-2"
           }
         }
       ]
