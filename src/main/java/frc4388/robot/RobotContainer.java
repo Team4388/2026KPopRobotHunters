@@ -121,9 +121,9 @@ public class RobotContainer {
     // );
 
     private Command RobotRev = new SequentialCommandGroup(
-        new InstantCommand(() -> m_robotIntake.setMode(IntakeMode.Idle), m_robotIntake),
-        new InstantCommand(() -> m_robotIntake.rollerStop(), m_robotIntake),
-        new InstantCommand(() -> m_robotShooter.spinUpShooting(), m_robotShooter)
+        new InstantCommand(() -> m_robotShooter.spinUpShooting(), m_robotShooter),
+        IntakeExtended,
+        new InstantCommand(() -> m_robotIntake.setMode(IntakeMode.RollerStop), m_robotIntake)
     );
 
     private Command RobotIntakeRetracted = new SequentialCommandGroup(

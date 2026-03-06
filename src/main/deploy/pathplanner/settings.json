@@ -8,7 +8,7 @@
     "HubRight",
     "HubLeft"
   ],
-  "defaultMaxVel": 2.8,
+  "defaultMaxVel": 3.0,
   "defaultMaxAccel": 3.0,
   "defaultMaxAngVel": 600.0,
   "defaultMaxAngAccel": 750.0,

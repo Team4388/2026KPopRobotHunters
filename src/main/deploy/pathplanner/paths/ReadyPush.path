@@ -47,7 +47,7 @@
     "maxVelocity": 3.0,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 600.0,
-    "maxAngularAcceleration": 770.0,
+    "maxAngularAcceleration": 750.0,
     "nominalVoltage": 12.0,
     "unlimited": false
   },
@@ -61,5 +61,5 @@
     "velocity": 0,
     "rotation": -148.82
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }

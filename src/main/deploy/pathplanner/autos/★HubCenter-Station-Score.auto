@@ -11,7 +11,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "HubRight-PlayerStation"
+                  "pathName": "HubCenter-PlayerStation"
                 }
               },
               {
@@ -46,17 +46,11 @@
           "data": {
             "name": "Robot Shoot"
           }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "RShoot-Tower"
-          }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "HubRight",
+  "folder": "HubCenter",
   "choreoAuto": false
 }

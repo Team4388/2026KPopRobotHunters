@@ -29,15 +29,15 @@
           }
         },
         {
-          "type": "path",
-          "data": {
-            "pathName": "LShoot-Nu"
-          }
-        },
-        {
           "type": "named",
           "data": {
             "name": "Intake Extended"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "LShoot-Nu"
           }
         },
         {
