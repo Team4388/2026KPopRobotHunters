@@ -19,7 +19,7 @@ public class    ShooterConstants {
     public static final double INDEXER_GEAR_RATIO = 1.;
 
     public static final ConfigurableDouble SHOOTER_MAX_VELOCITY = new ConfigurableDouble("Shooter MAX Velocity", 60);
-    public static final ConfigurableDouble SHOOTER_OVERRIDE_VELOCITY = new ConfigurableDouble("Shooter OVERRIDE Velocity", -40.25);
+    public static final ConfigurableDouble SHOOTER_OVERRIDE_VELOCITY = new ConfigurableDouble("Shooter OVERRIDE Velocity", -42);
     // public static final ConfigurableDouble SHOOTER_FEED_VELOCITY = new ConfigurableDouble("Shooter Feed Velocity", -35);
     // public static final ConfigurableDouble SHOOTER_RESTING_VELOCITY = new ConfigurableDouble("Shooter Resting Velocity", 0.0);
     
@@ -29,6 +29,7 @@ public class    ShooterConstants {
 
     public static final ConfigurableDouble INDEXER_FORWARD_OUTPUT = new ConfigurableDouble("Indexer FWD % Output", -0.4);
     public static final ConfigurableDouble INDEXER_REVERSE_OUTPUT = new ConfigurableDouble("Indexer reverse % Output", 0.0);
+    public static final ConfigurableDouble MODEL_TRIM = new ConfigurableDouble("TRIM SHOOTER SPEED", 0.0);
 
     
     public static final ConfigurableDouble AIM_LEAD_TIME = new ConfigurableDouble("Aim lead time", 0);
@@ -53,7 +54,7 @@ public class    ShooterConstants {
         //     30.6293;
         double speed = 
             5.6939*hubDistMeters +
-            22.76545;
+            22.76545 + MODEL_TRIM.get();
         
         double max = SHOOTER_MAX_VELOCITY.get();
 

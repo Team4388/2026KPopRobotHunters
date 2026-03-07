@@ -66,12 +66,6 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "Intake Retracted"
-          }
-        },
-        {
           "type": "path",
           "data": {
             "pathName": "HubFarRight-NeutralZone 2-2"

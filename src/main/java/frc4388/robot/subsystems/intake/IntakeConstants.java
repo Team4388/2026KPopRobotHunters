@@ -37,7 +37,7 @@ public class IntakeConstants {
     public static final ConfigurableDouble ARM_LIMIT_EXTENDED = new ConfigurableDouble("Arm angle extended", 0.3);
     public static final ConfigurableDouble ARM_EXTEND_PERCENT_OUTPUT = new ConfigurableDouble("Arm extend % output", 0.4);
     public static final ConfigurableDouble ARM_RETRACT_PERCENT_OUTPUT = new ConfigurableDouble("Arm retract % output", -0.4);
-    public static final ConfigurableDouble ROLLER_PERCENT_OUTPUT = new ConfigurableDouble("Roller Percent Output", .60);
+    public static final ConfigurableDouble ROLLER_PERCENT_OUTPUT = new ConfigurableDouble("Roller Percent Output", .70);
     // public static final ConfigurableDouble ROLL = new ConfigurableDouble("Arm angle extended", 0.25);
 
     // public static final AngularVelocity ROLLER_MAX_VELOCITY = RotationsPerSecond.of(4.0);
