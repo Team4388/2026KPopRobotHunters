@@ -143,6 +143,12 @@ public class Shooter extends SubsystemBase {
 
         badShooterVelocity = Math.abs(shooterSpeed - shooterSpeedTarget) > ShooterConstants.SHOOTER_SPEED_TOLERANCE.get();
 
+        //revtime calculations
+        // double shooterAcceleration = 
+        double shooterSpeedTargetPretend = ShooterConstants.getTargetShooterSpeed(distanceToHub).in(RotationsPerSecond);
+        double revTime = (Math.abs(shooterSpeed - shooterSpeedTargetPretend)/((7 - shooterSpeedTargetPretend)/ShooterConstants.T_CONSTANT));
+        // double revTimeExp = ShooterConstants.T_CONSTANT * Math.log(1 - Math.abs(shooterSpeed/shooterSpeedTargetPretend));
+        Logger.recordOutput("Time to rev", revTime);
 
         switch (mode) {
             case Shooting:
