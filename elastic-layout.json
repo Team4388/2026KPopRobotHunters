@@ -8,32 +8,15 @@
         "layouts": [
           {
             "title": "Tag Processed",
-            "x": 1024.0,
-            "y": 128.0,
-            "width": 384.0,
-            "height": 384.0,
+            "x": 384.0,
+            "y": 0.0,
+            "width": 256.0,
+            "height": 256.0,
             "type": "List Layout",
             "properties": {
               "label_position": "TOP"
             },
             "children": [
-              {
-                "title": "LeftCamTag",
-                "x": 896.0,
-                "y": 256.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Boolean Box",
-                "properties": {
-                  "topic": "/AdvantageKit/Vision/Camera0/IsTagProcessed",
-                  "period": 0.06,
-                  "data_type": "boolean",
-                  "true_color": 4283215696,
-                  "false_color": 4294198070,
-                  "true_icon": "Checkmark",
-                  "false_icon": "X"
-                }
-              },
               {
                 "title": "RightCamTag",
                 "x": 768.0,
@@ -50,40 +33,28 @@
                   "true_icon": "Checkmark",
                   "false_icon": "X"
                 }
+              },
+              {
+                "title": "LeftCamTag",
+                "x": 896.0,
+                "y": 256.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Boolean Box",
+                "properties": {
+                  "topic": "/AdvantageKit/Vision/Camera0/IsTagProcessed",
+                  "period": 0.06,
+                  "data_type": "boolean",
+                  "true_color": 4283215696,
+                  "false_color": 4294198070,
+                  "true_icon": "Checkmark",
+                  "false_icon": "X"
+                }
               }
             ]
           }
         ],
         "containers": [
-          {
-            "title": "FMSInfo",
-            "x": 0.0,
-            "y": 512.0,
-            "width": 384.0,
-            "height": 128.0,
-            "type": "FMSInfo",
-            "properties": {
-              "topic": "/FMSInfo",
-              "period": 0.06
-            }
-          },
-          {
-            "title": "Alliance",
-            "x": 0.0,
-            "y": 256.0,
-            "width": 384.0,
-            "height": 256.0,
-            "type": "Boolean Box",
-            "properties": {
-              "topic": "/FMSInfo/IsRedAlliance",
-              "period": 0.06,
-              "data_type": "boolean",
-              "true_color": 4294901760,
-              "false_color": 4279107839,
-              "true_icon": "None",
-              "false_icon": "None"
-            }
-          },
           {
             "title": "MatchTime",
             "x": 0.0,
@@ -101,29 +72,11 @@
             }
           },
           {
-            "title": "BatteryVoltage",
-            "x": 1024.0,
-            "y": 512.0,
-            "width": 384.0,
-            "height": 128.0,
-            "type": "Voltage View",
-            "properties": {
-              "topic": "/AdvantageKit/SystemStats/BatteryVoltage",
-              "period": 0.06,
-              "data_type": "double",
-              "min_value": 4.0,
-              "max_value": 13.0,
-              "divisions": 5,
-              "inverted": false,
-              "orientation": "horizontal"
-            }
-          },
-          {
             "title": "RetractedLimit",
-            "x": 640.0,
-            "y": 128.0,
-            "width": 384.0,
-            "height": 384.0,
+            "x": 0.0,
+            "y": 384.0,
+            "width": 128.0,
+            "height": 128.0,
             "type": "Boolean Box",
             "properties": {
               "topic": "/AdvantageKit/Intake/RetractedLimit",
@@ -137,9 +90,9 @@
           },
           {
             "title": "Auto Chooser",
-            "x": 640.0,
-            "y": 0.0,
-            "width": 768.0,
+            "x": 1024.0,
+            "y": 256.0,
+            "width": 384.0,
             "height": 128.0,
             "type": "ComboBox Chooser",
             "properties": {
@@ -150,9 +103,9 @@
           },
           {
             "title": "Roller Percent Output",
-            "x": 640.0,
-            "y": 512.0,
-            "width": 384.0,
+            "x": 0.0,
+            "y": 256.0,
+            "width": 256.0,
             "height": 128.0,
             "type": "Number Slider",
             "properties": {
@@ -163,6 +116,78 @@
               "max_value": 1.0,
               "divisions": 5,
               "update_continuously": false
+            }
+          },
+          {
+            "title": "Shooter OVERRIDE Velocity",
+            "x": 128.0,
+            "y": 384.0,
+            "width": 128.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/SmartDashboard/Shooter OVERRIDE Velocity",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": true
+            }
+          },
+          {
+            "title": "TRIM SHOOTER SPEED",
+            "x": 256.0,
+            "y": 256.0,
+            "width": 384.0,
+            "height": 128.0,
+            "type": "Number Slider",
+            "properties": {
+              "topic": "/SmartDashboard/TRIM SHOOTER SPEED",
+              "period": 0.06,
+              "data_type": "double",
+              "min_value": -3.0,
+              "max_value": 0.0,
+              "divisions": 5,
+              "update_continuously": false
+            }
+          },
+          {
+            "title": "Mode",
+            "x": 256.0,
+            "y": 384.0,
+            "width": 384.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/AdvantageKit/RealOutputs/LED/Mode",
+              "period": 0.06,
+              "data_type": "string",
+              "show_submit_button": true
+            }
+          },
+          {
+            "title": "Time to rev",
+            "x": 768.0,
+            "y": 128.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Large Text Display",
+            "properties": {
+              "topic": "/AdvantageKit/RealOutputs/Time to rev",
+              "period": 0.06,
+              "data_type": "double"
+            }
+          },
+          {
+            "title": "Arm angle extended",
+            "x": 1152.0,
+            "y": 128.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/SmartDashboard/Arm angle extended",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": true
             }
           }
         ]
@@ -527,12 +552,26 @@
               "data_type": "double",
               "show_submit_button": true
             }
+          },
+          {
+            "title": "Shooter OVERRIDE Velocity",
+            "x": 640.0,
+            "y": 512.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/SmartDashboard/Shooter OVERRIDE Velocity",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": true
+            }
           }
         ]
       }
     },
     {
-      "name": "Tab 3",
+      "name": "Miraland",
       "grid_layout": {
         "layouts": [],
         "containers": [
@@ -540,7 +579,7 @@
             "title": "Auto Chooser",
             "x": 0.0,
             "y": 0.0,
-            "width": 1536.0,
+            "width": 640.0,
             "height": 768.0,
             "type": "ComboBox Chooser",
             "properties": {
