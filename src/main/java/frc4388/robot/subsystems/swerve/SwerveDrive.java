@@ -377,6 +377,10 @@ public class SwerveDrive extends SubsystemBase implements Queryable {
         driveFieldAngle(leftStick, ang);
     }
 
+    public Pose2d getCurrentPose(){
+        return state.currentPose;
+    }
+
     public void driveRelativeLockedAngle(Translation2d leftStick, Rotation2d heading) {
         leftStick = leftStick.rotateBy(heading);
 
@@ -514,6 +518,7 @@ public class SwerveDrive extends SubsystemBase implements Queryable {
         setPercentOutput(SwerveDriveConstants.GEARS[i]);
         gear_index = i;
     }
+
 
     public void setPercentOutput(double speed) {
         speedAdjust = SwerveDriveConstants.MAX_SPEED_MEETERS_PER_SEC * speed;

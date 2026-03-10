@@ -1,7 +1,7 @@
 package frc4388.utility.status;
 
-import frc4388.robot.subsystems.RPLidarA1;
-import frc4388.robot.subsystems.RPLidarA1.ConnectionStatus;
+import frc4388.robot.subsystems.vision.RPLidarA1;
+import frc4388.robot.subsystems.vision.RPLidarA1.ConnectionStatus;
 import frc4388.utility.status.Status.ReportLevel;
 
 // Fault reporter for the RPLidar A1M8 Revolving lidar sensor

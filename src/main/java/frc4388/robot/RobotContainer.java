@@ -30,18 +30,18 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc4388.robot.commands.Swerve.StayInPosition;
 import frc4388.robot.commands.alignment.AutoAlign;
 import frc4388.robot.constants.Constants;
 import frc4388.robot.constants.Constants.OIConstants;
 import frc4388.robot.constants.Constants.SimConstants.Mode;
-// Subsystems
-import frc4388.robot.subsystems.LED;
-import frc4388.robot.subsystems.Lidar;
 import frc4388.robot.subsystems.intake.Intake;
 import frc4388.robot.subsystems.intake.Intake.IntakeMode;
+import frc4388.robot.subsystems.led.LED;
 import frc4388.robot.subsystems.shooter.Shooter;
 import frc4388.robot.subsystems.shooter.ShooterConstants;
 import frc4388.robot.subsystems.swerve.SwerveDrive;
+import frc4388.robot.subsystems.vision.Lidar;
 import frc4388.robot.subsystems.vision.Vision;
 import frc4388.utility.DeferredBlock;
 import frc4388.utility.compute.FieldPositions;
@@ -84,148 +84,159 @@ public class RobotContainer {
     // private final ButtonBox m_buttonBox = new ButtonBox(OIConstants.BUTTONBOX_ID);
 
     // public List<Subsystem> subsystems = new ArrayList<>();
-
-    // ! Teleop Commands
-    public void stop() {
-        new InstantCommand(()->{}, m_robotSwerveDrive).schedule();
-        m_robotSwerveDrive.stopModules();
-        Constants.AutoConstants.Y_OFFSET_TRIM.set(0);
-    }
-
-    // ! /*  Autos */
-    private SendableChooser<String> autoChooser;
-    private Command autoCommand;
-
-
-    private Command IntakeExtended = new SequentialCommandGroup(
-        new InstantCommand(() -> m_robotIntake.setMode(IntakeMode.Extended), m_robotIntake)
-    );
-
-    // private Command LidarIntake = new SequentialCommandGroup(
-    //     // Right now this will just go to the closest ball constantly updating - need to make it so it locks on one ball
-    //     // RobotIntakeDown,
-    //     // new WaitCommand(1),
-    //     // new InstantCommand(() -> System.out.println("Closest Ball: " + m_lidar.getClosestBall())),
-    //     new AutoAlign(m_robotSwerveDrive, m_vision, m_lidar, true)
-
-    //     // new RunCommand(
-    //     // () -> m_robotSwerveDrive.driveWithInput(
-    //     //         m_lidar.getClosestBall(),
-    //     //         new Translation2d(m_lidar.getLatestBallAngle().getCos() * 0.1, 0),
-    //     //         false
-    //     //     ),
-    //     //     m_robotSwerveDrive
-    //     // )
-    //     // .withTimeout(5.0)
-    //     // .andThen(new InstantCommand(() -> m_robotSwerveDrive.softStop(), m_robotSwerveDrive))
-    // );
-
-    private Command RobotRev = new SequentialCommandGroup(
-        new InstantCommand(() -> m_robotShooter.spinUpShooting(), m_robotShooter),
-        IntakeExtended,
-        new InstantCommand(() -> m_robotIntake.setMode(IntakeMode.RollerStop), m_robotIntake)
-    );
-
-    private Command IntakeRetracted = new SequentialCommandGroup(
-        new InstantCommand(() -> m_robotIntake.setMode(IntakeMode.Retracted), m_robotIntake)
-    );
-
-    private Command RobotShoot = new SequentialCommandGroup(
-        // TEST NEW AUTO ALIGN
-        //new AutoAlign(m_robotSwerveDrive, m_vision, new Pose2d(FieldPositions.HUB_POSITION,  new Rotation2d(0)), false),
-        new WaitUntilCommand(m_robotShooter::isShooterUpToSpeed),
-        new InstantCommand(()-> m_robotShooter.allowShooting(), m_robotShooter),
-        new WaitCommand(2),
-        IntakeRetracted,
-        new WaitCommand(5),
-        new InstantCommand(() -> m_robotShooter.denyShooting(), m_robotShooter),
-        new InstantCommand(()->m_robotShooter.spinUpIdle(), m_robotShooter)
-    );
-
+    private final StayInPosition m_stayInPosition = new StayInPosition(m_robotSwerveDrive);
     
-    public RobotContainer() {
-        
-        configureButtonBindings();
-        
-        // Called on first robot enable
-        DeferredBlock.addBlock(() -> {
-            m_robotSwerveDrive.resetGyro();
-        }, false);
-
-        // Called on every robot enable
-        DeferredBlock.addBlock(() -> {
-            TimesNegativeOne.update();
-            FieldPositions.update();
-
-            m_robotIntake.io.updateGains();
-            m_robotShooter.io.updateGains();
-        }, true);
-
-        NamedCommands.registerCommand("Robot Rev Up", RobotRev);
-        NamedCommands.registerCommand("Intake Retracted", IntakeRetracted);
-        NamedCommands.registerCommand("Robot Shoot", RobotShoot);
-        // NamedCommands.registerCommand("Lidar Intake", LidarIntake);
-        NamedCommands.registerCommand("Intake Extended", IntakeExtended);
-
-
-        DriverStation.silenceJoystickConnectionWarning(true);
-
-        // Drive normally
-        m_robotSwerveDrive.setDefaultCommand(new RunCommand(() -> {
-            m_robotSwerveDrive.driveWithInput(
-                getDeadbandedDriverController().getLeft(),
-                getDeadbandedDriverController().getRight(),true);
-
-        }, m_robotSwerveDrive)
-        .withName("SwerveDrive DefaultCommand"));
-        
-        m_robotSwerveDrive.setToSlow();
-        
-        makeAutoChooser();
-        SmartDashboard.putData("Auto Chooser", autoChooser);
-
-    }
+    private Pose2d currentPose = new Pose2d(0, 0, new Rotation2d());
+        // ! Teleop Commands
+        public void stop() {
+            new InstantCommand(()->{}, m_robotSwerveDrive).schedule();
+            m_robotSwerveDrive.stopModules();
+            Constants.AutoConstants.Y_OFFSET_TRIM.set(0);
+        }
     
-
-
-
-    /**
-     * Use this method to define your button->command mappings. Buttons can be
-     * created by instantiating a {@link GenericHID} or one of its subclasses
-     * ({@link edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then
-     * passing it to a {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
-     */
-    private void configureButtonBindings() {
-        
-        //Driver controls
-        new JoystickButton(getDeadbandedDriverController(), XboxController.A_BUTTON)
-            .onTrue(new InstantCommand(() -> m_robotSwerveDrive.resetGyro()));
-
-        new JoystickButton(getDeadbandedDriverController(), XboxController.RIGHT_BUMPER_BUTTON)
-            .onTrue(new InstantCommand(()  -> m_robotSwerveDrive.shiftUp()));
-        
-        new JoystickButton(getDeadbandedDriverController(), XboxController.LEFT_BUMPER_BUTTON)
-            .onTrue(new InstantCommand(() -> m_robotSwerveDrive.shiftDown()));
-
+        // ! /*  Autos */
+        private SendableChooser<String> autoChooser;
+        private Command autoCommand;
+    
+    
+        private Command IntakeExtended = new SequentialCommandGroup(
+            new InstantCommand(() -> m_robotIntake.setMode(IntakeMode.Extended), m_robotIntake)
+        );
+    
+        // private Command LidarIntake = new SequentialCommandGroup(
+        //     // Right now this will just go to the closest ball constantly updating - need to make it so it locks on one ball
+        //     // RobotIntakeDown,
+        //     // new WaitCommand(1),
+        //     // new InstantCommand(() -> System.out.println("Closest Ball: " + m_lidar.getClosestBall())),
+        //     new AutoAlign(m_robotSwerveDrive, m_vision, m_lidar, true)
+    
+        //     // new RunCommand(
+        //     // () -> m_robotSwerveDrive.driveWithInput(
+        //     //         m_lidar.getClosestBall(),
+        //     //         new Translation2d(m_lidar.getLatestBallAngle().getCos() * 0.1, 0),
+        //     //         false
+        //     //     ),
+        //     //     m_robotSwerveDrive
+        //     // )
+        //     // .withTimeout(5.0)
+        //     // .andThen(new InstantCommand(() -> m_robotSwerveDrive.softStop(), m_robotSwerveDrive))
+        // );
+    
+        private Command RobotRev = new SequentialCommandGroup(
+            new InstantCommand(() -> m_robotShooter.spinUpShooting(), m_robotShooter),
+            IntakeExtended,
+            new InstantCommand(() -> m_robotIntake.setMode(IntakeMode.RollerStop), m_robotIntake)
+        );
+    
+        private Command IntakeRetracted = new SequentialCommandGroup(
+            new InstantCommand(() -> m_robotIntake.setMode(IntakeMode.Retracted), m_robotIntake)
+        );
+    
+        private Command RobotShoot = new SequentialCommandGroup(
+            // TEST NEW AUTO ALIGN
+            //new AutoAlign(m_robotSwerveDrive, m_vision, new Pose2d(FieldPositions.HUB_POSITION,  new Rotation2d(0)), false),
+            new WaitUntilCommand(m_robotShooter::isShooterUpToSpeed),
+            new InstantCommand(()-> m_robotShooter.allowShooting(), m_robotShooter),
+            new WaitCommand(2),
+            IntakeRetracted,
+            new WaitCommand(5),
+            new InstantCommand(() -> m_robotShooter.denyShooting(), m_robotShooter),
+            new InstantCommand(()->m_robotShooter.spinUpIdle(), m_robotShooter)
+        );
     
         
-        new JoystickButton(getDeadbandedDriverController(), XboxController.BACK_BUTTON)
-            .onTrue(new InstantCommand(()  -> {
+        public RobotContainer() {
+            
+            configureButtonBindings();
+            
+            // Called on first robot enable
+            DeferredBlock.addBlock(() -> {
+                m_robotSwerveDrive.resetGyro();
+            }, false);
+    
+            // Called on every robot enable
+            DeferredBlock.addBlock(() -> {
+                TimesNegativeOne.update();
+                FieldPositions.update();
+    
                 m_robotIntake.io.updateGains();
                 m_robotShooter.io.updateGains();
-            }));
-
+            }, true);
+    
+            NamedCommands.registerCommand("Robot Rev Up", RobotRev);
+            NamedCommands.registerCommand("Intake Retracted", IntakeRetracted);
+            NamedCommands.registerCommand("Robot Shoot", RobotShoot);
+            // NamedCommands.registerCommand("Lidar Intake", LidarIntake);
+            NamedCommands.registerCommand("Intake Extended", IntakeExtended);
+    
+    
+            DriverStation.silenceJoystickConnectionWarning(true);
+    
+            // Drive normally
+            m_robotSwerveDrive.setDefaultCommand(new RunCommand(() -> {
+                m_robotSwerveDrive.driveWithInput(
+                    getDeadbandedDriverController().getLeft(),
+                    getDeadbandedDriverController().getRight(),true);
+    
+            }, m_robotSwerveDrive)
+            .withName("SwerveDrive DefaultCommand"));
             
-        // IF the driver is holding the left trigger, intake driving
-        new Trigger(() -> getDeadbandedDriverController().getLeftTriggerAxis() >= 0.5)
-            .whileTrue(new RunCommand(
-                () -> {
-                    m_robotSwerveDrive.driveIntakeOrientation(
-                        getDeadbandedDriverController().getLeft(),
-                        getDeadbandedDriverController().getRight()
-                        
-                    );
-                }, m_robotSwerveDrive))
+            m_robotSwerveDrive.setToSlow();
+            
+            makeAutoChooser();
+            SmartDashboard.putData("Auto Chooser", autoChooser);
+    
+        }
+        
+    
+    
+    
+        /**
+         * Use this method to define your button->command mappings. Buttons can be
+         * created by instantiating a {@link GenericHID} or one of its subclasses
+         * ({@link edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then
+         * passing it to a {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
+         */
+        private void configureButtonBindings() {
+            
+            //Driver controls
+            new JoystickButton(getDeadbandedDriverController(), XboxController.A_BUTTON)
+                .onTrue(new InstantCommand(() -> m_robotSwerveDrive.resetGyro()));
+    
+            new JoystickButton(getDeadbandedDriverController(), XboxController.RIGHT_BUMPER_BUTTON)
+                .onTrue(new InstantCommand(()  -> m_robotSwerveDrive.shiftUp()));
+            
+            new JoystickButton(getDeadbandedDriverController(), XboxController.LEFT_BUMPER_BUTTON)
+                .onTrue(new InstantCommand(() -> m_robotSwerveDrive.shiftDown()));
+    
+        
+            
+            new JoystickButton(getDeadbandedDriverController(), XboxController.BACK_BUTTON)
+                .onTrue(new InstantCommand(()  -> {
+                    m_robotIntake.io.updateGains();
+                    m_robotShooter.io.updateGains();
+                }));
+    
+                
+            // TEST-> the driver is holding the left trigger, drive slow and rotation up 
+            new Trigger(() -> getDeadbandedDriverController().getLeftTriggerAxis() >= 0.5)
+                .onTrue(new InstantCommand(() -> {
+                    m_robotSwerveDrive.setToSlow();
+                    m_robotSwerveDrive.shiftUpRot();
+                }))
+                .onFalse(new InstantCommand(() -> {
+                    m_robotSwerveDrive.setToFast();
+                    m_robotSwerveDrive.shiftDownRot();
+            }));
+    
+            //TEST - > Swerve drive pid on position
+            new JoystickButton(getDeadbandedDriverController(), XboxController.X_BUTTON)
+                .onTrue(new InstantCommand(() -> {
+                    currentPose = m_robotSwerveDrive.getCurrentPose();
+            }))
+            .whileTrue(new RunCommand(() -> {
+                m_stayInPosition.goToTargetPose(currentPose);
+            }, m_robotSwerveDrive))
             .onFalse(new InstantCommand(() -> {
                 m_robotSwerveDrive.softStop();
             }));
