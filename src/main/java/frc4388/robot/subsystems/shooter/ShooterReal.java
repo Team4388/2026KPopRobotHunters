@@ -95,6 +95,7 @@ public class ShooterReal implements ShooterIO {
 
         state.motor1Velocity = m_shooter1Motor.getVelocity().getValue().div(ShooterConstants.SHOOTERMOTOR_GEAR_RATIO);
         state.motor2Velocity = m_shooter2Motor.getVelocity().getValue().div(ShooterConstants.SHOOTERMOTOR_GEAR_RATIO);
+        state.indexerVelocity = m_indexerMotor.getVelocity().getValue().div(ShooterConstants.INDEXER_GEAR_RATIO);
         state.indexerOutput = m_indexerMotor.get();
         // state.indexerOutput = m_indexerMotor.getVelocity().getValue().div(ShooterConstants.INDEXER_GEAR_RATIO);
 

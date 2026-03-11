@@ -31,6 +31,7 @@ public class Shooter extends SubsystemBase {
 
     // Supplier<Pose2d> m_swervePoseSupplier;
     public boolean badShooterVelocity;
+    public double distanceToHub = 5;
 
 
     public Shooter(
@@ -76,7 +77,9 @@ public class Shooter extends SubsystemBase {
         this.mode = ShooterMode.Idle;
     }
 
-
+    public double getDistanceToHub(){
+        return distanceToHub;
+    }
 
     public void allowShooting() {
         shooterButtonReady = true;
@@ -86,6 +89,9 @@ public class Shooter extends SubsystemBase {
         shooterButtonReady = false;
     }
 
+    public AngularVelocity getBallVelocity() {
+        return RotationsPerSecond.of((state.motor1Velocity.in(RotationsPerSecond) + state.indexerVelocity.in(RotationsPerSecond)));
+    }
 
     @AutoLogOutput
     public ShooterMode getMode() {
@@ -126,7 +132,7 @@ public class Shooter extends SubsystemBase {
         Translation2d fieldPosLead = robotSpeed.times(ShooterConstants.AIM_LEAD_TIME.get()).plus(robotPose2d.getTranslation());
 
         // Get the robot's aim distance to hub
-        double distanceToHub = (fieldPosLead.minus(FieldPositions.HUB_POSITION).getNorm());
+        distanceToHub = (fieldPosLead.minus(FieldPositions.HUB_POSITION).getNorm());
 
         //Center of hub to cameras in inches
         Logger.recordOutput("Hub Dist", distanceToHub);

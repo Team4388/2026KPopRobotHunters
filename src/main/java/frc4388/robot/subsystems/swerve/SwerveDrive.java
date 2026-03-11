@@ -5,6 +5,7 @@
 package frc4388.robot.subsystems.swerve;
 
 import static edu.wpi.first.units.Units.Rotations;
+import static edu.wpi.first.units.Units.RotationsPerSecond;
 
 import java.util.function.Supplier;
 
@@ -23,6 +24,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -371,6 +373,28 @@ public class SwerveDrive extends SubsystemBase implements Queryable {
         Translation2d fieldPosLead = robotSpeed.times(aimLeadTime).plus(fieldPos);
 
         // Calculate the angle between the current position and the lead position
+        Rotation2d ang = getPose2d().getTranslation().minus(fieldPosLead).getAngle();
+
+
+        driveFieldAngle(leftStick, ang);
+    }
+
+
+    public void driveFacingVelocity(Translation2d leftStick, Translation2d fieldPos, double aimLeadTime, AngularVelocity ballVelocity, double distanceToHub) {
+
+        Translation2d robotSpeed = new Translation2d(
+            chassisSpeeds.vxMetersPerSecond, 
+            chassisSpeeds.vyMetersPerSecond
+        );
+
+        if (ballVelocity.in(RotationsPerSecond) > 1E-3 && chassisSpeeds.vyMetersPerSecond > 1E-3){
+            double aimOffset = chassisSpeeds.vyMetersPerSecond*distanceToHub/(ballVelocity.in(RotationsPerSecond));
+            fieldPos =  new Translation2d(fieldPos.getX(), fieldPos.getY() - aimOffset);
+            Logger.recordOutput("Aim Offset", aimOffset);
+        }
+
+        Translation2d fieldPosLead = robotSpeed.times(aimLeadTime).plus(fieldPos);        
+
         Rotation2d ang = getPose2d().getTranslation().minus(fieldPosLead).getAngle();
 
 

@@ -26,6 +26,7 @@ public interface ShooterIO {
 
         AngularVelocity motor1Velocity = RotationsPerSecond.of(0);
         AngularVelocity motor2Velocity = RotationsPerSecond.of(0);
+        AngularVelocity indexerVelocity = RotationsPerSecond.of(0);
         double indexerOutput = 0;
         
         Current motor1Current = Amps.of(0);
