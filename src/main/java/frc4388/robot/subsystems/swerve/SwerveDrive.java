@@ -391,7 +391,13 @@ public class SwerveDrive extends SubsystemBase implements Queryable {
             double aimOffset = chassisSpeeds.vyMetersPerSecond*distanceToHub/(ballVelocity.in(RotationsPerSecond));
             fieldPos =  new Translation2d(fieldPos.getX(), fieldPos.getY() - aimOffset);
             Logger.recordOutput("Aim Offset", aimOffset);
+            
+            // double aimOffset = chassisSpeeds.vyMetersPerSecond*distanceToHub/(ballVelocity.in(RotationsPerSecond))*Math.sqrt(1+Math.pow(7.161/distanceToHub, 2));
+            // fieldPos =  new Translation2d(fieldPos.getX(), fieldPos.getY() - aimOffset);
+            // Logger.recordOutput("Aim Offset", aimOffset);
         }
+
+    
 
         Translation2d fieldPosLead = robotSpeed.times(aimLeadTime).plus(fieldPos);        
 
