@@ -61,7 +61,7 @@ import frc4388.utility.controller.XboxController;
 public class RobotContainer {
     /* RobotMap */
     
-    public final RobotMap m_robotMap = new RobotMap(Mode.REAL);
+    public final RobotMap m_robotMap = new RobotMap(RobotBase.isReal() ? Mode.REAL : Mode.SIM);
     
     /*Limit Switch */
     // public final DigitalInput m_armLimitSwitch = new DigitalInput(9);

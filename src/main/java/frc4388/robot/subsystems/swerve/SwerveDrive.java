@@ -518,6 +518,16 @@ public class SwerveDrive extends SubsystemBase implements Queryable {
             }
 
             io.addVisionMeasurement(vision.getPosesToAdd());
+            io.updateInputs(state);
+            Logger.processInputs("SwerveDrive", state);
+
+            vision.setLastOdomPose(state.currentPose);
+            setLastOdomSpeed(state.currentPose, state.lastPose, state.odometryRate);
+            if (state.speeds != null) {
+                this.chassisSpeeds = state.speeds;
+            } else {
+                this.chassisSpeeds = new ChassisSpeeds();
+            }
         }
 
         // if(e.isPresent())
