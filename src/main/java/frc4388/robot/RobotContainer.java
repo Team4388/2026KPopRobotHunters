@@ -40,6 +40,7 @@ import frc4388.robot.subsystems.intake.Intake.IntakeMode;
 import frc4388.robot.subsystems.led.LED;
 import frc4388.robot.subsystems.shooter.Shooter;
 import frc4388.robot.subsystems.shooter.ShooterConstants;
+import frc4388.robot.subsystems.swerve.SimpleSwerveSim;
 import frc4388.robot.subsystems.swerve.SwerveDrive;
 import frc4388.robot.subsystems.vision.Lidar;
 import frc4388.robot.subsystems.vision.Vision;
@@ -69,6 +70,7 @@ public class RobotContainer {
     /* Subsystems */
     // public final Lidar m_lidar = new Lidar();
     public final LED m_robotLED = new LED(Constants.LEDConstants.LED_SPARK_ID);
+    public final SimpleSwerveSim m_robotSwerveSIM = new SimpleSwerveSim();
     //Testing of Colors
     public final Vision m_vision = new Vision(m_robotMap.rightCamera, m_robotMap.leftCamera);
     public final SwerveDrive m_robotSwerveDrive = new SwerveDrive(m_robotMap.swerveDrivetrain, m_vision);
@@ -243,14 +245,19 @@ public class RobotContainer {
 
         // IF the driver is holding the aim button, aim the robot towards the hub and shooter ready
         new Trigger(() -> getDeadbandedDriverController().getRightTriggerAxis() >= 0.5)
-            .whileTrue(new RunCommand(
+            .onTrue(new InstantCommand(
                 () -> {
-                m_robotSwerveDrive.driveFacingPosition(
-                    getDeadbandedDriverController().getLeft(),
-                    FieldPositions.HUB_POSITION,
-                    ShooterConstants.AIM_LEAD_TIME.get()
-                    );
-                }, m_robotSwerveDrive)
+                m_robotSwerveSIM.driveFacingPosition(
+                    FieldPositions.HUB_POSITION
+               );
+                })
+                // () -> {
+                // m_robotSwerveDrive.driveFacingPosition(
+                //     getDeadbandedDriverController().getLeft(),
+                //     FieldPositions.HUB_POSITION,
+                //     ShooterConstants.AIM_LEAD_TIME.get()
+                //     );
+                // }, m_robotSwerveDrive)
                 // () -> {
                 // m_robotSwerveDrive.driveFacingVelocity(
                 //     getDeadbandedDriverController().getLeft(),

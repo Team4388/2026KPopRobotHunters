@@ -132,48 +132,7 @@ public class SimpleSwerveSim implements SwerveIO {
     }
 
     
-    public synchronized void driveFacingPosition(Translation2d leftStick, Translation2d fieldPos, double aimLeadTime) {
-        System.out.println("It has worked!");
-        System.out.println("It has worked!");
-        System.out.println("It has worked!");
-        System.out.println("It has worked!");
-        System.out.println("It has worked!");
-        System.out.println("It has worked!");
-        System.out.println("It has worked!");
-        if (leftStick == null || fieldPos == null) return;
-
-        // current robot speed (robot-relative)
-        Translation2d robotSpeed = new Translation2d(vx, vy);
-
-        // lead the target by robot motion over aimLeadTime
-        Translation2d fieldPosLead = fieldPos.plus(robotSpeed.times(aimLeadTime));
-
-        // compute angle from robot to lead point (field frame)
-        Rotation2d toLead = fieldPosLead.minus(pose.getTranslation()).getAngle();
-        // Rotation2d ang = fieldPosLead.minus(getPose2d().getTranslation()).getAngle();
-
-        // compute shortest angle error (ang_error = desired - current) normalized to [-pi,pi]
-        double currentYaw = pose.getRotation().getRadians();
-        double desiredYaw = toLead.getRadians();
-        double error = desiredYaw - currentYaw;
-        // normalize
-        while (error > Math.PI) error -= 2 * Math.PI;
-        while (error < -Math.PI) error += 2 * Math.PI;
-
-        // simple P controller for rotation
-        final double KP_ROT = 2.0;      // tune as needed
-        final double MAX_OMEGA = 6.0;   // rad/s cap
-        double commandedOmega = KP_ROT * error;
-        if (commandedOmega > MAX_OMEGA) commandedOmega = MAX_OMEGA;
-        if (commandedOmega < -MAX_OMEGA) commandedOmega = -MAX_OMEGA;
-        this.omega = commandedOmega;
-
-        // apply translational command from leftStick (assume stick in [-1,1])
-        final double STICK_SPEED_MPS = 3.0; // 3 m/s at full stick; tune as needed
-        this.vx = leftStick.getX() * STICK_SPEED_MPS;
-        this.vy = leftStick.getY() * STICK_SPEED_MPS;
-    }
-
+    
     @Override
     public synchronized void resetPose(Pose2d p) {
         if (p == null) return;

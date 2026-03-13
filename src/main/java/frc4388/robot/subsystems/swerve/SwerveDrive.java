@@ -362,7 +362,6 @@ public class SwerveDrive extends SubsystemBase implements Queryable {
 
     // Drive with the robot facing towards a specific position
     public void driveFacingPosition(Translation2d leftStick, Translation2d fieldPos, double aimLeadTime) {
-
         // Get the current speed of the robot
         Translation2d robotSpeed = new Translation2d(
             chassisSpeeds.vxMetersPerSecond, 
