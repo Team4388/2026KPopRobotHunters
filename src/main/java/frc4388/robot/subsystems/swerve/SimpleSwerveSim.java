@@ -10,21 +10,12 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc4388.robot.subsystems.vision.VisionIO.PoseObservation;
 
-/**
- * Minimal swerve simulator implementation for SIM mode.
- * - Accepts SwerveRequest controls (tries to extract ChassisSpeeds via reflection)
- * - Integrates chassis speeds into a Pose2d each updateInputs call
- * - Provides reset/tare/vision correction hooks
- *
- * Lightweight: does not simulate voltages or module dynamics. Suitable to make
- * the robot move in the simulator and provide pose/velocity feedback.
- */
 public class SimpleSwerveSim implements SwerveIO {
     private Pose2d pose = new Pose2d();
     private Pose2d lastPose = pose;
-    private double vx = 0.0;     // m/s (robot-relative)
-    private double vy = 0.0;     // m/s (robot-relative)
-    private double omega = 0.0;  // rad/s (robot-relative)
+    private double vx = 0.0;
+    private double vy = 0.0;
+    private double omega = 0.0;
 
     private long lastTimeNs = System.nanoTime();
 
@@ -35,7 +26,6 @@ public class SimpleSwerveSim implements SwerveIO {
     public synchronized void setControl(SwerveRequest ctrl) {
         if (ctrl == null) return;
 
-        // Try to extract a ChassisSpeeds field first (common approach)
         ChassisSpeeds cs = tryGetSpeedsField(ctrl);
         if (cs != null) {
             vx = cs.vxMetersPerSecond;
@@ -44,7 +34,6 @@ public class SimpleSwerveSim implements SwerveIO {
             return;
         }
 
-        // Fallbacks: try to pull numeric fields by common names
         try {
             Class<?> cls = ctrl.getClass();
             double vxF = tryGetDoubleField(ctrl, cls, "VelocityX", "velocityX", "velocityx", "VelX");
@@ -54,7 +43,6 @@ public class SimpleSwerveSim implements SwerveIO {
             vy = vyF;
             omega = rotF;
         } catch (Exception e) {
-            // Silently ignore reflection failures and keep previous speeds.
         }
     }
 
@@ -67,11 +55,8 @@ public class SimpleSwerveSim implements SwerveIO {
                 return (ChassisSpeeds) o;
             }
         } catch (NoSuchFieldException nsf) {
-            // ignore
         } catch (IllegalAccessException iae) {
-            // ignore
         } catch (SecurityException se) {
-            // ignore
         }
         return null;
     }
@@ -86,11 +71,8 @@ public class SimpleSwerveSim implements SwerveIO {
                     return ((Number) val).doubleValue();
                 }
             } catch (NoSuchFieldException nsf) {
-                // try next name
             } catch (IllegalAccessException iae) {
-                // try next name
             } catch (Throwable t) {
-                // ignore other reflection issues
             }
         }
         return 0.0;
@@ -104,35 +86,22 @@ public class SimpleSwerveSim implements SwerveIO {
         double dt = Math.max(1e-6, (now - lastTimeNs) / 1.0e9);
         lastTimeNs = now;
 
-        // Save previous pose
         lastPose = pose;
 
-        // Compute robot-relative motion over dt
-        double dxRobot = vx * dt;
-        double dyRobot = vy * dt;
+        double dxField = vx * dt;
+        double dyField = vy * dt;
         double dTheta = omega * dt;
 
-        // Transform robot-relative delta into field frame using current rotation
-        Rotation2d r = pose.getRotation();
-        double cos = r.getCos();
-        double sin = r.getSin();
-
-        double dxField = dxRobot * cos - dyRobot * sin;
-        double dyField = dxRobot * sin + dyRobot * cos;
-
         Translation2d newTrans = pose.getTranslation().plus(new Translation2d(dxField, dyField));
-        Rotation2d newRot = r.plus(Rotation2d.fromRadians(dTheta));
+        Rotation2d newRot = pose.getRotation().plus(Rotation2d.fromRadians(dTheta));
         pose = new Pose2d(newTrans, newRot);
 
-        // Populate provided SwerveState for callers
         state.lastPose = lastPose;
         state.currentPose = pose;
         state.speeds = new ChassisSpeeds(vx, vy, omega);
         state.odometryRate = dt;
     }
 
-    
-    
     @Override
     public synchronized void resetPose(Pose2d p) {
         if (p == null) return;
@@ -161,8 +130,17 @@ public class SimpleSwerveSim implements SwerveIO {
         }
     }
 
+    public synchronized void pointAt(Translation2d target) {
+        if (target == null) return;
+        Translation2d toTarget = target.minus(pose.getTranslation());
+        if (toTarget.getNorm() < 1e-9) return;
+        Rotation2d desired = toTarget.getAngle();
+        pose = new Pose2d(pose.getTranslation(), desired);
+        lastPose = pose;
+        omega = 0.0;
+    }
+
     @Override
     public synchronized void setLimits(double limitInAmps) {
-        // No-op for this simple sim
     }
 }
