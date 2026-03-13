@@ -78,6 +78,19 @@ public class SimpleSwerveSim implements SwerveIO {
         return 0.0;
     }
 
+    
+    public synchronized void pointAtXY(double x, double y) {
+        Translation2d target = new Translation2d(x, y);
+        Translation2d toTarget = target.minus(pose.getTranslation());
+        if (toTarget.getNorm() < 1e-9) return;
+        Rotation2d desired = toTarget.getAngle();
+        pose = new Pose2d(pose.getTranslation(), desired);
+        lastPose = pose;
+        vx = 0.0;
+        vy = 0.0;
+        omega = 0.0;
+    }
+
     @Override
     public synchronized void updateInputs(SwerveState state) {
         if (state == null) return;
