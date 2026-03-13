@@ -246,17 +246,11 @@ public class RobotContainer {
         // IF the driver is holding the aim button, aim the robot towards the hub and shooter ready
         new Trigger(() -> getDeadbandedDriverController().getRightTriggerAxis() >= 0.5)
             .onTrue(new InstantCommand(
-                () -> {
-                m_robotSwerveSIM.driveFacingPosition(
-                    FieldPositions.HUB_POSITION
-               );
-                })
-                // () -> {
-                // m_robotSwerveDrive.driveFacingPosition(
-                //     getDeadbandedDriverController().getLeft(),
-                //     FieldPositions.HUB_POSITION,
-                //     ShooterConstants.AIM_LEAD_TIME.get()
-                //     );
+                    () -> m_robotSwerveDrive.driveFacingPosition(
+                        getDeadbandedDriverController().getLeft(),
+                        FieldPositions.HUB_POSITION,
+                        ShooterConstants.AIM_LEAD_TIME.get()
+                        ), m_robotSwerveDrive)
                 // }, m_robotSwerveDrive)
                 // () -> {
                 // m_robotSwerveDrive.driveFacingVelocity(
