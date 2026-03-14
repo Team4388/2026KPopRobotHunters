@@ -8,6 +8,8 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotBase;
 import frc4388.robot.subsystems.vision.VisionIO.PoseObservation;
 
 public class SimpleSwerveSim implements SwerveIO {
@@ -100,9 +102,27 @@ public class SimpleSwerveSim implements SwerveIO {
         lastTimeNs = now;
 
         lastPose = pose;
+        double dxField;
+        double dyField;
+        
+        if (DriverStation.isAutonomous()) {
+            double dxRobot = vx * dt;
+            double dyRobot = vy * dt;
 
-        double dxField = vx * dt;
-        double dyField = vy * dt;
+            Rotation2d r = pose.getRotation();
+            double cos = r.getCos();
+            double sin = r.getSin();
+
+            dxField = dxRobot * cos - dyRobot * sin;
+            dyField = dxRobot * sin + dyRobot * cos;
+
+        } else {
+            dxField = vx * dt;
+            dyField = vy * dt;
+
+        }
+
+
         double dTheta = omega * dt;
 
         Translation2d newTrans = pose.getTranslation().plus(new Translation2d(dxField, dyField));
