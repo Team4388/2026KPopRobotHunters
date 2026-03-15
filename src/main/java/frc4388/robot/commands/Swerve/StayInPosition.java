@@ -27,15 +27,18 @@ public class StayInPosition extends PID {
         double translationX = targetPose.getX() - currentPose.getX();
         double translationY = targetPose.getY() - currentPose.getY();
         if (translationX > 0.2){
+        //If below is changed make this change too so it never goes over 1
           translationX = 0.2;
         }
         if (translationY > 0.2){
+        //Same here
           translationY = 0.2;
         }
         if (Math.abs(translationX) < 0.01 && Math.abs(translationY) < 0.01) {
             driveTranslation = new Translation2d();
         } else {
-            driveTranslation = new Translation2d(translationX * 4.5, translationY * 4.5);
+            //TODO: Tweak for best corrector against another bot
+            driveTranslation = new Translation2d(translationX * 4.5, translationY * 4.5); 
         }
 
         drive.driveFieldAngleSIP(driveTranslation, targetPose.getRotation());
