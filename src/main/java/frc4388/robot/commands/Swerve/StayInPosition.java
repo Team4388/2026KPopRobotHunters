@@ -26,16 +26,16 @@ public class StayInPosition extends PID {
         Pose2d currentPose = drive.getCurrentPose();
         double translationX = targetPose.getX() - currentPose.getX();
         double translationY = targetPose.getY() - currentPose.getY();
-        if (translationX > 0.8){
-          translationX = 0.8;
+        if (translationX > 0.2){
+          translationX = 0.2;
         }
-        if (translationY > 0.8){
-          translationY = 0.8;
+        if (translationY > 0.2){
+          translationY = 0.2;
         }
         if (Math.abs(translationX) < 0.01 && Math.abs(translationY) < 0.01) {
             driveTranslation = new Translation2d();
         } else {
-            driveTranslation = new Translation2d(translationX, translationY);
+            driveTranslation = new Translation2d(translationX * 4.5, translationY * 4.5);
         }
 
         drive.driveFieldAngleSIP(driveTranslation, targetPose.getRotation());
