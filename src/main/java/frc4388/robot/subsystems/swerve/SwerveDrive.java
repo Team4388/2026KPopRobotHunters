@@ -409,13 +409,13 @@ public class SwerveDrive extends SubsystemBase implements Queryable {
             chassisSpeeds.vyMetersPerSecond
         );
 
-        if (ballVelocity > 1E-3 && chassisSpeeds.vyMetersPerSecond > 1E-3){
+        if (ballVelocity > 1E-3 && Math.abs(chassisSpeeds.vyMetersPerSecond) > 1E-3){
             double aimOffset = chassisSpeeds.vyMetersPerSecond*distanceToHub/(Math.abs(ballVelocity));
-            fieldPos =  new Translation2d(fieldPos.getX(), fieldPos.getY() - aimOffset);
-            Logger.recordOutput("Aim Offset", aimOffset);
-
             // double aimOffset = (chassisSpeeds.vyMetersPerSecond * distanceToHub) / (Math.abs(ballVelocity) * Math.cos(Math.atan((-1.4478 - (2.8956 + 4 * (0.03724333 * distanceToHub + 0.64797583) - Math.sqrt(Math.pow(2.8956 + 4 * (0.03724333 * distanceToHub + 0.64797583), 2) - 8.3863)) / 2) / distanceToHub)));
-            // Logger.recordOutput("Aim Offset", aimOffset);
+
+            fieldPos =  new Translation2d(fieldPos.getX(), fieldPos.getY() - aimOffset);
+            Logger.recordOutput("Offset", aimOffset);
+
         }
 
     
@@ -424,6 +424,7 @@ public class SwerveDrive extends SubsystemBase implements Queryable {
 
         Rotation2d ang = getPose2d().getTranslation().minus(fieldPosLead).getAngle();
 
+        Logger.recordOutput("Aim at Offset", fieldPos);
 
         driveFieldAngle(leftStick, ang);
     }
@@ -531,6 +532,12 @@ public class SwerveDrive extends SubsystemBase implements Queryable {
         vision.setLastOdomPose(state.currentPose);
         setLastOdomSpeed(state.currentPose, state.lastPose, state.odometryRate);
 
+        // if (state.speeds != null) {
+        //     this.chassisSpeeds = state.speeds;
+        // } else {
+        //     this.chassisSpeeds = new ChassisSpeeds();
+        // }
+        
         if (vision.isTag()) {
             Pose2d pose = vision.getPose2d();
             if (!robotKnowsWhereItIs) {
@@ -545,11 +552,6 @@ public class SwerveDrive extends SubsystemBase implements Queryable {
 
             vision.setLastOdomPose(state.currentPose);
             setLastOdomSpeed(state.currentPose, state.lastPose, state.odometryRate);
-            if (state.speeds != null) {
-                this.chassisSpeeds = state.speeds;
-            } else {
-                this.chassisSpeeds = new ChassisSpeeds();
-            }
         }
 
         // if(e.isPresent())
