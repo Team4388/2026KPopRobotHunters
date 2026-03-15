@@ -89,8 +89,9 @@ public class Shooter extends SubsystemBase {
         shooterButtonReady = false;
     }
 
-    public AngularVelocity getBallVelocity() {
-        return RotationsPerSecond.of((state.motor1Velocity.in(RotationsPerSecond) + state.indexerVelocity.in(RotationsPerSecond)));
+    public double getBallVelocity() {
+        return Math.abs(state.motor1TargetVelocity.in(RotationsPerSecond)) * ShooterConstants.SHOOTER_RADIUS * 2 * Math.PI;
+        //Math.abs(state.indexerForwardVelocity.in(RotationsPerSecond))*ShooterConstants.INDEXER_RADIUS)
     }
 
     @AutoLogOutput

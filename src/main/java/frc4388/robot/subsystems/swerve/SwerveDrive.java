@@ -150,14 +150,6 @@ public class SwerveDrive extends SubsystemBase implements Queryable {
     public void setInitalPose(Pose2d startingAutoPose){
         initalPose2d = startingAutoPose;
     }
-    // MIRA public void setOdoPose(Pose2d pose) {
-    //     if (pose == null) return;
-    //     io.tareEverything();
-    //     initalPose2d = pose;
-    //     io.resetPose(pose);
-    //     robotKnowsWhereItIs = true;
-    //     rotTarget = pose.getRotation().getDegrees();
-    // }
 
 
     // public void oneModuleTest(SwerveModule module, Translation2d leftStick,
@@ -378,20 +370,41 @@ public class SwerveDrive extends SubsystemBase implements Queryable {
         driveFieldAngle(leftStick, ang);
     }
 
+    public void defenseXPosition(){
+        io.setModuleSteerAngle(SwerveDriveConstants.IDs.LEFT_FRONT_STEER, Rotation2d.fromDegrees(45.0));
+        io.setModuleSteerAngle(SwerveDriveConstants.IDs.RIGHT_FRONT_STEER, Rotation2d.fromDegrees(-45.0));
+        io.setModuleSteerAngle(SwerveDriveConstants.IDs.LEFT_BACK_STEER, Rotation2d.fromDegrees(-45.0));
+        io.setModuleSteerAngle(SwerveDriveConstants.IDs.RIGHT_BACK_STEER, Rotation2d.fromDegrees(45.0));
+    }
 
-    public void driveFacingVelocity(Translation2d leftStick, Translation2d fieldPos, double aimLeadTime, AngularVelocity ballVelocity, double distanceToHub) {
+    public void stopDefenseXPosition(){
+            io.restoreSteerOffsets();
+    }
+
+    public void driveFacingPosition(Translation2d leftStick, Translation2d fieldPos) {
+        // Calculate the angle between the current position and the lead position
+        //Rotation2d ang = getPose2d().getTranslation().minus(fieldPos).getAngle();
+        Rotation2d ang = new Rotation2d(0,1);
+        System.out.println(ang);
+
+        driveFieldAngle(leftStick, ang);
+    }
+
+
+
+    public void driveFacingVelocity(Translation2d leftStick, Translation2d fieldPos, double aimLeadTime, double ballVelocity, double distanceToHub) {
 
         Translation2d robotSpeed = new Translation2d(
             chassisSpeeds.vxMetersPerSecond, 
             chassisSpeeds.vyMetersPerSecond
         );
 
-        if (ballVelocity.in(RotationsPerSecond) > 1E-3 && chassisSpeeds.vyMetersPerSecond > 1E-3){
-            double aimOffset = chassisSpeeds.vyMetersPerSecond*distanceToHub/(Math.abs(ballVelocity.in(RotationsPerSecond)));
+        if (ballVelocity > 1E-3 && chassisSpeeds.vyMetersPerSecond > 1E-3){
+            double aimOffset = chassisSpeeds.vyMetersPerSecond*distanceToHub/(Math.abs(ballVelocity));
             fieldPos =  new Translation2d(fieldPos.getX(), fieldPos.getY() - aimOffset);
             Logger.recordOutput("Aim Offset", aimOffset);
 
-            // double aimOffset = (chassisSpeeds.vyMetersPerSecond * distanceToHub) / (Math.abs(ballVelocity.in(RotationsPerSecond)) * Math.cos(Math.atan((-1.4478 - (2.8956 + 4 * (0.03724333 * distanceToHub + 0.64797583) - Math.sqrt(Math.pow(2.8956 + 4 * (0.03724333 * distanceToHub + 0.64797583), 2) - 8.3863)) / 2) / distanceToHub)));
+            // double aimOffset = (chassisSpeeds.vyMetersPerSecond * distanceToHub) / (Math.abs(ballVelocity) * Math.cos(Math.atan((-1.4478 - (2.8956 + 4 * (0.03724333 * distanceToHub + 0.64797583) - Math.sqrt(Math.pow(2.8956 + 4 * (0.03724333 * distanceToHub + 0.64797583), 2) - 8.3863)) / 2) / distanceToHub)));
             // Logger.recordOutput("Aim Offset", aimOffset);
         }
 

@@ -18,7 +18,8 @@ public class    ShooterConstants {
     public static final double SHOOTERMOTOR_GEAR_RATIO = 1.5;
     public static final double INDEXER_GEAR_RATIO = 1.;
     public static final double T_CONSTANT = 2;
-
+    public static final double SHOOTER_RADIUS = 2/39.37;
+    public static final double INDEXER_RADIUS = 0.625/39.37;
     public static final ConfigurableDouble SHOOTER_MAX_VELOCITY = new ConfigurableDouble("Shooter MAX Velocity", 60);
     public static final ConfigurableDouble SHOOTER_OVERRIDE_VELOCITY = new ConfigurableDouble("Shooter OVERRIDE Velocity", -42);
     // public static final ConfigurableDouble SHOOTER_FEED_VELOCITY = new ConfigurableDouble("Shooter Feed Velocity", -35);

@@ -231,17 +231,26 @@ public class RobotContainer {
                     m_robotSwerveDrive.shiftDownRot();
             }));
     
-            //TEST - > Swerve drive pid on position
+            //TEST - > Defense: X position on wheels and swerve drive pid on position
             new JoystickButton(getDeadbandedDriverController(), XboxController.X_BUTTON)
-                .onTrue(new InstantCommand(() -> {
-                    currentPose = m_robotSwerveDrive.getCurrentPose();
-            }))
-            .whileTrue(new RunCommand(() -> {
-                m_stayInPosition.goToTargetPose(currentPose);
+                .whileTrue(new RunCommand(() -> {
+                m_robotSwerveDrive.defenseXPosition();
             }, m_robotSwerveDrive))
-            .onFalse(new InstantCommand(() -> {
-                m_robotSwerveDrive.softStop();
+                .onFalse(new InstantCommand(() -> {
+                m_robotSwerveDrive.stopDefenseXPosition();
+
+            // .onTrue(new InstantCommand(() -> {
+            //         currentPose = m_robotSwerveDrive.getCurrentPose();
+            // }))
+            // .whileTrue(new RunCommand(() -> {
+            //     m_stayInPosition.goToTargetPose(currentPose);
+            // }, m_robotSwerveDrive))
+            // .onFalse(new InstantCommand(() -> {
+            //     m_robotSwerveDrive.softStop();
+            // }));
             }));
+
+            
 
         // IF the driver is holding the aim button, aim the robot towards the hub and shooter ready
         new Trigger(() -> getDeadbandedDriverController().getRightTriggerAxis() >= 0.5)

@@ -11,8 +11,10 @@ import com.ctre.phoenix6.swerve.SwerveModule;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import frc4388.robot.subsystems.vision.Vision;
 import frc4388.robot.subsystems.vision.VisionIO.PoseObservation;
+import frc4388.utility.status.CanDevice;
 
 public class SwerveReal implements SwerveIO {
     SwerveDrivetrain<TalonFX, TalonFX, CANcoder> swerveDriveTrain;
@@ -55,6 +57,15 @@ public class SwerveReal implements SwerveIO {
         }
     }
 
+    @Override
+    public void setModuleSteerAngle(CanDevice steerDevice, Rotation2d angle) {
+    }
+
+    @Override
+    public void restoreSteerOffsets() {
+
+    }
+    
     @Override
     public void setLimits(double limitInAmps) {
         for (SwerveModule<TalonFX, TalonFX, CANcoder> module : swerveDriveTrain.getModules()) {

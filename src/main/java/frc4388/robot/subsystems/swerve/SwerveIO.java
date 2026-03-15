@@ -7,8 +7,10 @@ import org.littletonrobotics.junction.AutoLog;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc4388.robot.subsystems.vision.VisionIO.PoseObservation;
+import frc4388.utility.status.CanDevice;
 
 public interface SwerveIO {
     @AutoLog
@@ -24,6 +26,10 @@ public interface SwerveIO {
     public default void setLimits(double limitInAmps) {}
 
     public default void tareEverything() {}
+
+    public default void setModuleSteerAngle(CanDevice steerDevice, Rotation2d angle) {}
+
+    public default void restoreSteerOffsets(){}
 
     public default void resetPose(Pose2d pose) {}
 
