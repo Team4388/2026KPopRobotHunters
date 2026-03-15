@@ -56,15 +56,6 @@ public class SwerveReal implements SwerveIO {
             swerveDriveTrain.addVisionMeasurement(pose, Utils.fpgaToCurrentTime(Vision.getTime()));
         }
     }
-
-    @Override
-    public void setModuleSteerAngle(CanDevice steerDevice, Rotation2d angle) {
-    }
-
-    @Override
-    public void restoreSteerOffsets() {
-
-    }
     
     @Override
     public void setLimits(double limitInAmps) {

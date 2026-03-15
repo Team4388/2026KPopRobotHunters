@@ -295,7 +295,27 @@ public class SwerveDrive extends SubsystemBase implements Queryable {
         // SmartDashboard.putBoolean("drift correction", true);
     }
 
-    
+    public void driveFieldAngleSIP(Translation2d leftStick, Rotation2d heading) {
+        
+        leftStick = leftStick.rotateBy(TimesNegativeOne.ForwardOffset);
+        leftStick = TimesNegativeOne.invert(leftStick, TimesNegativeOne.XAxis, TimesNegativeOne.YAxis);
+
+        rotTarget = heading.getDegrees();
+
+        var ctrl = new SwerveRequest.FieldCentricFacingAngle()
+            .withVelocityX(leftStick.getX() * speedAdjust)
+            .withVelocityY(leftStick.getY() * speedAdjust)
+            .withTargetDirection(heading);
+        ctrl.HeadingController.setPID(
+            SwerveDriveConstants.PIDConstants.AIM_kP.get(),
+            SwerveDriveConstants.PIDConstants.AIM_kI.get(),
+            SwerveDriveConstants.PIDConstants.AIM_kD.get()
+            // SwerveDriveConstants.PIDConstants.AIM_GAINS.kP,
+            // SwerveDriveConstants.PIDConstants.AIM_GAINS.kI,
+            // SwerveDriveConstants.PIDConstants.AIM_GAINS.kD
+        );
+        io.setControl(ctrl);
+    }
     
     public void driveIntake(Translation2d leftStick, boolean invertRotation){
         // if (invert){
@@ -371,14 +391,11 @@ public class SwerveDrive extends SubsystemBase implements Queryable {
     }
 
     public void defenseXPosition(){
-        io.setModuleSteerAngle(SwerveDriveConstants.IDs.LEFT_FRONT_STEER, Rotation2d.fromDegrees(45.0));
-        io.setModuleSteerAngle(SwerveDriveConstants.IDs.RIGHT_FRONT_STEER, Rotation2d.fromDegrees(-45.0));
-        io.setModuleSteerAngle(SwerveDriveConstants.IDs.LEFT_BACK_STEER, Rotation2d.fromDegrees(-45.0));
-        io.setModuleSteerAngle(SwerveDriveConstants.IDs.RIGHT_BACK_STEER, Rotation2d.fromDegrees(45.0));
+        io.setControl(new SwerveRequest.SwerveDriveBrake());
     }
 
     public void stopDefenseXPosition(){
-            io.restoreSteerOffsets();
+        stopModules();
     }
 
     public void driveFacingPosition(Translation2d leftStick, Translation2d fieldPos) {

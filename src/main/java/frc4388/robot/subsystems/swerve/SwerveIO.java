@@ -27,10 +27,6 @@ public interface SwerveIO {
 
     public default void tareEverything() {}
 
-    public default void setModuleSteerAngle(CanDevice steerDevice, Rotation2d angle) {}
-
-    public default void restoreSteerOffsets(){}
-
     public default void resetPose(Pose2d pose) {}
 
     public default void addVisionMeasurement(List<PoseObservation> poses) {}
