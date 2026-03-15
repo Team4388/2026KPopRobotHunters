@@ -4,6 +4,9 @@
 
 package frc4388.robot.commands.Swerve;
 
+import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.AutoLogOutput;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import frc4388.robot.commands.PID;
@@ -11,6 +14,7 @@ import frc4388.robot.subsystems.swerve.SwerveDrive;
 
 public class StayInPosition extends PID {
     SwerveDrive drive;
+    Translation2d driveTranslation = new Translation2d();
 
     public StayInPosition(SwerveDrive drive) {
         super(0.3, 0.0, 0.0, 0.0, 1);
@@ -20,24 +24,23 @@ public class StayInPosition extends PID {
 
     public void goToTargetPose(Pose2d targetPose) {
         Pose2d currentPose = drive.getCurrentPose();
-
         double translationX = targetPose.getX() - currentPose.getX();
         double translationY = targetPose.getY() - currentPose.getY();
-
-        double magnitude = Math.sqrt(translationX * translationX + translationY * translationY);
-        if (magnitude > 1.0) {
-            translationX /= magnitude;
-            translationY /= magnitude;
+        if (translationX > 0.8){
+          translationX = 0.8;
         }
-
-        Translation2d driveTranslation;
-        if (magnitude < 0.05) {
+        if (translationY > 0.8){
+          translationY = 0.8;
+        }
+        if (Math.abs(translationX) < 0.01 && Math.abs(translationY) < 0.01) {
             driveTranslation = new Translation2d();
         } else {
             driveTranslation = new Translation2d(translationX, translationY);
         }
 
         drive.driveFieldAngleSIP(driveTranslation, targetPose.getRotation());
+        // If above doesn't work
+        //drive.driveFieldAngle(driveTranslation, targetPose.getRotation());
     }
 
     @Override

@@ -24,27 +24,59 @@ public class SimpleSwerveSim implements SwerveIO {
     public SimpleSwerveSim() {
     }
 
-    @Override
     public synchronized void setControl(SwerveRequest ctrl) {
         if (ctrl == null) return;
 
+        // Handle FieldCentricFacingAngle — compute omega from target direction
+        if (ctrl instanceof SwerveRequest.FieldCentricFacingAngle facingAngle) {
+        vx = facingAngle.VelocityX;
+        vy = facingAngle.VelocityY;
+
+        // Simple P controller to rotate toward target
+        double currentAngle = pose.getRotation().getRadians();
+        double targetAngle  = facingAngle.TargetDirection.getRadians();
+        double error = targetAngle - currentAngle;
+
+            // Wrap error to [-pi, pi]
+            error = Math.atan2(Math.sin(error), Math.cos(error));
+
+            double kP = 5.0; // tune this — matches PathPlanner's rotation PID
+            omega = error * kP;
+            return;
+        }
+
+        // Handle FieldCentric (normal driving with explicit rotational rate)
+        if (ctrl instanceof SwerveRequest.FieldCentric fc) {
+            vx = fc.VelocityX;
+            vy = fc.VelocityY;
+            omega = fc.RotationalRate;
+            return;
+        }
+
+        if (ctrl instanceof SwerveRequest.RobotCentric rc) {
+        // rotate velocity into field frame
+            double cos = pose.getRotation().getCos();
+            double sin = pose.getRotation().getSin();
+            double vxRobot = rc.VelocityX;
+            double vyRobot = rc.VelocityY;
+            vx = vxRobot * cos - vyRobot * sin;
+            vy = vxRobot * sin + vyRobot * cos;
+            omega = rc.RotationalRate;
+            return;
+        }
+
+        // Handle brake
+        if (ctrl instanceof SwerveRequest.SwerveDriveBrake) {
+            vx = 0; vy = 0; omega = 0;
+            return;
+        }
+
+        // Fallback: your original reflection approach
         ChassisSpeeds cs = tryGetSpeedsField(ctrl);
         if (cs != null) {
             vx = cs.vxMetersPerSecond;
             vy = cs.vyMetersPerSecond;
             omega = cs.omegaRadiansPerSecond;
-            return;
-        }
-
-        try {
-            Class<?> cls = ctrl.getClass();
-            double vxF = tryGetDoubleField(ctrl, cls, "VelocityX", "velocityX", "velocityx", "VelX");
-            double vyF = tryGetDoubleField(ctrl, cls, "VelocityY", "velocityY", "velocityy", "VelY");
-            double rotF = tryGetDoubleField(ctrl, cls, "RotationalRate", "rotationalRate", "rotationalrate", "omega", "Omega");
-            vx = vxF;
-            vy = vyF;
-            omega = rotF;
-        } catch (Exception e) {
         }
     }
 

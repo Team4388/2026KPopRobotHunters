@@ -297,11 +297,7 @@ public class SwerveDrive extends SubsystemBase implements Queryable {
 
     public void driveFieldAngleSIP(Translation2d leftStick, Rotation2d heading) {
         
-        leftStick = leftStick.rotateBy(TimesNegativeOne.ForwardOffset);
-        leftStick = TimesNegativeOne.invert(leftStick, TimesNegativeOne.XAxis, TimesNegativeOne.YAxis);
-
-        rotTarget = heading.getDegrees();
-
+       rotTarget = heading.getDegrees();
         var ctrl = new SwerveRequest.FieldCentricFacingAngle()
             .withVelocityX(leftStick.getX() * speedAdjust)
             .withVelocityY(leftStick.getY() * speedAdjust)
@@ -310,9 +306,6 @@ public class SwerveDrive extends SubsystemBase implements Queryable {
             SwerveDriveConstants.PIDConstants.AIM_kP.get(),
             SwerveDriveConstants.PIDConstants.AIM_kI.get(),
             SwerveDriveConstants.PIDConstants.AIM_kD.get()
-            // SwerveDriveConstants.PIDConstants.AIM_GAINS.kP,
-            // SwerveDriveConstants.PIDConstants.AIM_GAINS.kI,
-            // SwerveDriveConstants.PIDConstants.AIM_GAINS.kD
         );
         io.setControl(ctrl);
     }
