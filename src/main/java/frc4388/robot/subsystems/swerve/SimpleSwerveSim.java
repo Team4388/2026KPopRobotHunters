@@ -27,25 +27,21 @@ public class SimpleSwerveSim implements SwerveIO {
     public synchronized void setControl(SwerveRequest ctrl) {
         if (ctrl == null) return;
 
-        // Handle FieldCentricFacingAngle — compute omega from target direction
         if (ctrl instanceof SwerveRequest.FieldCentricFacingAngle facingAngle) {
         vx = facingAngle.VelocityX;
         vy = facingAngle.VelocityY;
 
-        // Simple P controller to rotate toward target
         double currentAngle = pose.getRotation().getRadians();
         double targetAngle  = facingAngle.TargetDirection.getRadians();
         double error = targetAngle - currentAngle;
 
-            // Wrap error to [-pi, pi]
             error = Math.atan2(Math.sin(error), Math.cos(error));
 
-            double kP = 5.0; // tune this — matches PathPlanner's rotation PID
+            double kP = 5.0;
             omega = error * kP;
             return;
         }
 
-        // Handle FieldCentric (normal driving with explicit rotational rate)
         if (ctrl instanceof SwerveRequest.FieldCentric fc) {
             vx = fc.VelocityX;
             vy = fc.VelocityY;
@@ -54,7 +50,6 @@ public class SimpleSwerveSim implements SwerveIO {
         }
 
         if (ctrl instanceof SwerveRequest.RobotCentric rc) {
-        // rotate velocity into field frame
             double cos = pose.getRotation().getCos();
             double sin = pose.getRotation().getSin();
             double vxRobot = rc.VelocityX;
@@ -65,13 +60,11 @@ public class SimpleSwerveSim implements SwerveIO {
             return;
         }
 
-        // Handle brake
         if (ctrl instanceof SwerveRequest.SwerveDriveBrake) {
             vx = 0; vy = 0; omega = 0;
             return;
         }
 
-        // Fallback: your original reflection approach
         ChassisSpeeds cs = tryGetSpeedsField(ctrl);
         if (cs != null) {
             vx = cs.vxMetersPerSecond;
