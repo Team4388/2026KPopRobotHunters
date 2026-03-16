@@ -87,9 +87,6 @@ public class ShooterReal implements ShooterIO {
     public void setIndexerOutput(ShooterState state, double percentOutput) {
         state.indexerTargetOutput = percentOutput;
         m_indexerMotor.set(percentOutput);
-        if (state.indexerTargetOutput - state.indexerOutput > 0.05){
-            state.indexerForwardVelocity = m_indexerMotor.getVelocity().getValue().div(ShooterConstants.INDEXER_GEAR_RATIO);
-        }
     }
 
 
