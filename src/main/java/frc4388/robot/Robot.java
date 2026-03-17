@@ -20,6 +20,8 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc4388.robot.constants.BuildConstants;
 import frc4388.robot.constants.Constants.SimConstants;
 import frc4388.utility.DeferredBlock;
+import frc4388.utility.compute.HubShiftTimer;
+import frc4388.utility.compute.HubShiftTimer.ShiftInfo;
 import frc4388.utility.compute.RobotTime;
 import frc4388.utility.compute.Trim;
 import frc4388.utility.status.FaultReporter;
@@ -74,6 +76,11 @@ public class Robot extends LoggedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
+    //Hub Shift logs
+    ShiftInfo info = HubShiftTimer.getShiftInfo();
+    Logger.recordOutput("HubShift/IsActive", info.isActive());
+    Logger.recordOutput("HubShift/RemainingInShift", info.remainingInShift());
+    Logger.recordOutput("HubShift/Phase", info.phase().name());
   }
   /**
    * This function is called once each time the robot enters Disabled mode.
@@ -113,6 +120,7 @@ public class Robot extends LoggedRobot {
       m_autonomousCommand.schedule();
     }
     m_robotTime.startMatchTime();
+    HubShiftTimer.initializeAuto();
   }
 
   /**
@@ -138,6 +146,7 @@ public class Robot extends LoggedRobot {
 
     }
     m_robotTime.startMatchTime();
+    HubShiftTimer.initializeTeleop();
   }
 
   /**

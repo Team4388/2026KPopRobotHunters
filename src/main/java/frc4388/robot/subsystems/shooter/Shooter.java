@@ -19,6 +19,8 @@ import frc4388.robot.subsystems.LED;
 import frc4388.robot.subsystems.intake.Intake;
 import frc4388.robot.subsystems.swerve.SwerveDrive;
 import frc4388.utility.compute.FieldPositions;
+import frc4388.utility.compute.HubShiftTimer;
+import frc4388.utility.compute.HubShiftTimer.ShiftInfo;
 
 public class Shooter extends SubsystemBase {
     public ShooterIO io;
@@ -104,6 +106,7 @@ public class Shooter extends SubsystemBase {
         // FaultReporter.register(this); // TODO Implement fault reporter
 
         Logger.processInputs("Shooter", state);
+
         io.updateInputs(state);
 
 
