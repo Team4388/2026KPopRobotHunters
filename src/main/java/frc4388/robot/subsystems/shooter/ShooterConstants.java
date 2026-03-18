@@ -15,8 +15,8 @@ import frc4388.utility.status.CanDevice;
 public class    ShooterConstants {
     // Motor conversions
     
-    public static final double SHOOTERMOTOR_GEAR_RATIO = 1.5;
-    public static final double INDEXER_GEAR_RATIO = 1.;
+    public static final double SHOOTERMOTOR_GEAR_RATIO = 1.29; // TODO: supposed to be 9 rotations in to 7 out
+    public static final double INDEXER_GEAR_RATIO = 1.72; // TODO: change it is supposed to be 18 to 31 
     public static final double T_CONSTANT = 2;
     public static final double SHOOTER_RADIUS = 2/39.37;
     public static final double INDEXER_RADIUS = 0.625/39.37;
@@ -24,6 +24,7 @@ public class    ShooterConstants {
     public static final ConfigurableDouble SHOOTER_OVERRIDE_VELOCITY = new ConfigurableDouble("Shooter OVERRIDE Velocity", -42);
     // public static final ConfigurableDouble SHOOTER_FEED_VELOCITY = new ConfigurableDouble("Shooter Feed Velocity", -35);
     // public static final ConfigurableDouble SHOOTER_RESTING_VELOCITY = new ConfigurableDouble("Shooter Resting Velocity", 0.0);
+    
     
     public static final ConfigurableDouble SHOOTER_IDLE_PERCENT_OUTPUT = new ConfigurableDouble("Shooter idle % output", -0.15);
     // public static final ConfigurableDouble SHOOTER_IDLE_TARGET_VEL = new ConfigurableDouble("Shooter idle target velocity", 20.);
