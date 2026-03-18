@@ -104,7 +104,11 @@ public class Shooter extends SubsystemBase {
     @Override
     public void periodic() {
         // FaultReporter.register(this); // TODO Implement fault reporter
-
+        //Hub Shift logs
+        ShiftInfo info = HubShiftTimer.getShiftInfo();
+        Logger.recordOutput("HubShift/IsActive", info.isActive());
+        Logger.recordOutput("HubShift/RemainingInShift", info.remainingInShift());
+        Logger.recordOutput("HubShift/Phase", info.phase().name());
         Logger.processInputs("Shooter", state);
 
         io.updateInputs(state);

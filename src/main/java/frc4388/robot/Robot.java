@@ -76,11 +76,6 @@ public class Robot extends LoggedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
-    //Hub Shift logs
-    ShiftInfo info = HubShiftTimer.getShiftInfo();
-    Logger.recordOutput("HubShift/IsActive", info.isActive());
-    Logger.recordOutput("HubShift/RemainingInShift", info.remainingInShift());
-    Logger.recordOutput("HubShift/Phase", info.phase().name());
   }
   /**
    * This function is called once each time the robot enters Disabled mode.
