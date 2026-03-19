@@ -73,6 +73,8 @@ public final class SwerveDriveConstants {
     public static final boolean INVERT_Y = true;
     public static final boolean INVERT_ROTATION = false;
 
+    public static ConfigurableDouble distanceTolerence = new ConfigurableDouble("Distance Tolerence", 0.5);
+
     // public static final Trim POINTLESS_TRIM = new Trim("Pointless Trim", Double.MAX_VALUE, Double.MIN_VALUE, 0.1, 0);
 
     public static final class ModuleSpecificConstants { //2026

@@ -7,6 +7,8 @@ import org.littletonrobotics.junction.AutoLog;
 
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
+import frc4388.robot.subsystems.intake.Intake;
+import frc4388.robot.subsystems.led.LED;
 
 public interface ShooterIO {
     @AutoLog
@@ -49,6 +51,7 @@ public interface ShooterIO {
 
     public default void updateInputs(ShooterState state) {}
 
+    public default void motorStalled(ShooterState state, Intake m_Intake, LED m_robotLED) {}
     
     public default void updateGains() {}
 }

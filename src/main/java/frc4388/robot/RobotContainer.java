@@ -233,20 +233,20 @@ public class RobotContainer {
     
             //TEST - > Defense: X position on wheels and swerve drive pid on position
             new JoystickButton(getDeadbandedDriverController(), XboxController.X_BUTTON)
-            //     .whileTrue(new RunCommand(() -> {
-            //     m_robotSwerveDrive.defenseXPosition();
-            // }, m_robotSwerveDrive))
-            //     .onFalse(new InstantCommand(() -> {
-            //     m_robotSwerveDrive.stopDefenseXPosition();
-
-            .onTrue(new InstantCommand(() -> {
-                    currentPose = m_robotSwerveDrive.getCurrentPose();
-            }))
-            .whileTrue(new RunCommand(() -> {
-                m_stayInPosition.goToTargetPose(currentPose);
+                .whileTrue(new RunCommand(() -> {
+                m_robotSwerveDrive.defenseXPosition();
             }, m_robotSwerveDrive))
-            .onFalse(new InstantCommand(() -> {
-                m_robotSwerveDrive.softStop();
+                .onFalse(new InstantCommand(() -> {
+                m_robotSwerveDrive.stopDefenseXPosition();
+
+            // .onTrue(new InstantCommand(() -> {
+            //         currentPose = m_robotSwerveDrive.getCurrentPose();
+            // }))
+            // .whileTrue(new RunCommand(() -> {
+            //     m_stayInPosition.goToTargetPose(currentPose);
+            // }, m_robotSwerveDrive))
+            // .onFalse(new InstantCommand(() -> {
+            //     m_robotSwerveDrive.softStop();
                 
             }));
 
@@ -351,6 +351,14 @@ public class RobotContainer {
         //     .onTrue(new InstantCommand(() -> {
         //         m_robotClimber.toggleDeployed();
         //     }));
+
+        new JoystickButton(getDeadbandedOperatorController(), XboxController.A_BUTTON)
+            .onTrue(new InstantCommand(() -> {
+                m_robotShooter.indexerStalled();
+            }))
+            .onFalse(new InstantCommand(() -> {
+                m_robotShooter.spinUpIdle();
+            }));
 
 
    }

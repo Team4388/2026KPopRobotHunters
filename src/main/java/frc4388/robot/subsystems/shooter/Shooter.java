@@ -59,7 +59,8 @@ public class Shooter extends SubsystemBase {
     public enum ShooterMode {
         Shooting,
         ManualShoot,
-        Idle
+        Idle,
+        IndexerStall
     }
 
     private ShooterMode mode = ShooterMode.Idle;
@@ -83,6 +84,10 @@ public class Shooter extends SubsystemBase {
 
     public void allowShooting() {
         shooterButtonReady = true;
+    }   
+
+    public void indexerStalled() {
+        mode = ShooterMode.IndexerStall;
     }
 
     public void denyShooting() {
@@ -169,7 +174,7 @@ public class Shooter extends SubsystemBase {
 
                 switch (bitmask) {
                     case 0b000: // No errors but button is not pressed
-                        io.setIndexerOutput(state, ShooterConstants.INDEXER_REVERSE_OUTPUT.get());
+                        io.setIndexerOutput(state, 0);
                         m_robotLED.setMode(Constants.LEDConstants.OPREADY);
                         break;
 
@@ -180,19 +185,19 @@ public class Shooter extends SubsystemBase {
 
                     case 0b010: // Bad shooter velocity, button is not pressed
                     case 0b011: // Bad shooter velocty, button is pressed
-                        io.setIndexerOutput(state, ShooterConstants.INDEXER_REVERSE_OUTPUT.get());
+                        io.setIndexerOutput(state, 0);
                         m_robotLED.setMode(Constants.LEDConstants.BAD_FLYWEEL);
                         break;
 
                     case 0b100: // Driver error, button is not pressed
                     case 0b101: // Driver error, button is pressed
-                        io.setIndexerOutput(state, ShooterConstants.INDEXER_REVERSE_OUTPUT.get());
+                        io.setIndexerOutput(state, 0);
                         m_robotLED.setMode(Constants.LEDConstants.OPREADY_BADPHYS);
                         break;
 
                     case 0b110: // Driver error, bad shooter vel, button is not pressed
                     case 0b111: // Driver error, bad shooter vel, button is pressed
-                        io.setIndexerOutput(state, ShooterConstants.INDEXER_REVERSE_OUTPUT.get());
+                        io.setIndexerOutput(state, 0);
                         m_robotLED.setMode(Constants.LEDConstants.BAD_FLYWEEL_BADPHYS);
                         break;
                 }
@@ -207,7 +212,7 @@ public class Shooter extends SubsystemBase {
 
                 switch (bitmask2) {
                     case 0b000: // No errors but button is not pressed
-                        io.setIndexerOutput(state, ShooterConstants.INDEXER_REVERSE_OUTPUT.get());
+                        io.setIndexerOutput(state, 0);
                         m_robotLED.setMode(Constants.LEDConstants.OPREADY_FEED);
                         break;
 
@@ -218,7 +223,7 @@ public class Shooter extends SubsystemBase {
 
                     case 0b010: // Bad shooter velocity, button is not pressed
                     case 0b011: // Bad shooter velocty, button is pressed
-                        io.setIndexerOutput(state, ShooterConstants.INDEXER_REVERSE_OUTPUT.get());
+                        io.setIndexerOutput(state, 0);
                         m_robotLED.setMode(Constants.LEDConstants.BAD_FLYWEEL);
                         break;
 
@@ -244,12 +249,16 @@ public class Shooter extends SubsystemBase {
                     // Amps.of(ShooterConstants.SHOOTER_IDLE_MAX_CURRENT.get()), 
                     // RotationsPerSecond.of(ShooterConstants.INDEXER_REVERSE_OUTPUT.get())
                 );
-                io.setIndexerOutput(state, ShooterConstants.INDEXER_REVERSE_OUTPUT.get());
+                io.setIndexerOutput(state, 0);
                 m_robotLED.setMode(Constants.LEDConstants.DEFAULT_PATTERN);
                 break;
-            
-
+            case IndexerStall:
+                io.setShooterVelocity(state, RotationsPerSecond.of(ShooterConstants.SHOOTER_IDLE_PERCENT_OUTPUT.get()));
+                io.setIndexerOutput(state, ShooterConstants.INDEXER_REVERSE_OUTPUT.get());
+                m_robotLED.setMode(Constants.LEDConstants.INDEXER_REVERSE);
+                break;
             }
-
+            
+        io.motorStalled(state, m_Intake, m_robotLED);
     }
 }

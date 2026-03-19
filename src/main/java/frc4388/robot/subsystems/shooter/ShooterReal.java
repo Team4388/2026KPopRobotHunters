@@ -8,6 +8,10 @@ import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
+import edu.wpi.first.wpilibj.Timer;
+import frc4388.robot.constants.Constants;
+import frc4388.robot.subsystems.intake.Intake;
+import frc4388.robot.subsystems.led.LED;
 
 public class ShooterReal implements ShooterIO {
 
@@ -19,6 +23,12 @@ public class ShooterReal implements ShooterIO {
     VelocityDutyCycle shooter2Velocity = new VelocityDutyCycle(0);
     // VelocityDutyCycle m_indexerVelocity = new VelocityDutyCycle(0);
 
+    private final Timer m_stallTimerShooter = new Timer();
+    private final Timer m_stallTimerIndexer = new Timer();
+    private final Timer m_stallTimerRoller = new Timer();
+    private boolean m_shooterStalling = false;
+    private boolean m_indexerStalling = false;
+    private boolean m_rollerStalling = false;
 
     public ShooterReal(
          TalonFX shooter1Motor,
@@ -39,6 +49,50 @@ public class ShooterReal implements ShooterIO {
         shooter1Velocity.Slot = 0;
         shooter2Velocity.Slot = 0;
         // m_indexerVelocity.Slot = 0;
+    }
+    
+    @Override
+    public void motorStalled(ShooterState state, Intake m_Intake, LED m_robotLED) {
+        
+        // if (Math.abs(state.motor1TargetVelocity.in(RotationsPerSecond)) - Math.abs(state.motor1Velocity.in(RotationsPerSecond)) > 20) {
+        //     if (!m_shooterStalling) {
+        //         m_shooterStalling = true;
+        //         m_stallTimerShooter.restart();
+        //     }
+        //     if (m_stallTimerShooter.hasElapsed(5.0)) {
+        //         m_robotLED.setMode(Constants.LEDConstants.MOTOR_STALLED);
+        //     }
+        // } else {
+        //     m_shooterStalling = false;
+        //     m_stallTimerShooter.stop();
+        // }
+
+        // if (Math.abs(state.indexerTargetOutput) - Math.abs(state.indexerOutput) > 0.2) {
+        //     if (!m_indexerStalling) {
+        //         m_indexerStalling = true;
+        //         m_stallTimerIndexer.restart();
+        //     }
+        //     if (m_stallTimerIndexer.hasElapsed(5.0)) {
+        //         m_robotLED.setMode(Constants.LEDConstants.MOTOR_STALLED);
+        //     }
+        // } else {
+        //     m_indexerStalling = false;
+        //     m_stallTimerIndexer.stop();
+        // }
+
+        // if (Math.abs(m_Intake.getRollerTarget()) - Math.abs(m_Intake.getRollerSpeed()) > 0.2) {
+        //     if (!m_rollerStalling) {
+        //         m_rollerStalling = true;
+        //         m_stallTimerRoller.restart();
+        //     }
+        //     if (m_stallTimerRoller.hasElapsed(5.0)) {
+        //         m_robotLED.setMode(Constants.LEDConstants.MOTOR_STALLED);
+        //     }
+        // } else {
+        //     m_rollerStalling = false;
+        //     m_stallTimerRoller.stop();
+        // }
+        
     }
     
     @Override
