@@ -19,6 +19,8 @@ import frc4388.robot.subsystems.intake.Intake;
 import frc4388.robot.subsystems.led.LED;
 import frc4388.robot.subsystems.swerve.SwerveDrive;
 import frc4388.utility.compute.FieldPositions;
+import frc4388.utility.compute.HubShiftTimer;
+import frc4388.utility.compute.HubShiftTimer.ShiftInfo;
 
 public class Shooter extends SubsystemBase {
     public ShooterIO io;
@@ -114,8 +116,13 @@ public class Shooter extends SubsystemBase {
     @Override
     public void periodic() {
         // FaultReporter.register(this); // TODO Implement fault reporter
-
+        //Hub Shift logs
+        ShiftInfo info = HubShiftTimer.getShiftInfo();
+        Logger.recordOutput("HubShift/IsActive", info.isActive());
+        Logger.recordOutput("HubShift/RemainingInShift", info.remainingInShift());
+        Logger.recordOutput("HubShift/Phase", info.phase().name());
         Logger.processInputs("Shooter", state);
+
         io.updateInputs(state);
 
 
