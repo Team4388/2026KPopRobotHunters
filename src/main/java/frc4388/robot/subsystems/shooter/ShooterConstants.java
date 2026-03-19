@@ -36,8 +36,7 @@ public class    ShooterConstants {
 
     
     public static final ConfigurableDouble AIM_LEAD_TIME = new ConfigurableDouble("Aim lead time", 0);
-    public static final ConfigurableDouble CHASSIS_POS_OFFSET = new ConfigurableDouble("Chassis positive speed offset", 1.0);
-    public static final ConfigurableDouble CHASSIS_NEG_OFFSET = new ConfigurableDouble("Chassis negative speed offset", 1.0);
+
     // Shoot mode tolerances
     public static final ConfigurableDouble ROBOT_MIN_HUB = new ConfigurableDouble("Shoot min dist M", 1.8);
     public static final ConfigurableDouble ROBOT_MAX_HUB = new ConfigurableDouble("Shoot max dist M", 4.8);
@@ -50,29 +49,16 @@ public class    ShooterConstants {
     public static final ConfigurableDouble SHOOTER_SPEED_TOLERANCE = new ConfigurableDouble("Shooter speed tolerance RPS", 3); 
 
     // 
-    public static AngularVelocity getTargetShooterSpeed(double hubDistMeters, double chassisXSpeed) {
+    public static AngularVelocity getTargetShooterSpeed(double hubDistMeters) {
         // Model derived from points
         // double speed = 
         //     1.11576*hubDistMeters*hubDistMeters +
         //     0.318464*hubDistMeters +
         //     30.6293;
-            double speed;
-        if (Math.abs(chassisXSpeed) < 0.1) {
-            speed = 
+        double speed = 
             0.0593402*hubDistMeters*hubDistMeters +
             4.90561*hubDistMeters +
             30.35696 + MODEL_TRIM.get();
-        } else if (chassisXSpeed > 0) { // positive = further from hub
-            speed = 
-            0.0593402*hubDistMeters*hubDistMeters +
-            4.90561*hubDistMeters +
-            30.35696 + (chassisXSpeed * CHASSIS_POS_OFFSET.get()) + MODEL_TRIM.get();
-        } else { // negative = moving towards hub
-            speed = 
-            0.0593402*hubDistMeters*hubDistMeters +
-            4.90561*hubDistMeters +
-            30.35696 + (chassisXSpeed * CHASSIS_NEG_OFFSET.get()) + MODEL_TRIM.get();
-        }
 
         // double speed =
         //     0.00610938*hubDistMeters*hubDistMeters
@@ -96,8 +82,8 @@ public class    ShooterConstants {
     // Motor Configuration
     public static Slot0Configs SHOOTER_PID = new Slot0Configs()
         .withKV(0.0)
-        .withKP(0.02)
-        .withKI(0.15)
+        .withKP(0.05)
+        .withKI(0.20)
         .withKD(0.0);
 
     
@@ -105,7 +91,7 @@ public class    ShooterConstants {
     
     
     
-    public static ConfigurableDouble shooter_kP = new ConfigurableDouble("Shooter KP", 0.02);
+    public static ConfigurableDouble shooter_kP = new ConfigurableDouble("Shooter KP", 0.08);
     public static ConfigurableDouble shooter_kI = new ConfigurableDouble("Shooter KI", 0.15);
     public static ConfigurableDouble shooter_kD = new ConfigurableDouble("Shooter KD", 0);
 

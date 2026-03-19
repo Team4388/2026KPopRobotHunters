@@ -33,8 +33,6 @@ public class Shooter extends SubsystemBase {
     public boolean badShooterVelocity;
     public double distanceToHub = 5;
 
-    public double chassisXSpeed = 0;
-
 
     public Shooter(
         ShooterIO io,
@@ -68,8 +66,7 @@ public class Shooter extends SubsystemBase {
     private ShooterMode mode = ShooterMode.Idle;
     private boolean shooterButtonReady = false;
 
-    public void spinUpShooting(double chassisXSpeed) {
-        this.chassisXSpeed = chassisXSpeed;
+    public void spinUpShooting() {
         this.mode = ShooterMode.Shooting;
     }
 
@@ -160,14 +157,14 @@ public class Shooter extends SubsystemBase {
 
         //revtime calculations
         // double shooterAcceleration = 
-        double shooterSpeedTargetPretend = ShooterConstants.getTargetShooterSpeed(distanceToHub,chassisXSpeed).in(RotationsPerSecond);
+        double shooterSpeedTargetPretend = ShooterConstants.getTargetShooterSpeed(distanceToHub).in(RotationsPerSecond);
         double revTime = (Math.abs(shooterSpeed - shooterSpeedTargetPretend)/((7 - shooterSpeedTargetPretend)/ShooterConstants.T_CONSTANT));
         // double revTimeExp = ShooterConstants.T_CONSTANT * Math.log(1 - Math.abs(shooterSpeed/shooterSpeedTargetPretend));
         Logger.recordOutput("Time to rev", revTime);
 
         switch (mode) {
             case Shooting:
-                io.setShooterVelocity(state, ShooterConstants.getTargetShooterSpeed(distanceToHub, chassisXSpeed));
+                io.setShooterVelocity(state, ShooterConstants.getTargetShooterSpeed(distanceToHub));
 
                 int bitmask = (
                     (shooterButtonReady ? 1 : 0) +
