@@ -125,7 +125,7 @@ public class RobotContainer {
         // );
     
         private Command RobotRev = new SequentialCommandGroup(
-            new InstantCommand(() -> m_robotShooter.spinUpShooting(), m_robotShooter),
+            new InstantCommand(() -> m_robotShooter.spinUpShooting(m_robotSwerveDrive.chassisXSpeeds()), m_robotShooter),
             IntakeExtended,
             new InstantCommand(() -> m_robotIntake.setMode(IntakeMode.RollerStop), m_robotIntake)
         );
@@ -315,7 +315,7 @@ public class RobotContainer {
             .onTrue(new InstantCommand(() -> {
                 m_robotIntake.setMode(IntakeMode.Idle);
                 m_robotIntake.rollerStop();
-                m_robotShooter.spinUpShooting();
+                m_robotShooter.spinUpShooting(m_robotSwerveDrive.chassisXSpeeds());
             }))
             .onFalse(new InstantCommand(() -> {
                 m_robotShooter.spinUpIdle();
@@ -352,7 +352,7 @@ public class RobotContainer {
         //         m_robotClimber.toggleDeployed();
         //     }));
 
-        new JoystickButton(getDeadbandedOperatorController(), XboxController.A_BUTTON)
+        new JoystickButton(getDeadbandedOperatorController(), XboxController.B_BUTTON)
             .onTrue(new InstantCommand(() -> {
                 m_robotShooter.indexerStalled();
             }))

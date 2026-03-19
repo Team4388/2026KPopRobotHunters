@@ -412,7 +412,7 @@ public class SwerveDrive extends SubsystemBase implements Queryable {
         if (ballVelocity > 1E-3 && Math.abs(chassisSpeeds.vyMetersPerSecond) > 1E-3){
             double aimOffset = chassisSpeeds.vyMetersPerSecond*(distanceToHub + SwerveDriveConstants.distanceTolerence.get())/(Math.abs(ballVelocity));
             fieldPos =  new Translation2d(fieldPos.getX(), fieldPos.getY() - aimOffset);
-            Logger.recordOutput("Offset Simple", aimOffset);
+            Logger.recordOutput("Offset Value", aimOffset);
 
         }
 
@@ -510,6 +510,14 @@ public class SwerveDrive extends SubsystemBase implements Queryable {
             .withVelocityY(0)
             .withRotationalRate(0)
         ); // stop the modules without breaking
+    }
+
+    public double chassisXSpeeds(){
+        if (TimesNegativeOne.isRed) {
+            return chassisSpeeds.vxMetersPerSecond;
+        } else {
+            return -chassisSpeeds.vxMetersPerSecond;
+        }
     }
 
     public void stopModules() {

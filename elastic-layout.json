@@ -8,10 +8,10 @@
         "layouts": [
           {
             "title": "Tag Processed",
-            "x": 384.0,
+            "x": 896.0,
             "y": 0.0,
             "width": 256.0,
-            "height": 256.0,
+            "height": 384.0,
             "type": "List Layout",
             "properties": {
               "label_position": "TOP"
@@ -56,26 +56,10 @@
         ],
         "containers": [
           {
-            "title": "MatchTime",
-            "x": 0.0,
-            "y": 0.0,
-            "width": 384.0,
-            "height": 256.0,
-            "type": "Match Time",
-            "properties": {
-              "topic": "/AdvantageKit/DriverStation/MatchTime",
-              "period": 0.06,
-              "data_type": "double",
-              "time_display_mode": "Minutes and Seconds",
-              "red_start_time": 15,
-              "yellow_start_time": 30
-            }
-          },
-          {
             "title": "RetractedLimit",
-            "x": 0.0,
-            "y": 384.0,
-            "width": 128.0,
+            "x": 512.0,
+            "y": 0.0,
+            "width": 256.0,
             "height": 128.0,
             "type": "Boolean Box",
             "properties": {
@@ -90,9 +74,9 @@
           },
           {
             "title": "Auto Chooser",
-            "x": 1024.0,
-            "y": 256.0,
-            "width": 384.0,
+            "x": 896.0,
+            "y": 384.0,
+            "width": 256.0,
             "height": 128.0,
             "type": "ComboBox Chooser",
             "properties": {
@@ -103,9 +87,9 @@
           },
           {
             "title": "Roller Percent Output",
-            "x": 0.0,
+            "x": 512.0,
             "y": 256.0,
-            "width": 256.0,
+            "width": 384.0,
             "height": 128.0,
             "type": "Number Slider",
             "properties": {
@@ -120,8 +104,8 @@
           },
           {
             "title": "Shooter OVERRIDE Velocity",
-            "x": 128.0,
-            "y": 384.0,
+            "x": 768.0,
+            "y": 0.0,
             "width": 128.0,
             "height": 128.0,
             "type": "Text Display",
@@ -134,8 +118,8 @@
           },
           {
             "title": "TRIM SHOOTER SPEED",
-            "x": 256.0,
-            "y": 256.0,
+            "x": 512.0,
+            "y": 384.0,
             "width": 384.0,
             "height": 128.0,
             "type": "Number Slider",
@@ -151,8 +135,8 @@
           },
           {
             "title": "Mode",
-            "x": 256.0,
-            "y": 384.0,
+            "x": 512.0,
+            "y": 128.0,
             "width": 384.0,
             "height": 128.0,
             "type": "Text Display",
@@ -164,30 +148,49 @@
             }
           },
           {
-            "title": "Time to rev",
-            "x": 768.0,
-            "y": 128.0,
-            "width": 256.0,
-            "height": 128.0,
-            "type": "Large Text Display",
+            "title": "IsActive",
+            "x": 0.0,
+            "y": 0.0,
+            "width": 384.0,
+            "height": 256.0,
+            "type": "Boolean Box",
             "properties": {
-              "topic": "/AdvantageKit/RealOutputs/Time to rev",
+              "topic": "/AdvantageKit/RealOutputs/HubShift/IsActive",
               "period": 0.06,
-              "data_type": "double"
+              "data_type": "boolean",
+              "true_color": 4283215696,
+              "false_color": 4294198070,
+              "true_icon": "None",
+              "false_icon": "None"
             }
           },
           {
-            "title": "Arm angle extended",
-            "x": 1152.0,
-            "y": 128.0,
-            "width": 256.0,
+            "title": "RemainingInShift",
+            "x": 0.0,
+            "y": 256.0,
+            "width": 384.0,
             "height": 128.0,
-            "type": "Text Display",
+            "type": "Match Time",
             "properties": {
-              "topic": "/SmartDashboard/Arm angle extended",
+              "topic": "/AdvantageKit/RealOutputs/HubShift/RemainingInShift",
               "period": 0.06,
               "data_type": "double",
-              "show_submit_button": true
+              "time_display_mode": "Minutes and Seconds",
+              "red_start_time": 15,
+              "yellow_start_time": 30
+            }
+          },
+          {
+            "title": "Phase",
+            "x": 0.0,
+            "y": 384.0,
+            "width": 384.0,
+            "height": 128.0,
+            "type": "Large Text Display",
+            "properties": {
+              "topic": "/AdvantageKit/RealOutputs/HubShift/Phase",
+              "period": 0.06,
+              "data_type": "string"
             }
           }
         ]
@@ -527,8 +530,8 @@
           },
           {
             "title": "Shooter Idle max current",
-            "x": 384.0,
-            "y": 512.0,
+            "x": 1024.0,
+            "y": 384.0,
             "width": 256.0,
             "height": 128.0,
             "type": "Text Display",
@@ -555,8 +558,8 @@
           },
           {
             "title": "Shooter OVERRIDE Velocity",
-            "x": 640.0,
-            "y": 512.0,
+            "x": 1024.0,
+            "y": 256.0,
             "width": 256.0,
             "height": 128.0,
             "type": "Text Display",
@@ -576,16 +579,59 @@
         "layouts": [],
         "containers": [
           {
-            "title": "Auto Chooser",
+            "title": "Hub Dist",
+            "x": 640.0,
+            "y": 128.0,
+            "width": 256.0,
+            "height": 256.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/AdvantageKit/RealOutputs/Hub Dist",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": false
+            }
+          },
+          {
+            "title": "Distance Tolerence",
+            "x": 256.0,
+            "y": 128.0,
+            "width": 256.0,
+            "height": 256.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/SmartDashboard/Distance Tolerence",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": true
+            }
+          },
+          {
+            "title": "Chassis positive speed offset",
+            "x": 0.0,
+            "y": 256.0,
+            "width": 256.0,
+            "height": 256.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/SmartDashboard/Chassis positive speed offset",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": true
+            }
+          },
+          {
+            "title": "Chassis negative speed offset",
             "x": 0.0,
             "y": 0.0,
-            "width": 640.0,
-            "height": 768.0,
-            "type": "ComboBox Chooser",
+            "width": 256.0,
+            "height": 256.0,
+            "type": "Text Display",
             "properties": {
-              "topic": "/SmartDashboard/Auto Chooser",
+              "topic": "/SmartDashboard/Chassis negative speed offset",
               "period": 0.06,
-              "sort_options": false
+              "data_type": "double",
+              "show_submit_button": true
             }
           }
         ]
