@@ -15,6 +15,7 @@ import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc4388.robot.constants.BuildConstants;
@@ -149,7 +150,12 @@ public class Robot extends LoggedRobot {
    */
   @Override
   public void teleopPeriodic() {
-  //  m_robotContainer.m_robotMap.rightFront.go(m_robotContainer.getDeadbandedDriverController().getLeft());
+    var info = HubShiftTimer.getShiftInfo();
+
+    double rumble = (info.remainingInShift() < 5.) ? 1 : 0;
+
+    m_robotContainer.getDeadbandedDriverController().setRumble(RumbleType.kBothRumble, rumble);
+    m_robotContainer.getDeadbandedOperatorController().setRumble(RumbleType.kBothRumble, rumble);
   }
 
   /**
