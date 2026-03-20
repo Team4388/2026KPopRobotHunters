@@ -55,21 +55,24 @@ public class ShooterReal implements ShooterIO {
     }
     
     @Override
-    public void motorStalled(ShooterState state, Intake m_Intake, LED m_robotLED) {        
-        if (Math.abs(state.motor1TargetVelocity.in(RotationsPerSecond)) - Math.abs(state.motor1Velocity.in(RotationsPerSecond)) > 40) {
-            if (!m_shooterStalling) {
-                m_shooterStalling = true;
-                m_stallTimerShooter.restart();
-            }
-            if (m_stallTimerShooter.hasElapsed(5.0)) {
-                m_robotLED.setMode(Constants.LEDConstants.MOTOR_STALLED);
-                motorStall = "Shooter Stalled";
-                System.out.println(Math.abs(state.motor1TargetVelocity.in(RotationsPerSecond)) - Math.abs(state.motor1Velocity.in(RotationsPerSecond)));
-            }
-        } else {
-            m_shooterStalling = false;
-            m_stallTimerShooter.reset();
-        }
+    public void motorStalled(ShooterState state, Intake m_Intake, LED m_robotLED) {    
+            motorStall = "";
+        // if (Math.abs(state.motor1TargetVelocity.in(RotationsPerSecond)) - Math.abs(state.motor1Velocity.in(RotationsPerSecond)) > 40) {
+        //     if (!m_shooterStalling) {
+        //         m_shooterStalling = true;
+        //         m_stallTimerShooter.restart();
+        //     }
+        //     if (m_stallTimerShooter.hasElapsed(5.0)) {
+        //         m_robotLED.setMode(Constants.LEDConstants.MOTOR_STALLED);
+        //         motorStall = "Shooter Stalled";
+        //         System.out.println("Shooter Stalled: " + (Math.abs(state.motor1TargetVelocity.in(RotationsPerSecond)) - Math.abs(state.motor1Velocity.in(RotationsPerSecond))));
+        //         System.out.println("Target Velocity: " + Math.abs(state.motor1TargetVelocity.in(RotationsPerSecond)));
+        //         System.out.println("Actual Velocity: " + Math.abs(state.motor1Velocity.in(RotationsPerSecond)));
+        //     }
+        // } else {
+        //     m_shooterStalling = false;
+        //     m_stallTimerShooter.reset();
+        // }
 
         if (Math.abs(state.indexerTargetOutput) - Math.abs(state.indexerOutput) > 0.3) {
             if (!m_indexerStalling) {
@@ -79,7 +82,7 @@ public class ShooterReal implements ShooterIO {
             if (m_stallTimerIndexer.hasElapsed(5.0)) {
                 m_robotLED.setMode(Constants.LEDConstants.MOTOR_STALLED);
                 motorStall = "Indexer Stalled";
-                System.out.println(Math.abs(state.indexerTargetOutput) - Math.abs(state.indexerOutput));
+                System.out.println("Indexer Stalled: " + (Math.abs(state.indexerTargetOutput) - Math.abs(state.indexerOutput)));
             }
         } else {
             m_indexerStalling = false;
@@ -94,7 +97,7 @@ public class ShooterReal implements ShooterIO {
             if (m_stallTimerRoller.hasElapsed(5.0)) {
                 m_robotLED.setMode(Constants.LEDConstants.MOTOR_STALLED);
                 motorStall = "Roller Stalled";
-                System.out.println(Math.abs(m_Intake.getRollerTarget()) - Math.abs(m_Intake.getRollerSpeed()));
+                System.out.println("Roller Stalled: " + (Math.abs(m_Intake.getRollerTarget()) - Math.abs(m_Intake.getRollerSpeed())));
             }
         } else {
             m_rollerStalling = false;

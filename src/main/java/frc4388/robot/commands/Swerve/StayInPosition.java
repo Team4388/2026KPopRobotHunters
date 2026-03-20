@@ -34,7 +34,7 @@ public class StayInPosition extends PID {
         //Same here
           translationY = 0.2;
         }
-        if (Math.abs(translationX) < 0.01 && Math.abs(translationY) < 0.01) {
+        if (Math.abs(translationX) < 0.08 && Math.abs(translationY) < 0.08) {
             driveTranslation = new Translation2d();
         } else {
             //TODO: Tweak for best corrector against another bot
@@ -42,8 +42,6 @@ public class StayInPosition extends PID {
         }
 
         drive.driveFieldAngleSIP(driveTranslation, targetPose.getRotation());
-        // If above doesn't work
-        //drive.driveFieldAngle(driveTranslation, targetPose.getRotation());
     }
 
     @Override

@@ -13,12 +13,14 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc4388.robot.constants.Constants;
 import frc4388.robot.subsystems.intake.Intake;
 import frc4388.robot.subsystems.led.LED;
 import frc4388.robot.subsystems.swerve.SwerveDrive;
 import frc4388.utility.compute.FieldPositions;
+import frc4388.utility.compute.TimesNegativeOne;
 
 public class Shooter extends SubsystemBase {
     public ShooterIO io;
@@ -33,6 +35,8 @@ public class Shooter extends SubsystemBase {
     public boolean badShooterVelocity;
     public double distanceToHub = 5;
     public double chassisXSpeed = 0;
+
+
 
     public Shooter(
         ShooterIO io,
@@ -59,15 +63,13 @@ public class Shooter extends SubsystemBase {
     public enum ShooterMode {
         Shooting,
         ManualShoot,
-        Idle,
-        IndexerStall
+        Idle
     }
 
     private ShooterMode mode = ShooterMode.Idle;
     private boolean shooterButtonReady = false;
 
-    public void spinUpShooting(double chassisXSpeed) {
-        this.chassisXSpeed = chassisXSpeed;
+    public void spinUpShooting() {
         this.mode = ShooterMode.Shooting;
     }
 
@@ -86,10 +88,6 @@ public class Shooter extends SubsystemBase {
     public void allowShooting() {
         shooterButtonReady = true;
     }   
-
-    public void indexerStalled() {
-        mode = ShooterMode.IndexerStall;
-    }
 
     public void denyShooting() {
         shooterButtonReady = false;
@@ -122,26 +120,20 @@ public class Shooter extends SubsystemBase {
 
         // Get robot positon and speeds
         ChassisSpeeds chassisSpeeds = m_SwerveDrive.chassisSpeeds;
-        double XYSpeed = Math.sqrt(Math.pow(chassisSpeeds.vxMetersPerSecond,2) + Math.pow(chassisSpeeds.vyMetersPerSecond,2));
-        double AngSpeed  = Math.abs(chassisSpeeds.omegaRadiansPerSecond * (180/Math.PI));
 
         Pose2d robotPose2d = m_SwerveDrive.getPose2d();
 
+        if (TimesNegativeOne.isRed) {
+            chassisXSpeed = chassisSpeeds.vxMetersPerSecond;
+        } else {
+            chassisXSpeed = -chassisSpeeds.vxMetersPerSecond;
+        }
 
-        // Calculate aim lead
-        // Get the current speed of the robot
-        Translation2d robotSpeed = new Translation2d(
-            chassisSpeeds.vxMetersPerSecond, 
-            chassisSpeeds.vyMetersPerSecond
-        );
-
-        // Calculate a point to aim ahead of the actual position.
-        Translation2d fieldPosLead = robotSpeed.times(ShooterConstants.AIM_LEAD_TIME.get()).plus(robotPose2d.getTranslation());
-
+        Translation2d fieldPos = robotPose2d.getTranslation();
         // Get the robot's aim distance to hub
-        distanceToHub = (fieldPosLead.minus(FieldPositions.HUB_POSITION).getNorm());
+        distanceToHub = (fieldPos.minus(FieldPositions.HUB_POSITION).getNorm());
 
-        //Center of hub to cameras in inches
+        //Center of hub to cameras in meters
         Logger.recordOutput("Hub Dist", distanceToHub);
 
         boolean driverError = 
@@ -158,14 +150,14 @@ public class Shooter extends SubsystemBase {
 
         //revtime calculations
         // double shooterAcceleration = 
-        double shooterSpeedTargetPretend = ShooterConstants.getTargetShooterSpeed(distanceToHub).in(RotationsPerSecond);
+        double shooterSpeedTargetPretend = ShooterConstants.getTargetShooterSpeed(distanceToHub, chassisXSpeed).in(RotationsPerSecond);
         double revTime = (Math.abs(shooterSpeed - shooterSpeedTargetPretend)/((7 - shooterSpeedTargetPretend)/ShooterConstants.T_CONSTANT));
         // double revTimeExp = ShooterConstants.T_CONSTANT * Math.log(1 - Math.abs(shooterSpeed/shooterSpeedTargetPretend));
         Logger.recordOutput("Time to rev", revTime);
 
         switch (mode) {
             case Shooting:
-                io.setShooterVelocity(state, ShooterConstants.getTargetShooterSpeed(distanceToHub));
+                io.setShooterVelocity(state, ShooterConstants.getTargetShooterSpeed(distanceToHub, chassisXSpeed));
 
                 int bitmask = (
                     (shooterButtonReady ? 1 : 0) +
@@ -175,18 +167,18 @@ public class Shooter extends SubsystemBase {
 
                 switch (bitmask) {
                     case 0b000: // No errors but button is not pressed
-                        io.setIndexerOutput(state, 0);
+                        io.setIndexerOutput(state, ShooterConstants.INDEXER_REVERSE_OUTPUT.get());
                         m_robotLED.setMode(Constants.LEDConstants.OPREADY);
                         break;
 
-                    case 0b001: // No errors and shoot button is pressed
+                    case 0b001: // No errors and shoot button is pressed                        
                         io.setIndexerOutput(state, ShooterConstants.INDEXER_FORWARD_OUTPUT.get());
                         m_robotLED.setMode(Constants.LEDConstants.OPREADY);
                         break;
 
                     case 0b010: // Bad shooter velocity, button is not pressed
                     case 0b011: // Bad shooter velocty, button is pressed
-                        io.setIndexerOutput(state, 0);
+                        io.setIndexerOutput(state, ShooterConstants.INDEXER_REVERSE_OUTPUT.get());
                         m_robotLED.setMode(Constants.LEDConstants.BAD_FLYWEEL);
                         break;
 
@@ -252,11 +244,6 @@ public class Shooter extends SubsystemBase {
                 );
                 io.setIndexerOutput(state, 0);
                 m_robotLED.setMode(Constants.LEDConstants.DEFAULT_PATTERN);
-                break;
-            case IndexerStall:
-                io.setShooterVelocity(state, RotationsPerSecond.of(ShooterConstants.SHOOTER_IDLE_PERCENT_OUTPUT.get()));
-                io.setIndexerOutput(state, ShooterConstants.INDEXER_REVERSE_OUTPUT.get());
-                m_robotLED.setMode(Constants.LEDConstants.INDEXER_REVERSE);
                 break;
             }
             

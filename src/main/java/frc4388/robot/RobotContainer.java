@@ -125,7 +125,7 @@ public class RobotContainer {
         // );
     
         private Command RobotRev = new SequentialCommandGroup(
-            new InstantCommand(() -> m_robotShooter.spinUpShooting(m_robotSwerveDrive.chassisXSpeeds()), m_robotShooter),
+            new InstantCommand(() -> m_robotShooter.spinUpShooting(), m_robotShooter),
             IntakeExtended,
             new InstantCommand(() -> m_robotIntake.setMode(IntakeMode.RollerStop), m_robotIntake)
         );
@@ -149,7 +149,7 @@ public class RobotContainer {
         
         public RobotContainer() {
             
-            configureButtonBindings();
+            configureSINGLEBindings();
             
             // Called on first robot enable
             DeferredBlock.addBlock(() -> {
@@ -313,7 +313,7 @@ public class RobotContainer {
             .onTrue(new InstantCommand(() -> {
                 m_robotIntake.setMode(IntakeMode.Idle);
                 m_robotIntake.rollerStop();
-                m_robotShooter.spinUpShooting(m_robotSwerveDrive.chassisXSpeeds());
+                m_robotShooter.spinUpShooting();
             }))
             .onFalse(new InstantCommand(() -> {
                 m_robotShooter.spinUpIdle();
@@ -350,16 +350,125 @@ public class RobotContainer {
         //         m_robotClimber.toggleDeployed();
         //     }));
 
-        new JoystickButton(getDeadbandedOperatorController(), XboxController.B_BUTTON)
+
+   }
+
+
+   private void configureSINGLEBindings() {
+            
+            //Driver controls
+            new JoystickButton(getDeadbandedDriverController(), XboxController.A_BUTTON)
+                .onTrue(new InstantCommand(() -> m_robotSwerveDrive.resetGyro()));
+    
+            new JoystickButton(getDeadbandedDriverController(), XboxController.RIGHT_BUMPER_BUTTON)
+                .onTrue(new InstantCommand(()  -> m_robotSwerveDrive.shiftUp()));
+            
+            new JoystickButton(getDeadbandedDriverController(), XboxController.LEFT_BUMPER_BUTTON)
+                .onTrue(new InstantCommand(() -> m_robotSwerveDrive.shiftDown()));
+    
+    
+    
+                
+            // TEST-> the driver is holding the left trigger, drive slow and rotation up 
+            // new Trigger(() -> getDeadbandedDriverController().getLeftTriggerAxis() >= 0.5)
+            //     .onTrue(new InstantCommand(() -> {
+            //         m_robotSwerveDrive.setToSlow();
+            //         m_robotSwerveDrive.shiftUpRot();
+            //     }))
+            //     .onFalse(new InstantCommand(() -> {
+            //         m_robotSwerveDrive.setToFast();
+            //         m_robotSwerveDrive.shiftDownRot();
+            // }));
+    
+            //TEST - > X positino on wheels
+            new JoystickButton(getDeadbandedDriverController(), XboxController.BACK_BUTTON)
+                .whileTrue(new RunCommand(() -> {
+                m_robotSwerveDrive.defenseXPosition();
+            }, m_robotSwerveDrive))
+                .onFalse(new InstantCommand(() -> {
+                m_robotSwerveDrive.stopDefenseXPosition();
+            }));
+
+            //TEST - > PID positinon
+            new JoystickButton(getDeadbandedDriverController(), XboxController.B_BUTTON)
             .onTrue(new InstantCommand(() -> {
-                m_robotShooter.indexerStalled();
+                    currentPose = m_robotSwerveDrive.getCurrentPose();
+            }))
+            .whileTrue(new RunCommand(() -> {
+                m_stayInPosition.goToTargetPose(currentPose);
+            }, m_robotSwerveDrive))
+            .onFalse(new InstantCommand(() -> {
+                m_robotSwerveDrive.softStop();
+                
+            }));
+
+            
+
+        // IF the driver is holding the aim button, aim the robot towards the hub and shooter ready
+        new Trigger(() -> getDeadbandedDriverController().getLeftTriggerAxis() >= 0.5)
+            .onTrue(new InstantCommand(() -> {
+                    m_robotSwerveDrive.setToSlow();
+            }))
+            .whileTrue(new RunCommand(() -> {
+                m_robotSwerveDrive.driveFacingPosition(
+                    getDeadbandedDriverController().getLeft(),
+                    FieldPositions.HUB_POSITION,
+                    ShooterConstants.AIM_LEAD_TIME.get()
+                    );
+                }, m_robotSwerveDrive)
+            );
+
+        // D-PAD fine alignment
+        new Trigger(() -> getDeadbandedDriverController().getPOV() != -1)
+            .whileTrue(new RunCommand(
+                () -> m_robotSwerveDrive.driveFine(
+                    new Translation2d(
+                        1, 
+                        Rotation2d.fromDegrees(getDeadbandedDriverController().getPOV())
+                    ), 
+                    getDeadbandedDriverController().getRight(), 0.15
+                ), m_robotSwerveDrive))
+            .onFalse(new InstantCommand(() -> m_robotSwerveDrive.softStop(), m_robotSwerveDrive));
+
+
+        //allow shooting with right trigger
+        new Trigger(() -> getDeadbandedDriverController().getRightTriggerAxis() >= 0.5)
+            .onTrue(new InstantCommand(() -> {
+                m_robotShooter.allowShooting();
+            })).onFalse(new InstantCommand(() -> {
+                m_robotShooter.denyShooting();
+            }));
+        
+
+
+        //set shooter ready (rev) with left trigger hold
+        new Trigger(() -> getDeadbandedDriverController().getLeftTriggerAxis() >= 0.5)
+            .onTrue(new InstantCommand(() -> {
+                m_robotIntake.setMode(IntakeMode.Idle);
+                m_robotIntake.rollerStop();
+                m_robotShooter.spinUpShooting();
             }))
             .onFalse(new InstantCommand(() -> {
                 m_robotShooter.spinUpIdle();
             }));
 
+        new JoystickButton(getDeadbandedDriverController(), XboxController.X_BUTTON)
+            .onTrue(new InstantCommand(() -> {
+                m_robotIntake.setMode(IntakeMode.Extending);
+            }))
+            .onFalse(new InstantCommand(() -> {
+                m_robotIntake.setMode(IntakeMode.Idle);
+            }));
 
-   }
+        new JoystickButton(getDeadbandedDriverController(), XboxController.Y_BUTTON)
+            .onTrue(new InstantCommand(() -> {
+                m_robotIntake.setMode(IntakeMode.Retracting);
+            }))
+            .onFalse(new InstantCommand(() -> {
+                m_robotIntake.setMode(IntakeMode.Idle);
+            }));
+
+        }
 
 //.onTrue(new InstantCommand(()  -> m_robotLED.setMode(LEDPatterns.SOLID_PINK_HOT)));
 

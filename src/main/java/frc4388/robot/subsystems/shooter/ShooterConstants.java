@@ -2,6 +2,8 @@ package frc4388.robot.subsystems.shooter;
 
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 
+import org.littletonrobotics.junction.Logger;
+
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
@@ -31,8 +33,12 @@ public class    ShooterConstants {
     // public static final ConfigurableDouble SHOOTER_IDLE_MAX_CURRENT = new ConfigurableDouble("Shooter Idle max current", 10);
 
     public static final ConfigurableDouble INDEXER_FORWARD_OUTPUT = new ConfigurableDouble("Indexer FWD % Output", -0.4);
-    public static final ConfigurableDouble INDEXER_REVERSE_OUTPUT = new ConfigurableDouble("Indexer reverse % Output", 0.4);
+    public static final ConfigurableDouble INDEXER_REVERSE_OUTPUT = new ConfigurableDouble("Indexer reverse % Output", 0.2);
     public static final ConfigurableDouble MODEL_TRIM = new ConfigurableDouble("TRIM SHOOTER SPEED", 0);
+
+    
+    public static final double NEG_OFFSET = 8.;
+    public static final double POS_OFFSET = 8.;
 
     
     public static final ConfigurableDouble AIM_LEAD_TIME = new ConfigurableDouble("Aim lead time", -1);
@@ -49,21 +55,23 @@ public class    ShooterConstants {
     public static final ConfigurableDouble SHOOTER_SPEED_TOLERANCE = new ConfigurableDouble("Shooter speed tolerance RPS", 3); 
 
     // 
-    public static AngularVelocity getTargetShooterSpeed(double hubDistMeters) {
-        // Model derived from points
-        // double speed = 
-        //     1.11576*hubDistMeters*hubDistMeters +
-        //     0.318464*hubDistMeters +
-        //     30.6293;
-        double speed = 
-            0.0593402*hubDistMeters*hubDistMeters +
+    public static AngularVelocity getTargetShooterSpeed(double hubDistMeters, double chassisXSpeed) {
+            double speed = 0;
+
+        if (Math.abs(chassisXSpeed) < 0.1){
+            speed = 0.0593402*hubDistMeters*hubDistMeters +
             4.90561*hubDistMeters +
             30.35696 + MODEL_TRIM.get();
-
-        // double speed =
-        //     0.00610938*hubDistMeters*hubDistMeters
-        //     5.65235*hubDistMeters +
-        //     22.82825;
+        } else if (chassisXSpeed > 0){
+            speed = 0.0593402*hubDistMeters*hubDistMeters +
+            4.90561*hubDistMeters +
+            30.35696 + chassisXSpeed * POS_OFFSET + MODEL_TRIM.get();
+            
+        } else { // Negative is closer to hub
+            speed = 0.0593402*hubDistMeters*hubDistMeters +
+            4.90561*hubDistMeters +
+            30.35696 + chassisXSpeed * NEG_OFFSET + MODEL_TRIM.get();
+        }
         
         double max = SHOOTER_MAX_VELOCITY.get();
 
