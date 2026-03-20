@@ -32,7 +32,7 @@ public class Shooter extends SubsystemBase {
     // Supplier<Pose2d> m_swervePoseSupplier;
     public boolean badShooterVelocity;
     public double distanceToHub = 5;
-
+    public double chassisXSpeed = 0;
 
     public Shooter(
         ShooterIO io,
@@ -66,7 +66,8 @@ public class Shooter extends SubsystemBase {
     private ShooterMode mode = ShooterMode.Idle;
     private boolean shooterButtonReady = false;
 
-    public void spinUpShooting() {
+    public void spinUpShooting(double chassisXSpeed) {
+        this.chassisXSpeed = chassisXSpeed;
         this.mode = ShooterMode.Shooting;
     }
 

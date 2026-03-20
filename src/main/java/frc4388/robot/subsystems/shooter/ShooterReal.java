@@ -3,6 +3,7 @@ package frc4388.robot.subsystems.shooter;
 import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 
+import org.littletonrobotics.junction.Logger;
 import com.ctre.phoenix6.controls.VelocityDutyCycle;
 import com.ctre.phoenix6.hardware.TalonFX;
 
@@ -29,6 +30,8 @@ public class ShooterReal implements ShooterIO {
     private boolean m_shooterStalling = false;
     private boolean m_indexerStalling = false;
     private boolean m_rollerStalling = false;
+    public String motorStall = "";
+
 
     public ShooterReal(
          TalonFX shooter1Motor,
@@ -52,46 +55,52 @@ public class ShooterReal implements ShooterIO {
     }
     
     @Override
-    public void motorStalled(ShooterState state, Intake m_Intake, LED m_robotLED) {
-        
-        // if (Math.abs(state.motor1TargetVelocity.in(RotationsPerSecond)) - Math.abs(state.motor1Velocity.in(RotationsPerSecond)) > 20) {
-        //     if (!m_shooterStalling) {
-        //         m_shooterStalling = true;
-        //         m_stallTimerShooter.restart();
-        //     }
-        //     if (m_stallTimerShooter.hasElapsed(5.0)) {
-        //         m_robotLED.setMode(Constants.LEDConstants.MOTOR_STALLED);
-        //     }
-        // } else {
-        //     m_shooterStalling = false;
-        //     m_stallTimerShooter.stop();
-        // }
+    public void motorStalled(ShooterState state, Intake m_Intake, LED m_robotLED) {        
+        if (Math.abs(state.motor1TargetVelocity.in(RotationsPerSecond)) - Math.abs(state.motor1Velocity.in(RotationsPerSecond)) > 40) {
+            if (!m_shooterStalling) {
+                m_shooterStalling = true;
+                m_stallTimerShooter.restart();
+            }
+            if (m_stallTimerShooter.hasElapsed(5.0)) {
+                m_robotLED.setMode(Constants.LEDConstants.MOTOR_STALLED);
+                motorStall = "Shooter Stalled";
+                System.out.println(Math.abs(state.motor1TargetVelocity.in(RotationsPerSecond)) - Math.abs(state.motor1Velocity.in(RotationsPerSecond)));
+            }
+        } else {
+            m_shooterStalling = false;
+            m_stallTimerShooter.reset();
+        }
 
-        // if (Math.abs(state.indexerTargetOutput) - Math.abs(state.indexerOutput) > 0.2) {
-        //     if (!m_indexerStalling) {
-        //         m_indexerStalling = true;
-        //         m_stallTimerIndexer.restart();
-        //     }
-        //     if (m_stallTimerIndexer.hasElapsed(5.0)) {
-        //         m_robotLED.setMode(Constants.LEDConstants.MOTOR_STALLED);
-        //     }
-        // } else {
-        //     m_indexerStalling = false;
-        //     m_stallTimerIndexer.stop();
-        // }
+        if (Math.abs(state.indexerTargetOutput) - Math.abs(state.indexerOutput) > 0.3) {
+            if (!m_indexerStalling) {
+                m_indexerStalling = true;
+                m_stallTimerIndexer.restart();
+            }
+            if (m_stallTimerIndexer.hasElapsed(5.0)) {
+                m_robotLED.setMode(Constants.LEDConstants.MOTOR_STALLED);
+                motorStall = "Indexer Stalled";
+                System.out.println(Math.abs(state.indexerTargetOutput) - Math.abs(state.indexerOutput));
+            }
+        } else {
+            m_indexerStalling = false;
+            m_stallTimerIndexer.reset();
+        }
 
-        // if (Math.abs(m_Intake.getRollerTarget()) - Math.abs(m_Intake.getRollerSpeed()) > 0.2) {
-        //     if (!m_rollerStalling) {
-        //         m_rollerStalling = true;
-        //         m_stallTimerRoller.restart();
-        //     }
-        //     if (m_stallTimerRoller.hasElapsed(5.0)) {
-        //         m_robotLED.setMode(Constants.LEDConstants.MOTOR_STALLED);
-        //     }
-        // } else {
-        //     m_rollerStalling = false;
-        //     m_stallTimerRoller.stop();
-        // }
+        if (Math.abs(m_Intake.getRollerTarget()) - Math.abs(m_Intake.getRollerSpeed()) > 0.4) {
+            if (!m_rollerStalling) {
+                m_rollerStalling = true;
+                m_stallTimerRoller.restart();
+            }
+            if (m_stallTimerRoller.hasElapsed(5.0)) {
+                m_robotLED.setMode(Constants.LEDConstants.MOTOR_STALLED);
+                motorStall = "Roller Stalled";
+                System.out.println(Math.abs(m_Intake.getRollerTarget()) - Math.abs(m_Intake.getRollerSpeed()));
+            }
+        } else {
+            m_rollerStalling = false;
+            m_stallTimerRoller.reset();
+        }
+        Logger.recordOutput("Stalled Motor: ", motorStall);
         
     }
     

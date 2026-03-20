@@ -125,7 +125,7 @@ public class RobotContainer {
         // );
     
         private Command RobotRev = new SequentialCommandGroup(
-            new InstantCommand(() -> m_robotShooter.spinUpShooting(), m_robotShooter),
+            new InstantCommand(() -> m_robotShooter.spinUpShooting(m_robotSwerveDrive.chassisXSpeeds()), m_robotShooter),
             IntakeExtended,
             new InstantCommand(() -> m_robotIntake.setMode(IntakeMode.RollerStop), m_robotIntake)
         );
@@ -231,22 +231,25 @@ public class RobotContainer {
                     m_robotSwerveDrive.shiftDownRot();
             }));
     
-            //TEST - > Defense: X position on wheels and swerve drive pid on position
+            //TEST - > X positino on wheels
             new JoystickButton(getDeadbandedDriverController(), XboxController.X_BUTTON)
                 .whileTrue(new RunCommand(() -> {
                 m_robotSwerveDrive.defenseXPosition();
             }, m_robotSwerveDrive))
                 .onFalse(new InstantCommand(() -> {
                 m_robotSwerveDrive.stopDefenseXPosition();
+            }));
 
-            // .onTrue(new InstantCommand(() -> {
-            //         currentPose = m_robotSwerveDrive.getCurrentPose();
-            // }))
-            // .whileTrue(new RunCommand(() -> {
-            //     m_stayInPosition.goToTargetPose(currentPose);
-            // }, m_robotSwerveDrive))
-            // .onFalse(new InstantCommand(() -> {
-            //     m_robotSwerveDrive.softStop();
+            //TEST - > PID positinon
+            new JoystickButton(getDeadbandedDriverController(), XboxController.B_BUTTON)
+            .onTrue(new InstantCommand(() -> {
+                    currentPose = m_robotSwerveDrive.getCurrentPose();
+            }))
+            .whileTrue(new RunCommand(() -> {
+                m_stayInPosition.goToTargetPose(currentPose);
+            }, m_robotSwerveDrive))
+            .onFalse(new InstantCommand(() -> {
+                m_robotSwerveDrive.softStop();
                 
             }));
 
@@ -254,19 +257,14 @@ public class RobotContainer {
 
         // IF the driver is holding the aim button, aim the robot towards the hub and shooter ready
         new Trigger(() -> getDeadbandedDriverController().getRightTriggerAxis() >= 0.5)
-            .whileTrue(new RunCommand(
-                // () -> m_robotSwerveDrive.driveFacingPosition(
-                //         getDeadbandedDriverController().getLeft(),
-                //     FieldPositions.HUB_POSITION,
-                //     ShooterConstants.AIM_LEAD_TIME.get()
-                //     ), m_robotSwerveDrive)
-                () -> {
-                m_robotSwerveDrive.driveFacingVelocity(
+            .onTrue(new InstantCommand(() -> {
+                    m_robotSwerveDrive.setToSlow();
+            }))
+            .whileTrue(new RunCommand(() -> {
+                m_robotSwerveDrive.driveFacingPosition(
                     getDeadbandedDriverController().getLeft(),
                     FieldPositions.HUB_POSITION,
-                    ShooterConstants.AIM_LEAD_TIME.get(),
-                    m_robotShooter.getBallVelocity(),
-                    m_robotShooter.getDistanceToHub()
+                    ShooterConstants.AIM_LEAD_TIME.get()
                     );
                 }, m_robotSwerveDrive)
             );
@@ -315,7 +313,7 @@ public class RobotContainer {
             .onTrue(new InstantCommand(() -> {
                 m_robotIntake.setMode(IntakeMode.Idle);
                 m_robotIntake.rollerStop();
-                m_robotShooter.spinUpShooting();
+                m_robotShooter.spinUpShooting(m_robotSwerveDrive.chassisXSpeeds());
             }))
             .onFalse(new InstantCommand(() -> {
                 m_robotShooter.spinUpIdle();
@@ -352,7 +350,7 @@ public class RobotContainer {
         //         m_robotClimber.toggleDeployed();
         //     }));
 
-        new JoystickButton(getDeadbandedOperatorController(), XboxController.A_BUTTON)
+        new JoystickButton(getDeadbandedOperatorController(), XboxController.B_BUTTON)
             .onTrue(new InstantCommand(() -> {
                 m_robotShooter.indexerStalled();
             }))

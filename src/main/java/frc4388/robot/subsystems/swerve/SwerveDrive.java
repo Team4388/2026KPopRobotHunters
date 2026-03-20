@@ -166,6 +166,14 @@ public class SwerveDrive extends SubsystemBase implements Queryable {
     // module.setDesiredState(state);
     // }
 
+    public double chassisXSpeeds(){
+        if (TimesNegativeOne.isRed) {
+            return chassisSpeeds.vxMetersPerSecond;
+        } else {
+            return -chassisSpeeds.vxMetersPerSecond;
+        }
+    }
+
     public void driveWithInput(Translation2d leftStick, Translation2d rightStick, boolean fieldRelative) {
         if (rightStick.getNorm() < 0.05 && leftStick.getNorm() < 0.05 && stopped == false) // if no imput and the swerve drive is still going:
             stopModules(); // stop the swerve
@@ -412,7 +420,7 @@ public class SwerveDrive extends SubsystemBase implements Queryable {
         if (ballVelocity > 1E-3 && Math.abs(chassisSpeeds.vyMetersPerSecond) > 1E-3){
             double aimOffset = chassisSpeeds.vyMetersPerSecond*(distanceToHub + SwerveDriveConstants.distanceTolerence.get())/(Math.abs(ballVelocity));
             fieldPos =  new Translation2d(fieldPos.getX(), fieldPos.getY() - aimOffset);
-            Logger.recordOutput("Offset Simple", aimOffset);
+            Logger.recordOutput("Offset Value", aimOffset);
 
         }
 

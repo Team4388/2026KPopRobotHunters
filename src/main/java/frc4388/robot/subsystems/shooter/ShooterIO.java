@@ -21,7 +21,7 @@ public interface ShooterIO {
         // Angle shooterTargetPitch = Rotations.of(0);
         // Current pitchMotorCurrent = Amps.of(0);
 
-        AngularVelocity motor1TargetVelocity = RotationsPerSecond.of(40); // For modeling purposes
+        AngularVelocity motor1TargetVelocity = RotationsPerSecond.of(0);
         AngularVelocity motor2TargetVelocity = RotationsPerSecond.of(0);
         double indexerTargetOutput = 0;
 

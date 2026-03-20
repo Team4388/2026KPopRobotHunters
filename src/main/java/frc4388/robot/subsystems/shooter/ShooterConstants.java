@@ -35,7 +35,7 @@ public class    ShooterConstants {
     public static final ConfigurableDouble MODEL_TRIM = new ConfigurableDouble("TRIM SHOOTER SPEED", 0);
 
     
-    public static final ConfigurableDouble AIM_LEAD_TIME = new ConfigurableDouble("Aim lead time", 0);
+    public static final ConfigurableDouble AIM_LEAD_TIME = new ConfigurableDouble("Aim lead time", -1);
 
     // Shoot mode tolerances
     public static final ConfigurableDouble ROBOT_MIN_HUB = new ConfigurableDouble("Shoot min dist M", 1.8);
@@ -82,8 +82,8 @@ public class    ShooterConstants {
     // Motor Configuration
     public static Slot0Configs SHOOTER_PID = new Slot0Configs()
         .withKV(0.0)
-        .withKP(0.05)
-        .withKI(0.20)
+        .withKP(0.02)
+        .withKI(0.15)
         .withKD(0.0);
 
     
@@ -91,7 +91,7 @@ public class    ShooterConstants {
     
     
     
-    public static ConfigurableDouble shooter_kP = new ConfigurableDouble("Shooter KP", 0.08);
+    public static ConfigurableDouble shooter_kP = new ConfigurableDouble("Shooter KP", 0.02);
     public static ConfigurableDouble shooter_kI = new ConfigurableDouble("Shooter KI", 0.15);
     public static ConfigurableDouble shooter_kD = new ConfigurableDouble("Shooter KD", 0);
 
