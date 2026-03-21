@@ -24,6 +24,7 @@ import com.pathplanner.lib.util.PathPlannerLogging;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.units.measure.AngularVelocity;
@@ -431,6 +432,19 @@ public class SwerveDrive extends SubsystemBase implements Queryable {
         Pose2d fieldPosLeadLog = new Pose2d(fieldPosLead, new Rotation2d());
         Logger.recordOutput("Lead Aim", fieldPosLeadLog);
         driveFieldAngle(leftStick, ang);
+    }
+
+    public void offsetOdoPosition(Transform2d offset) {
+        // Manually performing an addittion on the pose
+        // WHY doesn't WPILIB have the ability to not transform poses
+        Pose2d new_pose = new Pose2d(
+            new Translation2d(
+                state.currentPose.getX() + offset.getX(),
+                state.currentPose.getY() + offset.getY()
+            ),
+            state.currentPose.getRotation()
+        );
+        this.io.resetPose(new_pose);
     }
 
     public void defenseXPosition(){

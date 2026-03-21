@@ -39,6 +39,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc4388.robot.commands.Swerve.StayInPosition;
 import frc4388.robot.commands.alignment.AutoAlign;
 import frc4388.robot.constants.Constants;
+import frc4388.robot.constants.FieldConstants;
 import frc4388.robot.constants.Constants.OIConstants;
 import frc4388.robot.constants.Constants.SimConstants.Mode;
 import frc4388.robot.subsystems.intake.Intake;
@@ -155,7 +156,7 @@ public class RobotContainer {
             new InstantCommand(()-> m_robotShooter.allowShooting(), m_robotShooter),
             new WaitCommand(5),
             IntakeRetracted,
-            new WaitCommand(5),
+            new WaitCommand(10),
             new InstantCommand(() -> m_robotShooter.denyShooting(), m_robotShooter),
             new InstantCommand(()->m_robotShooter.spinUpIdle(), m_robotShooter)
         );
@@ -185,7 +186,29 @@ public class RobotContainer {
             // NamedCommands.registerCommand("Lidar Intake", LidarIntake);
             NamedCommands.registerCommand("Intake Extended", IntakeExtended);
             NamedCommands.registerCommand("Robot Shoot Driving", RobotShootDriving);
+
+            NamedCommands.registerCommand("WaitShooter", new WaitUntilCommand(m_robotShooter::isShooterUpToSpeed));
+            NamedCommands.registerCommand("AllowShooting", new InstantCommand(() -> m_robotShooter.allowShooting(), m_robotShooter));
+            NamedCommands.registerCommand("DenyShooting", new InstantCommand(() -> m_robotShooter.denyShooting(), m_robotShooter));
+            NamedCommands.registerCommand("SpinUpShooting", new InstantCommand(() -> m_robotShooter.spinUpShooting(), m_robotShooter));
+            NamedCommands.registerCommand("SpinUpIdle", new InstantCommand(() -> m_robotShooter.spinUpIdle(), m_robotShooter));
     
+            NamedCommands.registerCommand("BumpOffsetForward", new InstantCommand(() -> {
+                if (TimesNegativeOne.isRed) {
+                    m_robotSwerveDrive.offsetOdoPosition(FieldConstants.BUMP_OFFSET_RED);
+                } else {
+                    m_robotSwerveDrive.offsetOdoPosition(FieldConstants.BUMP_OFFSET_BLUE);
+                }
+            }));
+
+            NamedCommands.registerCommand("BumpOffsetReverse", new InstantCommand(() -> {
+                if (!TimesNegativeOne.isRed) {
+                    m_robotSwerveDrive.offsetOdoPosition(FieldConstants.BUMP_OFFSET_RED);
+                } else {
+                    m_robotSwerveDrive.offsetOdoPosition(FieldConstants.BUMP_OFFSET_BLUE);
+                }
+            }));
+
     
             DriverStation.silenceJoystickConnectionWarning(true);
     
@@ -372,8 +395,11 @@ public class RobotContainer {
    private void configureSINGLEBindings() {
             
             //Driver controls
+            // new JoystickButton(getDeadbandedDriverController(), XboxController.A_BUTTON)
+            //     .onTrue(new InstantCommand(() -> m_robotSwerveDrive.resetGyro()));
+                
             new JoystickButton(getDeadbandedDriverController(), XboxController.A_BUTTON)
-                .onTrue(new InstantCommand(() -> m_robotSwerveDrive.resetGyro()));
+                .onTrue(new InstantCommand(() -> m_robotSwerveDrive.offsetOdoPosition(FieldConstants.BUMP_OFFSET_RED)));
     
             new JoystickButton(getDeadbandedDriverController(), XboxController.RIGHT_BUMPER_BUTTON)
                 .onTrue(new InstantCommand(()  -> m_robotSwerveDrive.shiftUp()));
