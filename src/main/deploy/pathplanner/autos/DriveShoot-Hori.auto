@@ -5,9 +5,21 @@
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "Robot Rev Up"
+          }
+        },
+        {
           "type": "parallel",
           "data": {
             "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Robot Shoot"
+                }
+              },
               {
                 "type": "path",
                 "data": {
@@ -18,12 +30,6 @@
                 "type": "named",
                 "data": {
                   "name": "Robot Shoot Driving"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Robot Shoot"
                 }
               }
             ]

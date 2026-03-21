@@ -45,7 +45,7 @@ public class    ShooterConstants {
     public static final ConfigurableDouble ROBOT_MIN_HUB = new ConfigurableDouble("Shoot min dist M", 1.8);
     public static final ConfigurableDouble ROBOT_MAX_HUB = new ConfigurableDouble("Shoot max dist M", 4.8);
 
-    public static final ConfigurableDouble AIM_ANGLE = new ConfigurableDouble("Aim angle tolerance", 5);
+    public static final ConfigurableDouble AIM_ANGLE = new ConfigurableDouble("Aim angle tolerance", 15);
     public static final ConfigurableDouble ROBOT_ANG_TOLERANCE = new ConfigurableDouble("Ang tolerance DEG", 360);
 
     public static final ConfigurableDouble ROBOT_SPEED_TOLERANCE = new ConfigurableDouble("Speed tolerance MS", 1);

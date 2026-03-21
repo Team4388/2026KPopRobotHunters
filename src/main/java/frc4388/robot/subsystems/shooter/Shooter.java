@@ -133,8 +133,7 @@ public class Shooter extends SubsystemBase {
             chassisSpeeds.vyMetersPerSecond
         );
         Translation2d fieldPosLead = robotSpeed.times(ShooterConstants.AIM_LEAD_TIME.get()).plus(FieldPositions.HUB_POSITION);
-        Rotation2d ang = m_SwerveDrive.getPose2d().getTranslation().minus(fieldPosLead).getAngle();
-
+        Rotation2d ang = m_SwerveDrive.getPose2d().getTranslation().minus(fieldPosLead).getAngle().minus(m_SwerveDrive.getPose2d().getRotation());
         Pose2d robotPose2d = m_SwerveDrive.getPose2d();
 
         if (TimesNegativeOne.isRed) {
@@ -154,7 +153,8 @@ public class Shooter extends SubsystemBase {
             // XYSpeed <= ShooterConstants.ROBOT_SPEED_TOLERANCE.get() |
             // AngSpeed <= ShooterConstants.ROBOT_ANG_SPEED_TOLERANCE.get() |
             distanceToHub <= ShooterConstants.ROBOT_MIN_HUB.get() | 
-            distanceToHub >= ShooterConstants.ROBOT_MAX_HUB.get();
+            distanceToHub >= ShooterConstants.ROBOT_MAX_HUB.get() |
+            Math.abs(ang.getDegrees()) > ShooterConstants.AIM_ANGLE.get();
 
 
         double shooterSpeed = Math.abs(state.motor1Velocity.in(RotationsPerSecond) + state.motor2Velocity.in(RotationsPerSecond)) / 2;
@@ -186,9 +186,7 @@ public class Shooter extends SubsystemBase {
                         break;
 
                     case 0b001: // No errors and shoot button is pressed     
-                    if (ang.getDegrees() < ShooterConstants.AIM_ANGLE.get()){       // robot is aimed at hub            
                         io.setIndexerOutput(state, ShooterConstants.INDEXER_FORWARD_OUTPUT.get());
-                    }
                         m_robotLED.setMode(Constants.LEDConstants.OPREADY);
                         break;
 

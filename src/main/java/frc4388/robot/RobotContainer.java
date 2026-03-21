@@ -153,7 +153,7 @@ public class RobotContainer {
             //new AutoAlign(m_robotSwerveDrive, m_vision, new Pose2d(FieldPositions.HUB_POSITION,  new Rotation2d(0)), false),
             new WaitUntilCommand(m_robotShooter::isShooterUpToSpeed),
             new InstantCommand(()-> m_robotShooter.allowShooting(), m_robotShooter),
-            new WaitCommand(2),
+            new WaitCommand(5),
             IntakeRetracted,
             new WaitCommand(5),
             new InstantCommand(() -> m_robotShooter.denyShooting(), m_robotShooter),
