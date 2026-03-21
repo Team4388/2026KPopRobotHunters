@@ -15,11 +15,14 @@ import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc4388.robot.constants.BuildConstants;
 import frc4388.robot.constants.Constants.SimConstants;
 import frc4388.utility.DeferredBlock;
+import frc4388.utility.compute.HubShiftTimer;
+import frc4388.utility.compute.HubShiftTimer.ShiftInfo;
 import frc4388.utility.compute.RobotTime;
 import frc4388.utility.compute.Trim;
 import frc4388.utility.status.FaultReporter;
@@ -113,6 +116,7 @@ public class Robot extends LoggedRobot {
       m_autonomousCommand.schedule();
     }
     m_robotTime.startMatchTime();
+    HubShiftTimer.initializeAuto();
   }
 
   /**
@@ -138,6 +142,7 @@ public class Robot extends LoggedRobot {
 
     }
     m_robotTime.startMatchTime();
+    HubShiftTimer.initializeTeleop();
   }
 
   /**
@@ -145,7 +150,12 @@ public class Robot extends LoggedRobot {
    */
   @Override
   public void teleopPeriodic() {
-  //  m_robotContainer.m_robotMap.rightFront.go(m_robotContainer.getDeadbandedDriverController().getLeft());
+    var info = HubShiftTimer.getShiftInfo();
+
+    double rumble = (info.remainingInShift() < 5.) ? 1 : 0;
+
+    m_robotContainer.getDeadbandedDriverController().setRumble(RumbleType.kBothRumble, rumble);
+    m_robotContainer.getDeadbandedOperatorController().setRumble(RumbleType.kBothRumble, rumble);
   }
 
   /**
