@@ -540,8 +540,15 @@ public class SwerveDrive extends SubsystemBase implements Queryable {
         softStop();
     }
 
-    public void enableRotationOverride(Translation2d fieldTarget) {
-        m_rotationOverrideTarget = fieldTarget;
+    public void enableRotationOverride(Translation2d fieldTarget, double aimLeadTime, Translation2d fieldPos) {
+        Translation2d robotSpeed = new Translation2d(
+            chassisSpeeds.vxMetersPerSecond, 
+            chassisSpeeds.vyMetersPerSecond
+        );
+        Translation2d fieldPosLead = robotSpeed.times(aimLeadTime).plus(fieldPos);
+        System.out.println("field pos lead: " + fieldPosLead);
+        Logger.recordOutput("Auto Aim", fieldPosLead);
+        m_rotationOverrideTarget = fieldPosLead;
         m_useRotationOverride = true;
     }
 

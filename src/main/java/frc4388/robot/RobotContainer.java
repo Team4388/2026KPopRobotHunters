@@ -137,10 +137,9 @@ public class RobotContainer {
         );
 
         private Command RobotShootDriving = new SequentialCommandGroup(
-            new InstantCommand(() -> 
-                m_robotSwerveDrive.enableRotationOverride(FieldPositions.HUB_POSITION)
-            ),
-            new WaitCommand(99) // stays on for the duration of the auto segment
+            new RunCommand(() -> 
+                m_robotSwerveDrive.enableRotationOverride(FieldPositions.HUB_POSITION, ShooterConstants.AIM_LEAD_TIME.get(), FieldPositions.HUB_POSITION)
+            ).withTimeout(20)
             ).finallyDo((interrupted) -> 
              m_robotSwerveDrive.disableRotationOverride()
         );
