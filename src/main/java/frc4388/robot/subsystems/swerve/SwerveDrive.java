@@ -7,6 +7,7 @@ package frc4388.robot.subsystems.swerve;
 import static edu.wpi.first.units.Units.Rotations;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import org.littletonrobotics.junction.AutoLogOutput;
@@ -20,6 +21,7 @@ import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.trajectory.PathPlannerTrajectory;
 import com.pathplanner.lib.util.PathPlannerLogging;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -65,6 +67,14 @@ public class SwerveDrive extends SubsystemBase implements Queryable {
     public Rotation2d orientRotTarget = new Rotation2d();
     public ChassisSpeeds chassisSpeeds = new ChassisSpeeds();
 
+    private final PIDController m_rotationOverridePID = new PIDController(
+        SwerveDriveConstants.PIDConstants.AIM_kP.get(),
+        SwerveDriveConstants.PIDConstants.AIM_kI.get(),
+        SwerveDriveConstants.PIDConstants.AIM_kD.get()
+    );
+    private boolean m_useRotationOverride = false;
+    private Translation2d m_rotationOverrideTarget = new Translation2d();
+
     /** Creates a new SwerveDrive. */
     public SwerveDrive(SwerveIO swerveDriveTrain, Vision vision) {
         // public SwerveDrive(SwerveDrivetrain<TalonFX, TalonFX, CANcoder>
@@ -83,6 +93,20 @@ public class SwerveDrive extends SubsystemBase implements Queryable {
             // Handle exception as needed
             config = null;
         }
+
+        PPHolonomicDriveController driveController = new PPHolonomicDriveController(
+            new PIDConstants(5.0, 0.0, 0.0), // Translation PID
+            new PIDConstants(5.0, 0.0, 0.0)  // Rotation PID (used when override is OFF)
+        );
+        driveController.setRotationTargetOverride(() -> {
+            if (!m_useRotationOverride) return Optional.empty();
+            Rotation2d targetAngle = getPose2d()
+                .getTranslation()
+                .minus(m_rotationOverrideTarget)
+                .getAngle();
+            return Optional.of(targetAngle);
+        });
+
         // DoubleSupplier a = () -> 1.d;
         AutoBuilder.configure(
                 () -> {
@@ -94,11 +118,7 @@ public class SwerveDrive extends SubsystemBase implements Queryable {
                 (speeds, feedforwards) -> io.setControl(new SwerveRequest.ApplyRobotSpeeds()
                         .withSpeeds(speeds)), // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds.
                                               // Also optionally outputs individual module feedforwards
-                new PPHolonomicDriveController( // PPHolonomicController is the built in path following controller for
-                                                // holonomic drive trains
-                        new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
-                        new PIDConstants(5.0, 0.0, 0.0) // Rotation PID constants
-                ),
+                driveController, // <-- use the variable, not inline new PPHolonomicDriveController(...)
                 config, // The robot configuration
                 () -> {
                     // Boolean supplier that controls when the path will be mirrored for the red
@@ -235,6 +255,27 @@ public class SwerveDrive extends SubsystemBase implements Queryable {
         
     }
 
+    
+
+    public void aimAtPosition(Translation2d fieldPos, double aimLeadTime) {
+        Translation2d robotSpeed = new Translation2d(
+            chassisSpeeds.vxMetersPerSecond, 
+            chassisSpeeds.vyMetersPerSecond
+        );
+        Translation2d fieldPosLead = robotSpeed.times(aimLeadTime).plus(fieldPos);
+        Rotation2d ang = getPose2d().getTranslation().minus(fieldPosLead).getAngle();
+
+        var ctrl = new SwerveRequest.FieldCentricFacingAngle()
+        .withVelocityX(chassisSpeeds.vxMetersPerSecond)
+        .withVelocityY(chassisSpeeds.vyMetersPerSecond)
+        .withTargetDirection(ang);
+        ctrl.HeadingController.setPID(
+        SwerveDriveConstants.PIDConstants.AIM_kP.get(),
+        SwerveDriveConstants.PIDConstants.AIM_kI.get(),
+        SwerveDriveConstants.PIDConstants.AIM_kD.get()
+        );
+        io.setControl(ctrl);
+    }
 
     public void driveWithInputOrientation(Translation2d leftStick, Translation2d rightStick) { // there is no practical
                                                                                                // reason to have a robot
@@ -408,33 +449,6 @@ public class SwerveDrive extends SubsystemBase implements Queryable {
         driveFieldAngle(leftStick, ang);
     }
 
-
-
-    public void driveFacingVelocity(Translation2d leftStick, Translation2d fieldPos, double aimLeadTime, double ballVelocity, double distanceToHub) {
-
-        Translation2d robotSpeed = new Translation2d(
-            chassisSpeeds.vxMetersPerSecond, 
-            chassisSpeeds.vyMetersPerSecond
-        );
-
-        if (ballVelocity > 1E-3 && Math.abs(chassisSpeeds.vyMetersPerSecond) > 1E-3){
-            double aimOffset = chassisSpeeds.vyMetersPerSecond*(distanceToHub + SwerveDriveConstants.distanceTolerence.get())/(Math.abs(ballVelocity));
-            fieldPos =  new Translation2d(fieldPos.getX(), fieldPos.getY() - aimOffset);
-            Logger.recordOutput("Offset Value", aimOffset);
-
-        }
-
-    
-
-        Translation2d fieldPosLead = robotSpeed.times(aimLeadTime).plus(fieldPos);        
-
-        Rotation2d ang = getPose2d().getTranslation().minus(fieldPosLead).getAngle();
-
-        Logger.recordOutput("Aim at Offset", fieldPos);
-
-        driveFieldAngle(leftStick, ang);
-    }
-
     public Pose2d getCurrentPose(){
         return state.currentPose;
     }
@@ -524,6 +538,15 @@ public class SwerveDrive extends SubsystemBase implements Queryable {
         // stopped = true;
         // swerveDriveTrain.setControl(new SwerveRequest.SwerveDriveBrake());
         softStop();
+    }
+
+    public void enableRotationOverride(Translation2d fieldTarget) {
+        m_rotationOverrideTarget = fieldTarget;
+        m_useRotationOverride = true;
+    }
+
+    public void disableRotationOverride() {
+        m_useRotationOverride = false;
     }
 
     @Override
@@ -664,4 +687,3 @@ public class SwerveDrive extends SubsystemBase implements Queryable {
         return status;
     }
 }
-

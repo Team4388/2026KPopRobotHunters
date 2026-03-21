@@ -9,6 +9,7 @@ import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.units.measure.AngularVelocity;
@@ -114,12 +115,19 @@ public class Shooter extends SubsystemBase {
     public void periodic() {
         // FaultReporter.register(this); // TODO Implement fault reporter
 
+
         Logger.processInputs("Shooter", state);
         io.updateInputs(state);
 
 
         // Get robot positon and speeds
         ChassisSpeeds chassisSpeeds = m_SwerveDrive.chassisSpeeds;
+        Translation2d robotSpeed = new Translation2d(
+            chassisSpeeds.vxMetersPerSecond, 
+            chassisSpeeds.vyMetersPerSecond
+        );
+        Translation2d fieldPosLead = robotSpeed.times(ShooterConstants.AIM_LEAD_TIME.get()).plus(FieldPositions.HUB_POSITION);
+        Rotation2d ang = m_SwerveDrive.getPose2d().getTranslation().minus(fieldPosLead).getAngle();
 
         Pose2d robotPose2d = m_SwerveDrive.getPose2d();
 
@@ -171,8 +179,10 @@ public class Shooter extends SubsystemBase {
                         m_robotLED.setMode(Constants.LEDConstants.OPREADY);
                         break;
 
-                    case 0b001: // No errors and shoot button is pressed                        
+                    case 0b001: // No errors and shoot button is pressed     
+                    if (ang.getDegrees() < ShooterConstants.AIM_ANGLE.get()){       // robot is aimed at hub            
                         io.setIndexerOutput(state, ShooterConstants.INDEXER_FORWARD_OUTPUT.get());
+                    }
                         m_robotLED.setMode(Constants.LEDConstants.OPREADY);
                         break;
 

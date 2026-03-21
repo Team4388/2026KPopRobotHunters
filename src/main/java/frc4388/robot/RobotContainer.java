@@ -5,9 +5,14 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
+// Copyright (c) FIRST and other WPILib contributors.
+// Open Source Software; you can modify and/or share it under the terms of
+// the WPILib BSD license file in the root directory of this project.
+
 package frc4388.robot;
 
 import java.io.File;
+import java.util.Optional;
 
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
@@ -24,6 +29,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 // Commands
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -129,6 +135,15 @@ public class RobotContainer {
             IntakeExtended,
             new InstantCommand(() -> m_robotIntake.setMode(IntakeMode.RollerStop), m_robotIntake)
         );
+
+        private Command RobotShootDriving = new SequentialCommandGroup(
+            new InstantCommand(() -> 
+                m_robotSwerveDrive.enableRotationOverride(FieldPositions.HUB_POSITION)
+            ),
+            new WaitCommand(99) // stays on for the duration of the auto segment
+            ).finallyDo((interrupted) -> 
+             m_robotSwerveDrive.disableRotationOverride()
+        );
     
         private Command IntakeRetracted = new SequentialCommandGroup(
             new InstantCommand(() -> m_robotIntake.setMode(IntakeMode.Retracted), m_robotIntake)
@@ -170,6 +185,7 @@ public class RobotContainer {
             NamedCommands.registerCommand("Robot Shoot", RobotShoot);
             // NamedCommands.registerCommand("Lidar Intake", LidarIntake);
             NamedCommands.registerCommand("Intake Extended", IntakeExtended);
+            NamedCommands.registerCommand("Robot Shoot Driving", RobotShootDriving);
     
     
             DriverStation.silenceJoystickConnectionWarning(true);

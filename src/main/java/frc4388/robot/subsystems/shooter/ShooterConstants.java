@@ -2,8 +2,6 @@ package frc4388.robot.subsystems.shooter;
 
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 
-import org.littletonrobotics.junction.Logger;
-
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
@@ -37,8 +35,8 @@ public class    ShooterConstants {
     public static final ConfigurableDouble MODEL_TRIM = new ConfigurableDouble("TRIM SHOOTER SPEED", 0);
 
     
-    public static final double NEG_OFFSET = 8.;
-    public static final double POS_OFFSET = 8.;
+    public static final ConfigurableDouble NEG_OFFSET = new ConfigurableDouble("Negative offset", 8.);
+    public static final ConfigurableDouble POS_OFFSET = new ConfigurableDouble("Positive offset", 8.);
 
     
     public static final ConfigurableDouble AIM_LEAD_TIME = new ConfigurableDouble("Aim lead time", -1);
@@ -47,6 +45,7 @@ public class    ShooterConstants {
     public static final ConfigurableDouble ROBOT_MIN_HUB = new ConfigurableDouble("Shoot min dist M", 1.8);
     public static final ConfigurableDouble ROBOT_MAX_HUB = new ConfigurableDouble("Shoot max dist M", 4.8);
 
+    public static final ConfigurableDouble AIM_ANGLE = new ConfigurableDouble("Aim angle tolerance", 5);
     public static final ConfigurableDouble ROBOT_ANG_TOLERANCE = new ConfigurableDouble("Ang tolerance DEG", 360);
 
     public static final ConfigurableDouble ROBOT_SPEED_TOLERANCE = new ConfigurableDouble("Speed tolerance MS", 1);
@@ -65,12 +64,12 @@ public class    ShooterConstants {
         } else if (chassisXSpeed > 0){
             speed = 0.0593402*hubDistMeters*hubDistMeters +
             4.90561*hubDistMeters +
-            30.35696 + chassisXSpeed * POS_OFFSET + MODEL_TRIM.get();
+            30.35696 + chassisXSpeed * POS_OFFSET.get() + MODEL_TRIM.get();
             
         } else { // Negative is closer to hub
             speed = 0.0593402*hubDistMeters*hubDistMeters +
             4.90561*hubDistMeters +
-            30.35696 + chassisXSpeed * NEG_OFFSET + MODEL_TRIM.get();
+            30.35696 + chassisXSpeed * NEG_OFFSET.get() + MODEL_TRIM.get();
         }
         
         double max = SHOOTER_MAX_VELOCITY.get();
