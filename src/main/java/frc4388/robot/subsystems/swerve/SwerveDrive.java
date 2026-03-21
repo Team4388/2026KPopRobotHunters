@@ -416,19 +416,20 @@ public class SwerveDrive extends SubsystemBase implements Queryable {
 
     // Drive with the robot facing towards a specific position
     public void driveFacingPosition(Translation2d leftStick, Translation2d fieldPos, double aimLeadTime) {
-        // Get the current speed of the robot
-        Translation2d robotSpeed = new Translation2d(
-            chassisSpeeds.vxMetersPerSecond, 
-            chassisSpeeds.vyMetersPerSecond
-        );
-
-        // Calculate a point to aim ahead of the actual position.
-        Translation2d fieldPosLead = robotSpeed.times(aimLeadTime).plus(fieldPos);
-
-        // Calculate the angle between the current position and the lead position
+        Translation2d robotSpeedYOnly = new Translation2d(0, chassisSpeeds.vyMetersPerSecond);
+        double yDistance = Math.abs(getPose2d().getTranslation().getY() - fieldPos.getY());
+        if ((chassisSpeeds.vyMetersPerSecond >0 &&getPose2d().getTranslation().getY() >4)||(chassisSpeeds.vyMetersPerSecond <0 &&getPose2d().getTranslation().getY() <4)){
+        if (Math.abs(chassisSpeeds.vyMetersPerSecond) > 0.2) {
+            if (TimesNegativeOne.isRed){
+                    robotSpeedYOnly = new Translation2d(-SwerveDriveConstants.FAR_OFFSET.get() * yDistance * (getPose2d().getTranslation().getX()-7.28989525), chassisSpeeds.vyMetersPerSecond);
+            } else {
+                robotSpeedYOnly = new Translation2d((getPose2d().getTranslation().getX())* yDistance* SwerveDriveConstants.FAR_OFFSET.get(), chassisSpeeds.vyMetersPerSecond);
+            }
+        } }
+        Translation2d fieldPosLead = robotSpeedYOnly.times(aimLeadTime).plus(fieldPos);
         Rotation2d ang = getPose2d().getTranslation().minus(fieldPosLead).getAngle();
-
-
+        Pose2d fieldPosLeadLog = new Pose2d(fieldPosLead, new Rotation2d());
+        Logger.recordOutput("Lead Aim", fieldPosLeadLog);
         driveFieldAngle(leftStick, ang);
     }
 
@@ -541,13 +542,9 @@ public class SwerveDrive extends SubsystemBase implements Queryable {
     }
 
     public void enableRotationOverride(Translation2d fieldTarget, double aimLeadTime, Translation2d fieldPos) {
-        Translation2d robotSpeed = new Translation2d(
-            chassisSpeeds.vxMetersPerSecond, 
-            chassisSpeeds.vyMetersPerSecond
-        );
-        Translation2d fieldPosLead = robotSpeed.times(aimLeadTime).plus(fieldPos);
-        System.out.println("field pos lead: " + fieldPosLead);
-        Logger.recordOutput("Auto Aim", fieldPosLead);
+        Translation2d robotSpeedYOnly = new Translation2d(0, chassisSpeeds.vyMetersPerSecond);
+
+        Translation2d fieldPosLead = robotSpeedYOnly.times(aimLeadTime).plus(fieldPos);
         m_rotationOverrideTarget = fieldPosLead;
         m_useRotationOverride = true;
     }

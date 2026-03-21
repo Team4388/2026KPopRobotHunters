@@ -141,6 +141,8 @@ public class ShooterReal implements ShooterIO {
         //     Math.abs(currentLimit.in(Amps)) > current &&
         //     Math.abs(targetVelocity.in(RotationsPerSecond)) > velocity
         // ) {
+            state.motor1TargetVelocity = RotationsPerSecond.of(percentOutput);
+            state.motor2TargetVelocity = RotationsPerSecond.of(percentOutput);
             m_shooter1Motor.set(percentOutput);
             m_shooter2Motor.set(percentOutput);
         // } else {

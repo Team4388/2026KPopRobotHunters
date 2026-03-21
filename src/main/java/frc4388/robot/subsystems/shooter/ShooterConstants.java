@@ -39,7 +39,7 @@ public class    ShooterConstants {
     public static final ConfigurableDouble POS_OFFSET = new ConfigurableDouble("Positive offset", 8.);
 
     
-    public static final ConfigurableDouble AIM_LEAD_TIME = new ConfigurableDouble("Aim lead time", -1);
+    public static final ConfigurableDouble AIM_LEAD_TIME = new ConfigurableDouble("Aim lead time", -1.1);
 
     // Shoot mode tolerances
     public static final ConfigurableDouble ROBOT_MIN_HUB = new ConfigurableDouble("Shoot min dist M", 1.8);
