@@ -13,6 +13,7 @@ import org.photonvision.PhotonCamera;
 
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.swerve.SwerveDrivetrain;
+import com.revrobotics.spark.SparkMax;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import frc4388.robot.constants.Constants;
@@ -98,7 +99,7 @@ public class RobotMap {
                 
                 //Configure Intake 20,21
                 TalonFX arm = new TalonFX(IntakeConstants.ARM_ID.id, Constants.CANIVORE_CANBUS);
-                TalonFX roller = new TalonFX(IntakeConstants.ROLLER_ID.id, Constants.CANIVORE_CANBUS);
+                SparkMax roller = new SparkMax(IntakeConstants.ROLLER_ID.id, com.revrobotics.spark.SparkLowLevel.MotorType.kBrushless);
                 DigitalInput armLimitSwitch = new DigitalInput(IntakeConstants.ARM_LIMIT_SWITCH_CHANNEL);
                 // DigitalInput basinLimitSwitch = new DigitalInput(ElevatorConstants.BASIN_LIMIT_SWITCH);
                 // DigitalInput endeffectorLimitSwitch = new DigitalInput(ElevatorConstants.ENDEFFECTOR_LIMIT_SWITCH);
@@ -118,7 +119,7 @@ public class RobotMap {
                 FaultTalonFX.addDevice(shooter2, "Shooter2");
                 FaultTalonFX.addDevice(indexer, "Indexer");
                 FaultTalonFX.addDevice(arm, "Arm");
-                FaultTalonFX.addDevice(roller, "Roller");
+                // FaultTalonFX.addDevice(roller, "Roller");
                 
                 FaultTalonFX.addDevice(swerveDrivetrainReal.getModule(0).getDriveMotor(), "Module 0 Drive");
                 FaultTalonFX.addDevice(swerveDrivetrainReal.getModule(0).getSteerMotor(), "Module 0 Steer");

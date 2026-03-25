@@ -1,11 +1,13 @@
 package frc4388.robot.subsystems.intake;
 
+import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Rotations;
 
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.PositionDutyCycle;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.revrobotics.spark.SparkMax;
 
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
@@ -17,7 +19,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 public class IntakeReal implements IntakeIO {
 
     TalonFX m_armMotor;
-    TalonFX m_rollerMotor;
+    SparkMax m_rollerMotor;
     DigitalInput m_armLimitSwitch;
 
     PositionDutyCycle armPosition = new PositionDutyCycle(0);
@@ -26,7 +28,7 @@ public class IntakeReal implements IntakeIO {
     public IntakeReal(
         DigitalInput armLimitSwitch,
         TalonFX armMotor,
-        TalonFX rollerMotor
+        SparkMax rollerMotor
     ) {
         // m_angleMotor = angleMotor;
         // m_pitchMotor = pitchMotor;
@@ -37,7 +39,7 @@ public class IntakeReal implements IntakeIO {
         // Apply the configs
         m_armMotor.getConfigurator().apply(IntakeConstants.ARM_PID);
         m_armMotor.getConfigurator().apply(IntakeConstants.ARM_MOTOR_CONFIG);
-        m_rollerMotor.getConfigurator().apply(IntakeConstants.ROLLER_MOTOR_CONFIG);
+        // m_rollerMotor.getConfigurator().apply(IntakeConstants.ROLLER_MOTOR_CONFIG);
 
         armPosition.Slot = 0;
         // rollerVelocity.Slot = 0;
@@ -59,11 +61,6 @@ public class IntakeReal implements IntakeIO {
     public void setRollerOutput(IntakeState state, double rollerOutput) {
         state.rollerTargetOutput = rollerOutput;
 
-
-        if(rollerOutput == 0) {
-            m_rollerMotor.set(0);
-            return;
-        }
         m_rollerMotor.set(rollerOutput);
     }
 
@@ -133,7 +130,7 @@ public class IntakeReal implements IntakeIO {
         state.armAngle = m_armMotor.getPosition().getValue().div(IntakeConstants.ARM_MOTOR_GEAR_RATIO);
         state.armMotorCurrent = m_armMotor.getStatorCurrent().getValue();
         state.rollerOutput = m_rollerMotor.get();
-        state.rollerMotorCurrent = m_rollerMotor.getStatorCurrent().getValue();
+        state.rollerMotorCurrent = Amps.of(m_rollerMotor.getOutputCurrent());
         state.retractedLimit = !m_armLimitSwitch.get();
         
         state.armMotorVelocity = m_armMotor.getVelocity().getValue();

@@ -30,6 +30,8 @@ public class Intake extends SubsystemBase {
     public enum IntakeMode {
         Extended,
         Retracted,
+        Extending,
+        Retracting,
         Idle,
         Bouncing
     }
@@ -99,6 +101,14 @@ public class Intake extends SubsystemBase {
                 break;
             case Retracted:
                 io.setArmAngle(state, Rotations.of(IntakeConstants.ARM_LIMIT_RETRACTED.get()));
+                io.setRollerOutput(state, 0);
+                break;
+            case Extending:
+                io.setArmAngle(state, Rotations.of(IntakeConstants.ARM_EXTEND_PERCENT_OUTPUT.get()));
+                io.setRollerOutput(state, IntakeConstants.ROLLER_PERCENT_OUTPUT.get());
+                break;
+            case Retracting:
+                io.setArmAngle(state, Rotations.of(IntakeConstants.ARM_RETRACT_PERCENT_OUTPUT.get()));
                 io.setRollerOutput(state, 0);
                 break;
             case Bouncing:
