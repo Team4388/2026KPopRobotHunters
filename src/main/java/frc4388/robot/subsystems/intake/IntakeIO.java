@@ -15,6 +15,8 @@ import edu.wpi.first.units.measure.Current;
 public interface IntakeIO {
     @AutoLog
     public class IntakeState {
+        double currentBounceTime = 0;
+
         boolean retractedLimit = false;
         Angle armAngle = Rotations.of(0);
         Angle armTargetAngle = Rotations.of(0);

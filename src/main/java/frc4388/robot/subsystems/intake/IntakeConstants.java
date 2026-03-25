@@ -1,11 +1,16 @@
 package frc4388.robot.subsystems.intake;
 
+import static edu.wpi.first.units.Units.Amps;
+import static edu.wpi.first.units.Units.RotationsPerSecond;
+
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.units.measure.Current;
 import frc4388.utility.configurable.ConfigurableDouble;
 import frc4388.utility.status.CanDevice;
 
@@ -14,6 +19,13 @@ public class IntakeConstants {
 
     public static final double ARM_MOTOR_GEAR_RATIO = 125;
     public static final double ROLLER_MOTOR_GEAR_RATIO = 3;
+
+
+    public static final double BOUNCE_HALF_PERIOD = 5.;
+    public static final double INTAKE_BOUNCE_OUTPUT = 0.2;
+    public static final double INTAKE_BOUNCE_MAX_OUTPUT = 0.5;
+    public static final ConfigurableDouble INTAKE_BOUNCE_CURRENT_LIMIT = new ConfigurableDouble("Intake Bounce Current Limit", 20);
+    public static final ConfigurableDouble INTAKE_BOUNCE_VELOCITY_LIMIT = new ConfigurableDouble("Intake Bounce Velocity Limit", 20);
 
 
 
