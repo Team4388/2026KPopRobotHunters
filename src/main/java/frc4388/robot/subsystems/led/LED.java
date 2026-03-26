@@ -14,8 +14,10 @@ import org.littletonrobotics.junction.AutoLogOutput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PWM;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc4388.robot.constants.Constants;
 import frc4388.robot.constants.Constants.LEDConstants;
 import frc4388.utility.status.Status;
+import frc4388.utility.compute.HubShiftTimer;
 import frc4388.utility.status.FaultReporter;
 import frc4388.utility.status.Queryable;
 import frc4388.utility.status.Status.ReportLevel;
@@ -27,6 +29,24 @@ import frc4388.utility.structs.LEDPatterns;
  */
 public class LED extends SubsystemBase implements Queryable {
   private PWM m_pwm;
+
+  public enum LEDState {
+    RED(LEDPatterns.SOLID_RED, LEDPatterns.RED_STROBE),
+    BLUE(LEDPatterns.SOLID_BLUE, LEDPatterns.BLUE_STROBE),
+    GOLD(LEDPatterns.SOLID_GOLD, LEDPatterns.SOLID_GOLD),
+    WHITE(LEDPatterns.SOLID_WHITE, LEDPatterns.WHITE_STROBE);
+
+    public LEDPatterns no_blink;
+    public LEDPatterns blink;
+
+    private LEDState(
+      LEDPatterns no_blink,
+      LEDPatterns blink
+    ) {
+      this.no_blink = no_blink;
+      this.blink = blink;
+    }
+  }
 
   public LED(int PWMport) {
     FaultReporter.register(this);
@@ -42,6 +62,19 @@ public class LED extends SubsystemBase implements Queryable {
   private LEDPatterns mode = LEDConstants.DEFAULT_PATTERN;
 
   public void setMode(LEDPatterns pattern){
+    // Don't stall the main thread every time the setMode function is called
+    if(this.mode != pattern) {
+      this.mode = pattern;
+      update();
+    }
+  }
+
+    public void setMode(LEDState state){
+    LEDPatterns pattern = 
+      HubShiftTimer.getShiftInfo().remainingInShift() < Constants.BLINK_TIME 
+        ? state.blink 
+        : state.no_blink;
+
     // Don't stall the main thread every time the setMode function is called
     if(this.mode != pattern) {
       this.mode = pattern;

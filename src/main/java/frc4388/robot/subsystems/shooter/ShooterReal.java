@@ -1,6 +1,5 @@
 package frc4388.robot.subsystems.shooter;
 
-import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 
 import org.littletonrobotics.junction.Logger;
@@ -8,7 +7,6 @@ import com.ctre.phoenix6.controls.VelocityDutyCycle;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.units.measure.AngularVelocity;
-import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.wpilibj.Timer;
 import frc4388.robot.constants.Constants;
 import frc4388.robot.subsystems.intake.Intake;

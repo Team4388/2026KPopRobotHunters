@@ -18,6 +18,7 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotBase;
+import frc4388.robot.subsystems.led.LED.LEDState;
 import frc4388.utility.compute.Trim;
 import frc4388.utility.structs.Gains;
 import frc4388.utility.structs.LEDPatterns;
@@ -33,6 +34,10 @@ import frc4388.utility.structs.LEDPatterns;
 public final class Constants {
     public static final CANBus RIO_CANBUS = CANBus.roboRIO();
     public static final CANBus CANIVORE_CANBUS = new CANBus("drivetrain");
+
+
+    public static final double BLINK_TIME = 5.;
+    public static final double RUMBLE_TIME = 2.;
 
     // public static final class LiDARConstants {
     //     public static final int REEF_LIDAR_DIO_CHANNEL = 7;
@@ -108,23 +113,12 @@ public final class Constants {
 
         
         // LED color for when the flywheel speed isn't in tolarance
-        public static final LEDPatterns BAD_FLYWEEL = LEDPatterns.SOLID_GOLD;
-        // LED color for when the flywheel speed isn't in tolarance, but the driver conditions are bad
-        public static final LEDPatterns BAD_FLYWEEL_BADPHYS = LEDPatterns.GOLD_STROBE;
-
+        public static final LEDState BAD_FLYWEEL = LEDState.GOLD;
         // Operator ready to shoot
-        public static final LEDPatterns OPREADY = LEDPatterns.SOLID_WHITE;
-        // Operator ready to shoot, but the driver conditions are bad
-        public static final LEDPatterns OPREADY_BADPHYS = LEDPatterns.WHITE_STROBE;
-
-        // LED color for when the indexer was stuck on ball and going in reverse
-        public static final LEDPatterns INDEXER_REVERSE = LEDPatterns.SOLID_VIOLET;
-
+        public static final LEDState OPREADY = LEDState.WHITE;
         // LED color for when the indexer, intake roller, or shooter is not going at right speed for more than 5 seconds and is likely stalled
-        public static final LEDPatterns MOTOR_STALLED = LEDPatterns.SOLID_RED;
-
-        public static final LEDPatterns OPREADY_FEED = LEDPatterns.SOLID_BLUE;
-        // public static final LEDPatterns OPREADY_FEED_BADPHYS = LEDPatterns.BLUE_STROBE;
+        public static final LEDState MOTOR_STALLED = LEDState.RED;
+        public static final LEDState OPREADY_FEED = LEDState.BLUE;
     }
 
     public static final class OIConstants {

@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc4388.robot.constants.BuildConstants;
+import frc4388.robot.constants.Constants;
 import frc4388.robot.constants.Constants.SimConstants;
 import frc4388.utility.DeferredBlock;
 import frc4388.utility.compute.HubShiftTimer;
@@ -152,7 +153,7 @@ public class Robot extends LoggedRobot {
   public void teleopPeriodic() {
     var info = HubShiftTimer.getShiftInfo();
 
-    double rumble = (info.remainingInShift() < 5.  && info.remainingInShift() > 0.1) ? 1 : 0;
+    double rumble = (info.remainingInShift() < Constants.RUMBLE_TIME) ? 1 : 0;
 
     // m_robotContainer.getDeadbandedDriverController().setRumble(RumbleType.kBothRumble, rumble);
     // m_robotContainer.getDeadbandedOperatorController().setRumble(RumbleType.kBothRumble, rumble);
