@@ -1,4 +1,4 @@
-package frc4388.robot.subsystems;
+package frc4388.robot.subsystems.vision;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -20,8 +20,8 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc4388.robot.subsystems.RPLidarA1.PolarPoint;
-import frc4388.robot.subsystems.RPLidarA1.ScanListener;
+import frc4388.robot.subsystems.vision.RPLidarA1.PolarPoint;
+import frc4388.robot.subsystems.vision.RPLidarA1.ScanListener;
 import frc4388.utility.configurable.ConfigurableDouble;
 import frc4388.utility.status.FaultA1M8;
 

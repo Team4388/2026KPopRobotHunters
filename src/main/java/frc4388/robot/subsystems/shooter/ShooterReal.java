@@ -3,11 +3,16 @@ package frc4388.robot.subsystems.shooter;
 import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 
+import org.littletonrobotics.junction.Logger;
 import com.ctre.phoenix6.controls.VelocityDutyCycle;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
+import edu.wpi.first.wpilibj.Timer;
+import frc4388.robot.constants.Constants;
+import frc4388.robot.subsystems.intake.Intake;
+import frc4388.robot.subsystems.led.LED;
 
 public class ShooterReal implements ShooterIO {
 
@@ -18,6 +23,14 @@ public class ShooterReal implements ShooterIO {
     VelocityDutyCycle shooter1Velocity = new VelocityDutyCycle(0);
     VelocityDutyCycle shooter2Velocity = new VelocityDutyCycle(0);
     // VelocityDutyCycle m_indexerVelocity = new VelocityDutyCycle(0);
+
+    private final Timer m_stallTimerShooter = new Timer();
+    private final Timer m_stallTimerIndexer = new Timer();
+    private final Timer m_stallTimerRoller = new Timer();
+    private boolean m_shooterStalling = false;
+    private boolean m_indexerStalling = false;
+    private boolean m_rollerStalling = false;
+    public String motorStall = "";
 
 
     public ShooterReal(
@@ -39,6 +52,59 @@ public class ShooterReal implements ShooterIO {
         shooter1Velocity.Slot = 0;
         shooter2Velocity.Slot = 0;
         // m_indexerVelocity.Slot = 0;
+    }
+    
+    @Override
+    public void motorStalled(ShooterState state, Intake m_Intake, LED m_robotLED) {    
+            motorStall = "";
+        if (Math.abs(state.motor1TargetVelocity.in(RotationsPerSecond)) - Math.abs(state.motor1Velocity.in(RotationsPerSecond)) > 40) {
+            if (!m_shooterStalling) {
+                m_shooterStalling = true;
+                m_stallTimerShooter.restart();
+            }
+            if (m_stallTimerShooter.hasElapsed(5.0)) {
+                m_robotLED.setMode(Constants.LEDConstants.MOTOR_STALLED);
+                motorStall = "Shooter Stalled";
+                System.out.println("Shooter Stalled: " + (Math.abs(state.motor1TargetVelocity.in(RotationsPerSecond)) - Math.abs(state.motor1Velocity.in(RotationsPerSecond))));
+                System.out.println("Target Velocity: " + Math.abs(state.motor1TargetVelocity.in(RotationsPerSecond)));
+                System.out.println("Actual Velocity: " + Math.abs(state.motor1Velocity.in(RotationsPerSecond)));
+            }
+        } else {
+            m_shooterStalling = false;
+            m_stallTimerShooter.reset();
+        }
+
+        if (Math.abs(state.indexerTargetOutput) - Math.abs(state.indexerOutput) > 0.3) {
+            if (!m_indexerStalling) {
+                m_indexerStalling = true;
+                m_stallTimerIndexer.restart();
+            }
+            if (m_stallTimerIndexer.hasElapsed(5.0)) {
+                m_robotLED.setMode(Constants.LEDConstants.MOTOR_STALLED);
+                motorStall = "Indexer Stalled";
+                System.out.println("Indexer Stalled: " + (Math.abs(state.indexerTargetOutput) - Math.abs(state.indexerOutput)));
+            }
+        } else {
+            m_indexerStalling = false;
+            m_stallTimerIndexer.reset();
+        }
+
+        if (Math.abs(m_Intake.getRollerTarget()) - Math.abs(m_Intake.getRollerSpeed()) > 0.4) {
+            if (!m_rollerStalling) {
+                m_rollerStalling = true;
+                m_stallTimerRoller.restart();
+            }
+            if (m_stallTimerRoller.hasElapsed(5.0)) {
+                m_robotLED.setMode(Constants.LEDConstants.MOTOR_STALLED);
+                motorStall = "Roller Stalled";
+                System.out.println("Roller Stalled: " + (Math.abs(m_Intake.getRollerTarget()) - Math.abs(m_Intake.getRollerSpeed())));
+            }
+        } else {
+            m_rollerStalling = false;
+            m_stallTimerRoller.reset();
+        }
+        Logger.recordOutput("Stalled Motor: ", motorStall);
+        
     }
     
     @Override
@@ -75,6 +141,8 @@ public class ShooterReal implements ShooterIO {
         //     Math.abs(currentLimit.in(Amps)) > current &&
         //     Math.abs(targetVelocity.in(RotationsPerSecond)) > velocity
         // ) {
+            state.motor1TargetVelocity = RotationsPerSecond.of(percentOutput);
+            state.motor2TargetVelocity = RotationsPerSecond.of(percentOutput);
             m_shooter1Motor.set(percentOutput);
             m_shooter2Motor.set(percentOutput);
         // } else {

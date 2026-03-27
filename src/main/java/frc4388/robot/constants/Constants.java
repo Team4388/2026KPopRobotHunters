@@ -117,6 +117,11 @@ public final class Constants {
         // Operator ready to shoot, but the driver conditions are bad
         public static final LEDPatterns OPREADY_BADPHYS = LEDPatterns.WHITE_STROBE;
 
+        // LED color for when the indexer was stuck on ball and going in reverse
+        public static final LEDPatterns INDEXER_REVERSE = LEDPatterns.SOLID_VIOLET;
+
+        // LED color for when the indexer, intake roller, or shooter is not going at right speed for more than 5 seconds and is likely stalled
+        public static final LEDPatterns MOTOR_STALLED = LEDPatterns.SOLID_RED;
 
         public static final LEDPatterns OPREADY_FEED = LEDPatterns.SOLID_BLUE;
         // public static final LEDPatterns OPREADY_FEED_BADPHYS = LEDPatterns.BLUE_STROBE;

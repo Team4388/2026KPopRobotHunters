@@ -15,30 +15,37 @@ import frc4388.utility.status.CanDevice;
 public class    ShooterConstants {
     // Motor conversions
     
-    public static final double SHOOTERMOTOR_GEAR_RATIO = 1.5;
-    public static final double INDEXER_GEAR_RATIO = 1.;
+    public static final double SHOOTERMOTOR_GEAR_RATIO = 1.286; // TODO: supposed to be 9 rotations in to 7 out    -- 0.77 or 1.29
+    public static final double INDEXER_GEAR_RATIO = 1.72; // TODO: change it is supposed to be 18 to 31 
     public static final double T_CONSTANT = 2;
-
+    public static final double SHOOTER_RADIUS = 2/39.37;
+    public static final double INDEXER_RADIUS = 0.625/39.37;
     public static final ConfigurableDouble SHOOTER_MAX_VELOCITY = new ConfigurableDouble("Shooter MAX Velocity", 60);
     public static final ConfigurableDouble SHOOTER_OVERRIDE_VELOCITY = new ConfigurableDouble("Shooter OVERRIDE Velocity", -42);
     // public static final ConfigurableDouble SHOOTER_FEED_VELOCITY = new ConfigurableDouble("Shooter Feed Velocity", -35);
     // public static final ConfigurableDouble SHOOTER_RESTING_VELOCITY = new ConfigurableDouble("Shooter Resting Velocity", 0.0);
+    
     
     public static final ConfigurableDouble SHOOTER_IDLE_PERCENT_OUTPUT = new ConfigurableDouble("Shooter idle % output", -0.15);
     // public static final ConfigurableDouble SHOOTER_IDLE_TARGET_VEL = new ConfigurableDouble("Shooter idle target velocity", 20.);
     // public static final ConfigurableDouble SHOOTER_IDLE_MAX_CURRENT = new ConfigurableDouble("Shooter Idle max current", 10);
 
     public static final ConfigurableDouble INDEXER_FORWARD_OUTPUT = new ConfigurableDouble("Indexer FWD % Output", -0.4);
-    public static final ConfigurableDouble INDEXER_REVERSE_OUTPUT = new ConfigurableDouble("Indexer reverse % Output", 0.0);
-    public static final ConfigurableDouble MODEL_TRIM = new ConfigurableDouble("TRIM SHOOTER SPEED", -1.5);
+    public static final ConfigurableDouble INDEXER_REVERSE_OUTPUT = new ConfigurableDouble("Indexer reverse % Output", 0.2);
+    public static final ConfigurableDouble MODEL_TRIM = new ConfigurableDouble("TRIM SHOOTER SPEED", 0);
 
     
-    public static final ConfigurableDouble AIM_LEAD_TIME = new ConfigurableDouble("Aim lead time", 0);
+    public static final ConfigurableDouble NEG_OFFSET = new ConfigurableDouble("Negative offset", 8.);
+    public static final ConfigurableDouble POS_OFFSET = new ConfigurableDouble("Positive offset", 8.);
+
+    
+    public static final ConfigurableDouble AIM_LEAD_TIME = new ConfigurableDouble("Aim lead time", -1.1);
 
     // Shoot mode tolerances
     public static final ConfigurableDouble ROBOT_MIN_HUB = new ConfigurableDouble("Shoot min dist M", 1.8);
     public static final ConfigurableDouble ROBOT_MAX_HUB = new ConfigurableDouble("Shoot max dist M", 4.8);
 
+    public static final ConfigurableDouble AIM_ANGLE = new ConfigurableDouble("Aim angle tolerance", 15);
     public static final ConfigurableDouble ROBOT_ANG_TOLERANCE = new ConfigurableDouble("Ang tolerance DEG", 360);
 
     public static final ConfigurableDouble ROBOT_SPEED_TOLERANCE = new ConfigurableDouble("Speed tolerance MS", 1);
@@ -47,20 +54,23 @@ public class    ShooterConstants {
     public static final ConfigurableDouble SHOOTER_SPEED_TOLERANCE = new ConfigurableDouble("Shooter speed tolerance RPS", 3); 
 
     // 
-    public static AngularVelocity getTargetShooterSpeed(double hubDistMeters) {
-        // Model derived from points
-        // double speed = 
-        //     1.11576*hubDistMeters*hubDistMeters +
-        //     0.318464*hubDistMeters +
-        //     30.6293;
-        double speed = 
-            5.6939*hubDistMeters +
-            22.76545 + MODEL_TRIM.get();
+    public static AngularVelocity getTargetShooterSpeed(double hubDistMeters, double chassisXSpeed) {
+            double speed = 0;
 
-        // double speed =
-        //     0.00610938*hubDistMeters*hubDistMeters
-        //     5.65235*hubDistMeters +
-        //     22.82825;
+        if (Math.abs(chassisXSpeed) < 0.1){
+            speed = 0.0593402*hubDistMeters*hubDistMeters +
+            4.90561*hubDistMeters +
+            30.35696 + MODEL_TRIM.get();
+        } else if (chassisXSpeed > 0){
+            speed = 0.0593402*hubDistMeters*hubDistMeters +
+            4.90561*hubDistMeters +
+            30.35696 + chassisXSpeed * POS_OFFSET.get() + MODEL_TRIM.get();
+            
+        } else { // Negative is closer to hub
+            speed = 0.0593402*hubDistMeters*hubDistMeters +
+            4.90561*hubDistMeters +
+            30.35696 + chassisXSpeed * NEG_OFFSET.get() + MODEL_TRIM.get();
+        }
         
         double max = SHOOTER_MAX_VELOCITY.get();
 
@@ -79,7 +89,7 @@ public class    ShooterConstants {
     // Motor Configuration
     public static Slot0Configs SHOOTER_PID = new Slot0Configs()
         .withKV(0.0)
-        .withKP(0.08)
+        .withKP(0.02)
         .withKI(0.15)
         .withKD(0.0);
 
@@ -88,7 +98,7 @@ public class    ShooterConstants {
     
     
     
-    public static ConfigurableDouble shooter_kP = new ConfigurableDouble("Shooter KP", 0.08);
+    public static ConfigurableDouble shooter_kP = new ConfigurableDouble("Shooter KP", 0.02);
     public static ConfigurableDouble shooter_kI = new ConfigurableDouble("Shooter KI", 0.15);
     public static ConfigurableDouble shooter_kD = new ConfigurableDouble("Shooter KD", 0);
 
