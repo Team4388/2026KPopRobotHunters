@@ -73,9 +73,10 @@ public final class SwerveDriveConstants {
     public static final boolean INVERT_Y = true;
     public static final boolean INVERT_ROTATION = false;
 
+    public static ConfigurableDouble FAR_OFFSET = new ConfigurableDouble("Far Offset", 0.05);
     // public static final Trim POINTLESS_TRIM = new Trim("Pointless Trim", Double.MAX_VALUE, Double.MIN_VALUE, 0.1, 0);
 
-    private static final class ModuleSpecificConstants { //2025
+    public static final class ModuleSpecificConstants { //2026
         //Front Left
         private static final Angle FRONT_LEFT_ENCODER_OFFSET = Rotations.of(0.49707+0.350-0.03+0.0134+0.06-0.043);
         private static final boolean FRONT_LEFT_DRIVE_MOTOR_INVERTED = false;

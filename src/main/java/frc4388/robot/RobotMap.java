@@ -25,6 +25,7 @@ import frc4388.robot.subsystems.intake.IntakeReal;
 import frc4388.robot.subsystems.shooter.ShooterConstants;
 import frc4388.robot.subsystems.shooter.ShooterIO;
 import frc4388.robot.subsystems.shooter.ShooterReal;
+import frc4388.robot.subsystems.swerve.SimpleSwerveSim;
 // import frc4388.robot.subsystems.elevator.ElevatorIO;
 // import frc4388.robot.subsystems.elevator.ElevatorReal;
 import frc4388.robot.subsystems.swerve.SwerveDriveConstants;
@@ -133,8 +134,15 @@ public class RobotMap {
                 FaultCANCoder.addDevice(swerveDrivetrainReal.getModule(3).getEncoder(), "Module 3 CANCoder");
 
                 break;
-            // case SIM:
-            //     break;
+            case SIM:
+                leftCamera = new VisionIO() {};
+                rightCamera = new VisionIO() {};
+
+                swerveDrivetrain = new SimpleSwerveSim() {};
+
+                shooterIO = new ShooterIO() {};
+                intakeIO = new IntakeIO() {};
+                break;
             default:
                 leftCamera = new VisionIO() {};
                 rightCamera = new VisionIO() {};

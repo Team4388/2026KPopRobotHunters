@@ -1,4 +1,4 @@
-package frc4388.robot.subsystems;
+package frc4388.robot.subsystems.vision;
 
 import com.fazecast.jSerialComm.SerialPort;
 import edu.wpi.first.wpilibj.DriverStation;

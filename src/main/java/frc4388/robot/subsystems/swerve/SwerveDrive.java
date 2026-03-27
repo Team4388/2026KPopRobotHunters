@@ -5,7 +5,9 @@
 package frc4388.robot.subsystems.swerve;
 
 import static edu.wpi.first.units.Units.Rotations;
+import static edu.wpi.first.units.Units.RotationsPerSecond;
 
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import org.littletonrobotics.junction.AutoLogOutput;
@@ -19,10 +21,13 @@ import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.trajectory.PathPlannerTrajectory;
 import com.pathplanner.lib.util.PathPlannerLogging;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -63,6 +68,14 @@ public class SwerveDrive extends SubsystemBase implements Queryable {
     public Rotation2d orientRotTarget = new Rotation2d();
     public ChassisSpeeds chassisSpeeds = new ChassisSpeeds();
 
+    private final PIDController m_rotationOverridePID = new PIDController(
+        SwerveDriveConstants.PIDConstants.AIM_kP.get(),
+        SwerveDriveConstants.PIDConstants.AIM_kI.get(),
+        SwerveDriveConstants.PIDConstants.AIM_kD.get()
+    );
+    private boolean m_useRotationOverride = false;
+    private Translation2d m_rotationOverrideTarget = new Translation2d();
+
     /** Creates a new SwerveDrive. */
     public SwerveDrive(SwerveIO swerveDriveTrain, Vision vision) {
         // public SwerveDrive(SwerveDrivetrain<TalonFX, TalonFX, CANcoder>
@@ -81,6 +94,20 @@ public class SwerveDrive extends SubsystemBase implements Queryable {
             // Handle exception as needed
             config = null;
         }
+
+        PPHolonomicDriveController driveController = new PPHolonomicDriveController(
+            new PIDConstants(5.0, 0.0, 0.0), // Translation PID
+            new PIDConstants(5.0, 0.0, 0.0)  // Rotation PID (used when override is OFF)
+        );
+        driveController.setRotationTargetOverride(() -> {
+            if (!m_useRotationOverride) return Optional.empty();
+            Rotation2d targetAngle = getPose2d()
+                .getTranslation()
+                .minus(m_rotationOverrideTarget)
+                .getAngle();
+            return Optional.of(targetAngle);
+        });
+
         // DoubleSupplier a = () -> 1.d;
         AutoBuilder.configure(
                 () -> {
@@ -92,11 +119,7 @@ public class SwerveDrive extends SubsystemBase implements Queryable {
                 (speeds, feedforwards) -> io.setControl(new SwerveRequest.ApplyRobotSpeeds()
                         .withSpeeds(speeds)), // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds.
                                               // Also optionally outputs individual module feedforwards
-                new PPHolonomicDriveController( // PPHolonomicController is the built in path following controller for
-                                                // holonomic drive trains
-                        new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
-                        new PIDConstants(5.0, 0.0, 0.0) // Rotation PID constants
-                ),
+                driveController, // <-- use the variable, not inline new PPHolonomicDriveController(...)
                 config, // The robot configuration
                 () -> {
                     // Boolean supplier that controls when the path will be mirrored for the red
@@ -148,14 +171,6 @@ public class SwerveDrive extends SubsystemBase implements Queryable {
     public void setInitalPose(Pose2d startingAutoPose){
         initalPose2d = startingAutoPose;
     }
-    // MIRA public void setOdoPose(Pose2d pose) {
-    //     if (pose == null) return;
-    //     io.tareEverything();
-    //     initalPose2d = pose;
-    //     io.resetPose(pose);
-    //     robotKnowsWhereItIs = true;
-    //     rotTarget = pose.getRotation().getDegrees();
-    // }
 
 
     // public void oneModuleTest(SwerveModule module, Translation2d leftStick,
@@ -171,6 +186,14 @@ public class SwerveDrive extends SubsystemBase implements Queryable {
     // SwerveModuleState state = new SwerveModuleState(speed, rot);
     // module.setDesiredState(state);
     // }
+
+    public double chassisXSpeeds(){
+        if (TimesNegativeOne.isRed) {
+            return chassisSpeeds.vxMetersPerSecond;
+        } else {
+            return -chassisSpeeds.vxMetersPerSecond;
+        }
+    }
 
     public void driveWithInput(Translation2d leftStick, Translation2d rightStick, boolean fieldRelative) {
         if (rightStick.getNorm() < 0.05 && leftStick.getNorm() < 0.05 && stopped == false) // if no imput and the swerve drive is still going:
@@ -233,6 +256,27 @@ public class SwerveDrive extends SubsystemBase implements Queryable {
         
     }
 
+    
+
+    public void aimAtPosition(Translation2d fieldPos, double aimLeadTime) {
+        Translation2d robotSpeed = new Translation2d(
+            chassisSpeeds.vxMetersPerSecond, 
+            chassisSpeeds.vyMetersPerSecond
+        );
+        Translation2d fieldPosLead = robotSpeed.times(aimLeadTime).plus(fieldPos);
+        Rotation2d ang = getPose2d().getTranslation().minus(fieldPosLead).getAngle();
+
+        var ctrl = new SwerveRequest.FieldCentricFacingAngle()
+        .withVelocityX(chassisSpeeds.vxMetersPerSecond)
+        .withVelocityY(chassisSpeeds.vyMetersPerSecond)
+        .withTargetDirection(ang);
+        ctrl.HeadingController.setPID(
+        SwerveDriveConstants.PIDConstants.AIM_kP.get(),
+        SwerveDriveConstants.PIDConstants.AIM_kI.get(),
+        SwerveDriveConstants.PIDConstants.AIM_kD.get()
+        );
+        io.setControl(ctrl);
+    }
 
     public void driveWithInputOrientation(Translation2d leftStick, Translation2d rightStick) { // there is no practical
                                                                                                // reason to have a robot
@@ -301,7 +345,20 @@ public class SwerveDrive extends SubsystemBase implements Queryable {
         // SmartDashboard.putBoolean("drift correction", true);
     }
 
-    
+    public void driveFieldAngleSIP(Translation2d leftStick, Rotation2d heading) {
+        
+       rotTarget = heading.getDegrees();
+        var ctrl = new SwerveRequest.FieldCentricFacingAngle()
+            .withVelocityX(leftStick.getX() * speedAdjust)
+            .withVelocityY(leftStick.getY() * speedAdjust)
+            .withTargetDirection(heading);
+        ctrl.HeadingController.setPID(
+            SwerveDriveConstants.PIDConstants.AIM_kP.get(),
+            SwerveDriveConstants.PIDConstants.AIM_kI.get(),
+            SwerveDriveConstants.PIDConstants.AIM_kD.get()
+        );
+        io.setControl(ctrl);
+    }
     
     public void driveIntake(Translation2d leftStick, boolean invertRotation){
         // if (invert){
@@ -360,21 +417,55 @@ public class SwerveDrive extends SubsystemBase implements Queryable {
 
     // Drive with the robot facing towards a specific position
     public void driveFacingPosition(Translation2d leftStick, Translation2d fieldPos, double aimLeadTime) {
-
-        // Get the current speed of the robot
-        Translation2d robotSpeed = new Translation2d(
-            chassisSpeeds.vxMetersPerSecond, 
-            chassisSpeeds.vyMetersPerSecond
-        );
-
-        // Calculate a point to aim ahead of the actual position.
-        Translation2d fieldPosLead = robotSpeed.times(aimLeadTime).plus(fieldPos);
-
-        // Calculate the angle between the current position and the lead position
+        Translation2d robotSpeedYOnly = new Translation2d(0, chassisSpeeds.vyMetersPerSecond);
+        double yDistance = Math.abs(getPose2d().getTranslation().getY() - fieldPos.getY());
+        if ((chassisSpeeds.vyMetersPerSecond >0 &&getPose2d().getTranslation().getY() >4)||(chassisSpeeds.vyMetersPerSecond <0 &&getPose2d().getTranslation().getY() <4)){
+        if (Math.abs(chassisSpeeds.vyMetersPerSecond) > 0.2) {
+            if (TimesNegativeOne.isRed){
+                    robotSpeedYOnly = new Translation2d(-SwerveDriveConstants.FAR_OFFSET.get() * yDistance * (getPose2d().getTranslation().getX()-7.28989525), chassisSpeeds.vyMetersPerSecond);
+            } else {
+                robotSpeedYOnly = new Translation2d((getPose2d().getTranslation().getX())* yDistance* SwerveDriveConstants.FAR_OFFSET.get(), chassisSpeeds.vyMetersPerSecond);
+            }
+        } }
+        Translation2d fieldPosLead = robotSpeedYOnly.times(aimLeadTime).plus(fieldPos);
         Rotation2d ang = getPose2d().getTranslation().minus(fieldPosLead).getAngle();
+        Pose2d fieldPosLeadLog = new Pose2d(fieldPosLead, new Rotation2d());
+        Logger.recordOutput("Lead Aim", fieldPosLeadLog);
+        driveFieldAngle(leftStick, ang);
+    }
 
+    public void offsetOdoPosition(Transform2d offset) {
+        // Manually performing an addittion on the pose
+        // WHY doesn't WPILIB have the ability to not transform poses
+        Pose2d new_pose = new Pose2d(
+            new Translation2d(
+                state.currentPose.getX() + offset.getX(),
+                state.currentPose.getY() + offset.getY()
+            ),
+            state.currentPose.getRotation()
+        );
+        this.io.resetPose(new_pose);
+    }
+
+    public void defenseXPosition(){
+        io.setControl(new SwerveRequest.SwerveDriveBrake());
+    }
+
+    public void stopDefenseXPosition(){
+        stopModules();
+    }
+
+    public void driveFacingPosition(Translation2d leftStick, Translation2d fieldPos) {
+        // Calculate the angle between the current position and the lead position
+        //Rotation2d ang = getPose2d().getTranslation().minus(fieldPos).getAngle();
+        Rotation2d ang = new Rotation2d(0,1);
+        System.out.println(ang);
 
         driveFieldAngle(leftStick, ang);
+    }
+
+    public Pose2d getCurrentPose(){
+        return state.currentPose;
     }
 
     public void driveRelativeLockedAngle(Translation2d leftStick, Rotation2d heading) {
@@ -464,6 +555,18 @@ public class SwerveDrive extends SubsystemBase implements Queryable {
         softStop();
     }
 
+    public void enableRotationOverride(Translation2d fieldTarget, double aimLeadTime, Translation2d fieldPos) {
+        Translation2d robotSpeedYOnly = new Translation2d(0, chassisSpeeds.vyMetersPerSecond);
+
+        Translation2d fieldPosLead = robotSpeedYOnly.times(aimLeadTime).plus(fieldPos);
+        m_rotationOverrideTarget = fieldPosLead;
+        m_useRotationOverride = true;
+    }
+
+    public void disableRotationOverride() {
+        m_useRotationOverride = false;
+    }
+
     @Override
     public void periodic() {
         // This method will be called once per scheduler run\
@@ -476,6 +579,12 @@ public class SwerveDrive extends SubsystemBase implements Queryable {
         vision.setLastOdomPose(state.currentPose);
         setLastOdomSpeed(state.currentPose, state.lastPose, state.odometryRate);
 
+        if (state.speeds != null) {
+            this.chassisSpeeds = state.speeds;
+        } else {
+            this.chassisSpeeds = new ChassisSpeeds();
+        }
+        
         if (vision.isTag()) {
             Pose2d pose = vision.getPose2d();
             if (!robotKnowsWhereItIs) {
@@ -485,6 +594,11 @@ public class SwerveDrive extends SubsystemBase implements Queryable {
             }
 
             io.addVisionMeasurement(vision.getPosesToAdd());
+            io.updateInputs(state);
+            Logger.processInputs("SwerveDrive", state);
+
+            vision.setLastOdomPose(state.currentPose);
+            setLastOdomSpeed(state.currentPose, state.lastPose, state.odometryRate);
         }
 
         // if(e.isPresent())
@@ -514,6 +628,7 @@ public class SwerveDrive extends SubsystemBase implements Queryable {
         setPercentOutput(SwerveDriveConstants.GEARS[i]);
         gear_index = i;
     }
+
 
     public void setPercentOutput(double speed) {
         speedAdjust = SwerveDriveConstants.MAX_SPEED_MEETERS_PER_SEC * speed;
@@ -590,4 +705,3 @@ public class SwerveDrive extends SubsystemBase implements Queryable {
         return status;
     }
 }
-
