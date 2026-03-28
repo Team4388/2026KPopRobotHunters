@@ -13,7 +13,7 @@ public class IntakeConstants {
 
     public static final double ARM_MOTOR_GEAR_RATIO = 125;
     public static final double ROLLER_MOTOR_GEAR_RATIO = 3;
-    public static final double ARM_ENCODER_OFFSET = 0.;
+    public static final double ARM_ENCODER_OFFSET = -0.466;
 
 
 
@@ -41,11 +41,14 @@ public class IntakeConstants {
     // public static final Angle ARM_LIMIT_LOWER = Degrees.of(90);
     // public static final Angle ARM_LIMIT_UPPER = Degrees.of(-90);
 
-    public static final ConfigurableDouble ARM_LIMIT_RETRACTED = new ConfigurableDouble("Arm angle retracted", 0.1);
-    public static final ConfigurableDouble ARM_LIMIT_EXTENDED = new ConfigurableDouble("Arm angle extended", 0.33);
-    public static final ConfigurableDouble ARM_EXTEND_PERCENT_OUTPUT = new ConfigurableDouble("Arm extend % output", 0.4);
-    public static final ConfigurableDouble ARM_RETRACT_PERCENT_OUTPUT = new ConfigurableDouble("Arm retract % output", -0.4);
-    public static final ConfigurableDouble ROLLER_PERCENT_OUTPUT = new ConfigurableDouble("Roller Percent Output", .70);
+    public static final ConfigurableDouble ARM_LIMIT_RETRACTED = new ConfigurableDouble("Arm angle retracted", 0.);
+    public static final ConfigurableDouble ARM_LIMIT_EXTENDED = new ConfigurableDouble("Arm angle extended", 1.8);
+    public static final ConfigurableDouble ARM_EXTEND_PERCENT_OUTPUT = new ConfigurableDouble("Arm extend % output", 0.1);
+    public static final ConfigurableDouble ARM_RETRACT_PERCENT_OUTPUT = new ConfigurableDouble("Arm retract % output", -0.1);
+    
+    public static final ConfigurableDouble ROLLER_PERCENT_OUTPUT = new ConfigurableDouble("Roller Percent Output", .80);
+    public static final ConfigurableDouble ROLLER_RETRACT_PERCENT_OUTPUT = new ConfigurableDouble("Roller Retract Output", .40);
+
     // public static final ConfigurableDouble ROLL = new ConfigurableDouble("Arm angle extended", 0.25);
 
     // public static final AngularVelocity ROLLER_MAX_VELOCITY = RotationsPerSecond.of(4.0);
@@ -77,10 +80,14 @@ public class IntakeConstants {
 
     static {
         ARM_MOTOR_CONFIG.limitSwitch
-            .reverseLimitSwitchType(Type.kNormallyClosed)
             .limitSwitchPositionSensor(FeedbackSensor.kPrimaryEncoder)
-            .forwardLimitSwitchPosition(0)
-            .forwardLimitSwitchTriggerBehavior(Behavior.kStopMovingMotorAndSetPosition);
+
+            .forwardLimitSwitchType(Type.kNormallyOpen)
+            .forwardLimitSwitchTriggerBehavior(Behavior.kKeepMovingMotor)
+
+            .reverseLimitSwitchType(Type.kNormallyClosed)
+            .reverseLimitSwitchPosition(0)
+            .reverseLimitSwitchTriggerBehavior(Behavior.kStopMovingMotorAndSetPosition);
     }
 
     // public static final TalonFXConfiguration ARM_MOTOR_CONFIG = new TalonFXConfiguration()

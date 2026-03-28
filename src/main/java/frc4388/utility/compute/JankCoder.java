@@ -75,7 +75,6 @@ public class JankCoder {
         } catch (Exception e) {
             // e.printStackTrace();
             System.out.println("ENCODER: Unable to write to trim file `" + m_encoder.getSourceChannel() + "`!?!");
-            rotations = 0;
         }
     }
 

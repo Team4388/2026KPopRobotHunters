@@ -164,7 +164,7 @@ public class RobotContainer {
         
         public RobotContainer() {
             
-            configureSINGLEBindings();
+            configureButtonBindings();
             
             // Called on first robot enable
             DeferredBlock.addBlock(() -> {

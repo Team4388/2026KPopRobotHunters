@@ -17,8 +17,9 @@ public interface IntakeIO {
     public class IntakeState {
         double currentBounceTime = 0;
 
-        boolean extendedLimit = false;
-        boolean retractedLimit = false;
+        boolean retractedLimitSwitch = false;
+        boolean extendedSoftLimit = false;
+        boolean retractedSoftLimit = false;
         Angle intakeEncoder = Rotations.of(0);
 
         Angle armAngle = Rotations.of(0);

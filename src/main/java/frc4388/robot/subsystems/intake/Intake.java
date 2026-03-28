@@ -109,7 +109,7 @@ public class Intake extends SubsystemBase {
                 break;
             case Retracting:
                 io.armOutput(IntakeConstants.ARM_RETRACT_PERCENT_OUTPUT.get());
-                io.setRollerOutput(state, 0);
+                io.setRollerOutput(state, IntakeConstants.ROLLER_RETRACT_PERCENT_OUTPUT.get());
                 break;
             case Bouncing:
                 io.setRollerOutput(state, 0);
@@ -131,8 +131,9 @@ public class Intake extends SubsystemBase {
                 io.armOutput(percentOutput);
                 break;
             case Idle:
+                io.armOutput(0);
                 // io.setArmAngle(state, Rotations.of(IntakeConstants.ARM_LIMIT_RETRACTED.get()));
-                io.setRollerOutput(state, 0);
+                // io.setRollerOutput(state, 0);
                 break;
         }
         // if (state.retractedLimit){

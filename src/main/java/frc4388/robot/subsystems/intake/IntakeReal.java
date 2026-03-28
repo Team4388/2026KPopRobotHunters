@@ -10,6 +10,8 @@ import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.PositionDutyCycle;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.revrobotics.PersistMode;
+import com.revrobotics.ResetMode;
 import com.revrobotics.spark.SparkMax;
 
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -37,7 +39,9 @@ public class IntakeReal implements IntakeIO {
         m_armMotor = armMotor;
         m_rollerMotor = rollerMotor;
         m_encoder = jankCoder;
-        // m_armLimitSwitch = armLimitSwitch;
+
+        m_armMotor.configure(IntakeConstants.ARM_MOTOR_CONFIG, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
+        m_rollerMotor.configure(IntakeConstants.ROLELR_MOTOR_CONFIG, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
     }
 
 
@@ -77,18 +81,20 @@ public class IntakeReal implements IntakeIO {
     }
 
     private boolean retractedLimit() {
-        return m_encoder.get() >= IntakeConstants.ARM_LIMIT_EXTENDED.get();
+        return m_encoder.get() <= IntakeConstants.ARM_LIMIT_RETRACTED.get();
     }
     private boolean extendedLimit() {
-        return m_encoder.get() <= IntakeConstants.ARM_LIMIT_RETRACTED.get();
+        return m_encoder.get() >= IntakeConstants.ARM_LIMIT_EXTENDED.get();
     }
 
     @Override
     public void armOutput(double percentOutput){
 
-        if(retractedLimit()) {
-            percentOutput = Math.max(percentOutput, 0);
-        } else if (extendedLimit()) {
+        // if(retractedLimit()) {
+        //     percentOutput = Math.max(percentOutput, 0);
+        // } 
+        
+        if (extendedLimit()) {
             percentOutput = Math.min(percentOutput, 0);
         }
 
@@ -98,6 +104,9 @@ public class IntakeReal implements IntakeIO {
 
     @Override
     public void updateInputs(IntakeState state) {
+        m_encoder.update();
+
+
         state.armAngle = Rotations.of(m_armMotor.getEncoder().getPosition()).div(IntakeConstants.ARM_MOTOR_GEAR_RATIO);
         state.armMotorVelocity = RotationsPerSecond.of(m_armMotor.getEncoder().getVelocity()).div(IntakeConstants.ARM_MOTOR_GEAR_RATIO);
         // state.armMotorAcceleration = RotationsPerSecondPerSecond.of(m_armMotor.getEncoder().ge);
@@ -106,17 +115,15 @@ public class IntakeReal implements IntakeIO {
         state.rollerOutput = m_rollerMotor.get();
         state.rollerMotorCurrent = Amps.of(m_rollerMotor.getOutputCurrent());
 
-        state.retractedLimit = retractedLimit();
-        state.extendedLimit = extendedLimit();
-        state.armAngle = m_encoder.getRotations();
+        state.retractedSoftLimit = retractedLimit();
+        state.extendedSoftLimit = extendedLimit();
 
-        
+        state.intakeEncoder = m_encoder.getRotations();
+        state.retractedLimitSwitch = m_armMotor.getReverseLimitSwitch().isPressed();
 
-
-        // if(state.retractedLimit) {
-        //     // Set the arm motor to be zero if the limit switch is pressed
-        //     m_armMotor.setPosition(0., 0); 
-        // }
+        if(state.retractedLimitSwitch) {
+            m_encoder.resetRotations();
+        }
     }
 
     @Override 
