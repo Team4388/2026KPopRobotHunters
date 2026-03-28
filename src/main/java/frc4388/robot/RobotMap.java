@@ -37,6 +37,7 @@ import frc4388.robot.subsystems.vision.VisionReal;
 import frc4388.utility.status.FaultCANCoder;
 import frc4388.utility.status.FaultPhotonCamera;
 import frc4388.utility.status.FaultPidgeon2;
+import frc4388.utility.status.FaultSparkMax;
 import frc4388.utility.status.FaultTalonFX;
 
 /**
@@ -118,8 +119,8 @@ public class RobotMap {
                 FaultTalonFX.addDevice(shooter1, "Shooter1");
                 FaultTalonFX.addDevice(shooter2, "Shooter2");
                 FaultTalonFX.addDevice(indexer, "Indexer");
-                // FaultTalonFX.addDevice(arm, "Arm");
-                // FaultTalonFX.addDevice(roller, "Roller");
+                FaultSparkMax.addDevice(arm, "Arm");
+                FaultSparkMax.addDevice(roller, "Roller");
                 
                 FaultTalonFX.addDevice(swerveDrivetrainReal.getModule(0).getDriveMotor(), "Module 0 Drive");
                 FaultTalonFX.addDevice(swerveDrivetrainReal.getModule(0).getSteerMotor(), "Module 0 Steer");
