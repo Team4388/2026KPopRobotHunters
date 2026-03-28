@@ -17,10 +17,14 @@ public interface IntakeIO {
     public class IntakeState {
         double currentBounceTime = 0;
 
+        boolean extendedLimit = false;
         boolean retractedLimit = false;
+        Angle intakeEncoder = Rotations.of(0);
+
         Angle armAngle = Rotations.of(0);
         Angle armTargetAngle = Rotations.of(0);
         Current armMotorCurrent = Amps.of(0);
+
 
         AngularVelocity armMotorVelocity = RotationsPerSecond.of(0);
         // AngularAcceleration armMotorAcceleration = RotationsPerSecondPerSecond.of(0);

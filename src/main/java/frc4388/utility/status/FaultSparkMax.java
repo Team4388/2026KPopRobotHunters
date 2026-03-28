@@ -63,7 +63,7 @@ public class FaultSparkMax implements Queryable {
             s.addReport(ReportLevel.ERROR, "Sensor fault");
         }
         if(faults.temperature) {
-            s.addReport(ReportLevel.ERROR, "Tempreture fault");
+            s.addReport(ReportLevel.ERROR, "Temperature fault");
         }
 
         Warnings warnings = motor.getWarnings();

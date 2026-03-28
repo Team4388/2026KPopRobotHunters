@@ -34,6 +34,7 @@ import frc4388.robot.subsystems.swerve.SwerveIO;
 import frc4388.robot.subsystems.swerve.SwerveReal;
 import frc4388.robot.subsystems.vision.VisionIO;
 import frc4388.robot.subsystems.vision.VisionReal;
+import frc4388.utility.compute.JankCoder;
 import frc4388.utility.status.FaultCANCoder;
 import frc4388.utility.status.FaultPhotonCamera;
 import frc4388.utility.status.FaultPidgeon2;
@@ -106,11 +107,10 @@ public class RobotMap {
                 // DigitalInput endeffectorLimitSwitch = new DigitalInput(ElevatorConstants.ENDEFFECTOR_LIMIT_SWITCH);
                 // DigitalInput IRIntakeBeam = new DigitalInput(ElevatorConstants.INTAKE_LIMIT_SWITCH);
 
-
-                // shooterIO = new ShooterIO() {};
                 shooterIO = new ShooterReal(shooter1, shooter2, indexer);
+                JankCoder armEncoder = new JankCoder(0, IntakeConstants.ARM_ENCODER_OFFSET);
 
-                intakeIO = new IntakeReal(arm, roller);
+                intakeIO = new IntakeReal(arm, roller, armEncoder);
 
                 // Fault
                 FaultPidgeon2.addDevice(swerveDrivetrainReal.getPigeon2(), "Gyro");

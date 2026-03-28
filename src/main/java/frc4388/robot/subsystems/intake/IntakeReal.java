@@ -19,22 +19,24 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Velocity;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import frc4388.utility.compute.JankCoder;
 
 public class IntakeReal implements IntakeIO {
 
     SparkMax m_armMotor;
     SparkMax m_rollerMotor;
-    DutyCycleEncoder encoder;
+    JankCoder m_encoder;
 
     public IntakeReal(
-        // DigitalInput armLimitSwitch,
         SparkMax armMotor,
-        SparkMax rollerMotor
+        SparkMax rollerMotor,
+        JankCoder jankCoder
     ) {
         // m_angleMotor = angleMotor;
         // m_pitchMotor = pitchMotor;
         m_armMotor = armMotor;
         m_rollerMotor = rollerMotor;
+        m_encoder = jankCoder;
         // m_armLimitSwitch = armLimitSwitch;
     }
 
@@ -74,9 +76,24 @@ public class IntakeReal implements IntakeIO {
         // m_rollerMotor.set(0);
     }
 
+    private boolean retractedLimit() {
+        return m_encoder.get() >= IntakeConstants.ARM_LIMIT_EXTENDED.get();
+    }
+    private boolean extendedLimit() {
+        return m_encoder.get() <= IntakeConstants.ARM_LIMIT_RETRACTED.get();
+    }
+
     @Override
     public void armOutput(double percentOutput){
+
+        if(retractedLimit()) {
+            percentOutput = Math.max(percentOutput, 0);
+        } else if (extendedLimit()) {
+            percentOutput = Math.min(percentOutput, 0);
+        }
+
         m_armMotor.set(percentOutput);
+
     }
 
     @Override
@@ -88,6 +105,12 @@ public class IntakeReal implements IntakeIO {
 
         state.rollerOutput = m_rollerMotor.get();
         state.rollerMotorCurrent = Amps.of(m_rollerMotor.getOutputCurrent());
+
+        state.retractedLimit = retractedLimit();
+        state.extendedLimit = extendedLimit();
+        state.armAngle = m_encoder.getRotations();
+
+        
 
 
         // if(state.retractedLimit) {

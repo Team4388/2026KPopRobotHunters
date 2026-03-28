@@ -44,7 +44,7 @@ public class Intake extends SubsystemBase {
         switch (mode) {
             case Bouncing:
                 // When bounce is enabled: set the bounce timer
-                this.state.currentBounceTime = Utils.getSystemTimeSeconds() + IntakeConstants.BOUNCE_HALF_PERIOD;
+                this.state.currentBounceTime = Utils.getSystemTimeSeconds() + IntakeConstants.INTAKE_BOUNCE_HALF_PERIOD.get();
                 break;
             default:
                 break;
@@ -118,15 +118,15 @@ public class Intake extends SubsystemBase {
                     state.armMotorCurrent.in(Amps) < IntakeConstants.INTAKE_BOUNCE_CURRENT_LIMIT.get() &&
                     state.armMotorVelocity.in(RotationsPerSecond) < IntakeConstants.INTAKE_BOUNCE_VELOCITY_LIMIT.get()
                 ) {
-                    this.state.currentBounceTime = Utils.getSystemTimeSeconds() + IntakeConstants.BOUNCE_HALF_PERIOD;
+                    this.state.currentBounceTime = Utils.getSystemTimeSeconds() + IntakeConstants.INTAKE_BOUNCE_HALF_PERIOD.get();
                 }
 
                 // Get the time delta from the last bounce time update
                 double currentTime = Utils.getSystemTimeSeconds() - state.currentBounceTime;
                 // Get the percentage through the bounce period (0 output means one half period has passed)
-                double percentOutput = (currentTime / IntakeConstants.BOUNCE_HALF_PERIOD) * IntakeConstants.INTAKE_BOUNCE_OUTPUT;
+                double percentOutput = (currentTime / IntakeConstants.INTAKE_BOUNCE_HALF_PERIOD.get()) * IntakeConstants.INTAKE_BOUNCE_OUTPUT.get();
                 // Clamp the output of the motor to some value
-                percentOutput = Math.max(Math.min(percentOutput, IntakeConstants.INTAKE_BOUNCE_MAX_OUTPUT), -IntakeConstants.INTAKE_BOUNCE_MAX_OUTPUT);
+                percentOutput = Math.max(Math.min(percentOutput, IntakeConstants.INTAKE_BOUNCE_MAX_OUTPUT.get()), -IntakeConstants.INTAKE_BOUNCE_MAX_OUTPUT.get());
 
                 io.armOutput(percentOutput);
                 break;

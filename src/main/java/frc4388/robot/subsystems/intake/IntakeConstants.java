@@ -13,11 +13,13 @@ public class IntakeConstants {
 
     public static final double ARM_MOTOR_GEAR_RATIO = 125;
     public static final double ROLLER_MOTOR_GEAR_RATIO = 3;
+    public static final double ARM_ENCODER_OFFSET = 0.;
 
 
-    public static final double BOUNCE_HALF_PERIOD = 5.;
-    public static final double INTAKE_BOUNCE_OUTPUT = 0.2;
-    public static final double INTAKE_BOUNCE_MAX_OUTPUT = 0.5;
+
+    public static final ConfigurableDouble INTAKE_BOUNCE_HALF_PERIOD = new ConfigurableDouble("Bounce Half Period", 5.);
+    public static final ConfigurableDouble INTAKE_BOUNCE_OUTPUT = new ConfigurableDouble("Bounce Output", 0.2);
+    public static final ConfigurableDouble INTAKE_BOUNCE_MAX_OUTPUT = new ConfigurableDouble("Bounce Max Output", 0.5);
     public static final ConfigurableDouble INTAKE_BOUNCE_CURRENT_LIMIT = new ConfigurableDouble("Intake Bounce Current Limit", 20);
     public static final ConfigurableDouble INTAKE_BOUNCE_VELOCITY_LIMIT = new ConfigurableDouble("Intake Bounce Velocity Limit", 20);
 
@@ -27,7 +29,7 @@ public class IntakeConstants {
 
     public static final CanDevice ARM_ID   = new CanDevice("ARM", 20);
     public static final CanDevice ROLLER_ID   = new CanDevice("INTAKE_ROLLER", 21);
-    // public static final int ARM_LIMIT_SWITCH_CHANNEL = 9;
+    public static final int ARM_ENCODER_ID = 0;
         
     // Limits
 
@@ -40,7 +42,7 @@ public class IntakeConstants {
     // public static final Angle ARM_LIMIT_UPPER = Degrees.of(-90);
 
     public static final ConfigurableDouble ARM_LIMIT_RETRACTED = new ConfigurableDouble("Arm angle retracted", 0.1);
-    public static final ConfigurableDouble ARM_ssLIMIT_EXTENDED = new ConfigurableDouble("Arm angle extended", 0.33);
+    public static final ConfigurableDouble ARM_LIMIT_EXTENDED = new ConfigurableDouble("Arm angle extended", 0.33);
     public static final ConfigurableDouble ARM_EXTEND_PERCENT_OUTPUT = new ConfigurableDouble("Arm extend % output", 0.4);
     public static final ConfigurableDouble ARM_RETRACT_PERCENT_OUTPUT = new ConfigurableDouble("Arm retract % output", -0.4);
     public static final ConfigurableDouble ROLLER_PERCENT_OUTPUT = new ConfigurableDouble("Roller Percent Output", .70);
