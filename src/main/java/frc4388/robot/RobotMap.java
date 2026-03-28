@@ -98,9 +98,9 @@ public class RobotMap {
                 TalonFX indexer = new TalonFX(ShooterConstants.INDEXER_ID.id, Constants.CANIVORE_CANBUS);
                 
                 //Configure Intake 20,21
-                TalonFX arm = new TalonFX(IntakeConstants.ARM_ID.id, Constants.CANIVORE_CANBUS);
+                SparkMax arm = new SparkMax(IntakeConstants.ARM_ID.id, com.revrobotics.spark.SparkLowLevel.MotorType.kBrushless);
                 SparkMax roller = new SparkMax(IntakeConstants.ROLLER_ID.id, com.revrobotics.spark.SparkLowLevel.MotorType.kBrushless);
-                DigitalInput armLimitSwitch = new DigitalInput(IntakeConstants.ARM_LIMIT_SWITCH_CHANNEL);
+                // DigitalInput armLimitSwitch = new DigitalInput(IntakeConstants.ARM_LIMIT_SWITCH_CHANNEL);
                 // DigitalInput basinLimitSwitch = new DigitalInput(ElevatorConstants.BASIN_LIMIT_SWITCH);
                 // DigitalInput endeffectorLimitSwitch = new DigitalInput(ElevatorConstants.ENDEFFECTOR_LIMIT_SWITCH);
                 // DigitalInput IRIntakeBeam = new DigitalInput(ElevatorConstants.INTAKE_LIMIT_SWITCH);
@@ -109,7 +109,7 @@ public class RobotMap {
                 // shooterIO = new ShooterIO() {};
                 shooterIO = new ShooterReal(shooter1, shooter2, indexer);
 
-                intakeIO = new IntakeReal(armLimitSwitch, arm, roller);
+                intakeIO = new IntakeReal(arm, roller);
 
                 // Fault
                 FaultPidgeon2.addDevice(swerveDrivetrainReal.getPigeon2(), "Gyro");
@@ -118,7 +118,7 @@ public class RobotMap {
                 FaultTalonFX.addDevice(shooter1, "Shooter1");
                 FaultTalonFX.addDevice(shooter2, "Shooter2");
                 FaultTalonFX.addDevice(indexer, "Indexer");
-                FaultTalonFX.addDevice(arm, "Arm");
+                // FaultTalonFX.addDevice(arm, "Arm");
                 // FaultTalonFX.addDevice(roller, "Roller");
                 
                 FaultTalonFX.addDevice(swerveDrivetrainReal.getModule(0).getDriveMotor(), "Module 0 Drive");

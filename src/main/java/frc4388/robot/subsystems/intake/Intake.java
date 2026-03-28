@@ -96,19 +96,19 @@ public class Intake extends SubsystemBase {
 
         switch (mode) {
             case Extended:
-                io.setArmAngle(state, Rotations.of(IntakeConstants.ARM_LIMIT_EXTENDED.get()));
-                io.setRollerOutput(state, IntakeConstants.ROLLER_PERCENT_OUTPUT.get());
+            //     io.setArmAngle(state, Rotations.of(IntakeConstants.ARM_LIMIT_EXTENDED.get()));
+            //     io.setRollerOutput(state, IntakeConstants.ROLLER_PERCENT_OUTPUT.get());
                 break;
             case Retracted:
-                io.setArmAngle(state, Rotations.of(IntakeConstants.ARM_LIMIT_RETRACTED.get()));
-                io.setRollerOutput(state, 0);
+            //     io.setArmAngle(state, Rotations.of(IntakeConstants.ARM_LIMIT_RETRACTED.get()));
+            //     io.setRollerOutput(state, 0);
                 break;
             case Extending:
-                io.setArmAngle(state, Rotations.of(IntakeConstants.ARM_EXTEND_PERCENT_OUTPUT.get()));
+                io.armOutput(IntakeConstants.ARM_EXTEND_PERCENT_OUTPUT.get());
                 io.setRollerOutput(state, IntakeConstants.ROLLER_PERCENT_OUTPUT.get());
                 break;
             case Retracting:
-                io.setArmAngle(state, Rotations.of(IntakeConstants.ARM_RETRACT_PERCENT_OUTPUT.get()));
+                io.armOutput(IntakeConstants.ARM_RETRACT_PERCENT_OUTPUT.get());
                 io.setRollerOutput(state, 0);
                 break;
             case Bouncing:

@@ -23,7 +23,7 @@ public interface IntakeIO {
         Current armMotorCurrent = Amps.of(0);
 
         AngularVelocity armMotorVelocity = RotationsPerSecond.of(0);
-        AngularAcceleration armMotorAcceleration = RotationsPerSecondPerSecond.of(0);
+        // AngularAcceleration armMotorAcceleration = RotationsPerSecondPerSecond.of(0);
 
         // Angle shooterPitch = Rotations.of(0);
         // Angle shooterTargetPitch = Rotations.of(0);

@@ -1,16 +1,10 @@
 package frc4388.robot.subsystems.intake;
 
-import static edu.wpi.first.units.Units.Amps;
-import static edu.wpi.first.units.Units.RotationsPerSecond;
+import com.revrobotics.spark.FeedbackSensor;
+import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.config.LimitSwitchConfig.Behavior;
+import com.revrobotics.spark.config.LimitSwitchConfig.Type;
 
-import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
-import com.ctre.phoenix6.configs.MotorOutputConfigs;
-import com.ctre.phoenix6.configs.Slot0Configs;
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.signals.NeutralModeValue;
-
-import edu.wpi.first.units.measure.AngularVelocity;
-import edu.wpi.first.units.measure.Current;
 import frc4388.utility.configurable.ConfigurableDouble;
 import frc4388.utility.status.CanDevice;
 
@@ -33,7 +27,7 @@ public class IntakeConstants {
 
     public static final CanDevice ARM_ID   = new CanDevice("ARM", 20);
     public static final CanDevice ROLLER_ID   = new CanDevice("INTAKE_ROLLER", 21);
-    public static final int ARM_LIMIT_SWITCH_CHANNEL = 9;
+    // public static final int ARM_LIMIT_SWITCH_CHANNEL = 9;
         
     // Limits
 
@@ -46,7 +40,7 @@ public class IntakeConstants {
     // public static final Angle ARM_LIMIT_UPPER = Degrees.of(-90);
 
     public static final ConfigurableDouble ARM_LIMIT_RETRACTED = new ConfigurableDouble("Arm angle retracted", 0.1);
-    public static final ConfigurableDouble ARM_LIMIT_EXTENDED = new ConfigurableDouble("Arm angle extended", 0.33);
+    public static final ConfigurableDouble ARM_ssLIMIT_EXTENDED = new ConfigurableDouble("Arm angle extended", 0.33);
     public static final ConfigurableDouble ARM_EXTEND_PERCENT_OUTPUT = new ConfigurableDouble("Arm extend % output", 0.4);
     public static final ConfigurableDouble ARM_RETRACT_PERCENT_OUTPUT = new ConfigurableDouble("Arm retract % output", -0.4);
     public static final ConfigurableDouble ROLLER_PERCENT_OUTPUT = new ConfigurableDouble("Roller Percent Output", .70);
@@ -56,16 +50,16 @@ public class IntakeConstants {
     // public static final AngularVelocity ROLLER_STOP = RotationsPerSecond.of(0.0);
 
 
-    public static final Slot0Configs ARM_PID = new Slot0Configs()
-        .withKP(0.08)
-        .withKI(0.0)
-        .withKD(0.05);
+    // public static final Slot0Configs ARM_PID = new Slot0Configs()
+    //     .withKP(0.08)
+    //     .withKI(0.0)
+    //     .withKD(0.05);
 
     
 
-    public static ConfigurableDouble arm_kP = new ConfigurableDouble("ARM KP", 0.08);
-    public static ConfigurableDouble arm_kI = new ConfigurableDouble("ARM KI", 0);
-    public static ConfigurableDouble arm_kD = new ConfigurableDouble("ARM KD", 0.05);
+    // public static ConfigurableDouble arm_kP = new ConfigurableDouble("ARM KP", 0.08);
+    // public static ConfigurableDouble arm_kI = new ConfigurableDouble("ARM KI", 0);
+    // public static ConfigurableDouble arm_kD = new ConfigurableDouble("ARM KD", 0.05);
     
 
 
@@ -75,25 +69,37 @@ public class IntakeConstants {
     // public static final Angle PITCH_LIMIT_LOWER = Degrees.of(0);
     
     // Motor configs
-    public static final TalonFXConfiguration ARM_MOTOR_CONFIG = new TalonFXConfiguration()
-        .withCurrentLimits(
-            new CurrentLimitsConfigs()
-                .withStatorCurrentLimit(15) // TODO: tune???
-                .withStatorCurrentLimitEnable(true)
-            ).withMotorOutput(
-                new MotorOutputConfigs()
-                    .withNeutralMode(NeutralModeValue.Brake) // Must be break because this has to be accurate
-                    .withDutyCycleNeutralDeadband(0.04) // TODO: Figure out what this means
-    );
 
-    public static final TalonFXConfiguration ROLLER_MOTOR_CONFIG = new TalonFXConfiguration()
-        .withCurrentLimits(
-            new CurrentLimitsConfigs()
-                .withStatorCurrentLimit(40) // TODO: tune???
-                .withStatorCurrentLimitEnable(true)
-            ).withMotorOutput(
-                new MotorOutputConfigs()
-                    .withNeutralMode(NeutralModeValue.Coast) // Must be coast because this is spinny spinny
-                    .withDutyCycleNeutralDeadband(0.04) // TODO: Figure out what this means
-    );
+    public static final SparkMaxConfig ARM_MOTOR_CONFIG = new SparkMaxConfig();
+    public static final SparkMaxConfig ROLELR_MOTOR_CONFIG = new SparkMaxConfig();
+
+    static {
+        ARM_MOTOR_CONFIG.limitSwitch
+            .reverseLimitSwitchType(Type.kNormallyClosed)
+            .limitSwitchPositionSensor(FeedbackSensor.kPrimaryEncoder)
+            .forwardLimitSwitchPosition(0)
+            .forwardLimitSwitchTriggerBehavior(Behavior.kStopMovingMotorAndSetPosition);
+    }
+
+    // public static final TalonFXConfiguration ARM_MOTOR_CONFIG = new TalonFXConfiguration()
+    //     .withCurrentLimits(
+    //         new CurrentLimitsConfigs()
+    //             .withStatorCurrentLimit(15) // TODO: tune???
+    //             .withStatorCurrentLimitEnable(true)
+    //         ).withMotorOutput(
+    //             new MotorOutputConfigs()
+    //                 .withNeutralMode(NeutralModeValue.Brake) // Must be break because this has to be accurate
+    //                 .withDutyCycleNeutralDeadband(0.04) // TODO: Figure out what this means
+    // );
+
+    // public static final TalonFXConfiguration ROLLER_MOTOR_CONFIG = new TalonFXConfiguration()
+    //     .withCurrentLimits(
+    //         new CurrentLimitsConfigs()
+    //             .withStatorCurrentLimit(40) // TODO: tune???
+    //             .withStatorCurrentLimitEnable(true)
+    //         ).withMotorOutput(
+    //             new MotorOutputConfigs()
+    //                 .withNeutralMode(NeutralModeValue.Coast) // Must be coast because this is spinny spinny
+    //                 .withDutyCycleNeutralDeadband(0.04) // TODO: Figure out what this means
+    // );
 }
