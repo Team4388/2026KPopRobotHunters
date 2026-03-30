@@ -28,10 +28,14 @@ public class Intake extends SubsystemBase {
     }
 
     public enum IntakeMode {
-        Extended,
-        Retracted,
-        Extending,
+        ExtendedREMOVEME,
+        RetractedREMOVEME,
+
+        ExtendingIdle,
+        ExtendingRolling,
+
         Retracting,
+
         Idle,
         Bouncing
     }
@@ -95,22 +99,35 @@ public class Intake extends SubsystemBase {
         // getCurrentTime
 
         switch (mode) {
-            case Extended:
+            case ExtendedREMOVEME:
             //     io.setArmAngle(state, Rotations.of(IntakeConstants.ARM_LIMIT_EXTENDED.get()));
             //     io.setRollerOutput(state, IntakeConstants.ROLLER_PERCENT_OUTPUT.get());
                 break;
-            case Retracted:
+            case RetractedREMOVEME:
             //     io.setArmAngle(state, Rotations.of(IntakeConstants.ARM_LIMIT_RETRACTED.get()));
             //     io.setRollerOutput(state, 0);
                 break;
-            case Extending:
+
+            case ExtendingIdle:
                 io.armOutput(IntakeConstants.ARM_EXTEND_PERCENT_OUTPUT.get());
-                io.setRollerOutput(state, IntakeConstants.ROLLER_PERCENT_OUTPUT.get());
+                io.setRollerOutput(state, 0);
                 break;
+                
+            case ExtendingRolling:
+                io.armOutput(IntakeConstants.ARM_EXTEND_PERCENT_OUTPUT.get());
+                io.setRollerOutput(state, IntakeConstants.ARM_EXTEND_PERCENT_OUTPUT.get());
+                break;
+
             case Retracting:
                 io.armOutput(IntakeConstants.ARM_RETRACT_PERCENT_OUTPUT.get());
-                io.setRollerOutput(state, IntakeConstants.ROLLER_RETRACT_PERCENT_OUTPUT.get());
+
+                if(state.intakeEncoder.in(Rotations) > IntakeConstants.ARM_REVERSE_ROLLER_RANGE.get()) {
+                    io.setRollerOutput(state, IntakeConstants.ROLLER_RETRACT_PERCENT_OUTPUT.get());
+                } else {
+                    io.setRollerOutput(state, 0);
+                }
                 break;
+            
             case Bouncing:
                 io.setRollerOutput(state, 0);
 
@@ -129,11 +146,16 @@ public class Intake extends SubsystemBase {
                 percentOutput = Math.max(Math.min(percentOutput, IntakeConstants.INTAKE_BOUNCE_MAX_OUTPUT.get()), -IntakeConstants.INTAKE_BOUNCE_MAX_OUTPUT.get());
 
                 io.armOutput(percentOutput);
+
+                if(state.intakeEncoder.in(Rotations) > IntakeConstants.ARM_REVERSE_ROLLER_RANGE.get()) {
+                    io.setRollerOutput(state, IntakeConstants.ROLLER_RETRACT_PERCENT_OUTPUT.get());
+                } else {
+                    io.setRollerOutput(state, 0);
+                }
                 break;
             case Idle:
                 io.armOutput(0);
-                // io.setArmAngle(state, Rotations.of(IntakeConstants.ARM_LIMIT_RETRACTED.get()));
-                // io.setRollerOutput(state, 0);
+                io.setRollerOutput(state, 0);
                 break;
         }
         // if (state.retractedLimit){

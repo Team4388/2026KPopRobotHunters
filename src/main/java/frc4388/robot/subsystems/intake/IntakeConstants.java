@@ -45,6 +45,8 @@ public class IntakeConstants {
     public static final ConfigurableDouble ARM_LIMIT_EXTENDED = new ConfigurableDouble("Arm angle extended", 1.8);
     public static final ConfigurableDouble ARM_EXTEND_PERCENT_OUTPUT = new ConfigurableDouble("Arm extend % output", 0.1);
     public static final ConfigurableDouble ARM_RETRACT_PERCENT_OUTPUT = new ConfigurableDouble("Arm retract % output", -0.1);
+
+    public static final ConfigurableDouble ARM_REVERSE_ROLLER_RANGE = new ConfigurableDouble("Arm reverse roller range", 2.0);
     
     public static final ConfigurableDouble ROLLER_PERCENT_OUTPUT = new ConfigurableDouble("Roller Percent Output", .80);
     public static final ConfigurableDouble ROLLER_RETRACT_PERCENT_OUTPUT = new ConfigurableDouble("Roller Retract Output", .40);
