@@ -1,11 +1,18 @@
 package frc4388.robot.subsystems.intake;
 
+import static edu.wpi.first.units.Units.Amps;
+import static edu.wpi.first.units.Units.Rotation;
 import static edu.wpi.first.units.Units.Rotations;
+import static edu.wpi.first.units.Units.RotationsPerSecond;
+import static edu.wpi.first.units.Units.RotationsPerSecondPerSecond;
 
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.PositionDutyCycle;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.revrobotics.PersistMode;
+import com.revrobotics.ResetMode;
+import com.revrobotics.spark.SparkMax;
 
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
@@ -13,44 +20,28 @@ import edu.wpi.first.units.measure.Acceleration;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Velocity;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import frc4388.utility.compute.JankCoder;
 
 public class IntakeReal implements IntakeIO {
 
-    TalonFX m_armMotor;
-    TalonFX m_rollerMotor;
-    DigitalInput m_armLimitSwitch;
-
-    PositionDutyCycle armPosition = new PositionDutyCycle(0);
-    DutyCycleOut armPercentOutput = new DutyCycleOut(0);
+    SparkMax m_armMotor;
+    SparkMax m_rollerMotor;
+    JankCoder m_encoder;
 
     public IntakeReal(
-        DigitalInput armLimitSwitch,
-        TalonFX armMotor,
-        TalonFX rollerMotor
+        SparkMax armMotor,
+        SparkMax rollerMotor,
+        JankCoder jankCoder
     ) {
         // m_angleMotor = angleMotor;
         // m_pitchMotor = pitchMotor;
         m_armMotor = armMotor;
         m_rollerMotor = rollerMotor;
-        m_armLimitSwitch = armLimitSwitch;
+        m_encoder = jankCoder;
 
-        // Apply the configs
-        m_armMotor.getConfigurator().apply(IntakeConstants.ARM_PID);
-        m_armMotor.getConfigurator().apply(IntakeConstants.ARM_MOTOR_CONFIG);
-        m_rollerMotor.getConfigurator().apply(IntakeConstants.ROLLER_MOTOR_CONFIG);
-
-        armPosition.Slot = 0;
-        // rollerVelocity.Slot = 0;
-    }
-
-    private Angle clampAng(Angle x, Angle min, Angle max){
-        if(x.gt(max)) {
-            return max;
-        }else if(x.lt(min)) {
-            return min;
-        }else{
-            return x;
-        }
+        m_armMotor.configure(IntakeConstants.ARM_MOTOR_CONFIG, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
+        m_rollerMotor.configure(IntakeConstants.ROLELR_MOTOR_CONFIG, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
     }
 
 
@@ -59,11 +50,6 @@ public class IntakeReal implements IntakeIO {
     public void setRollerOutput(IntakeState state, double rollerOutput) {
         state.rollerTargetOutput = rollerOutput;
 
-
-        if(rollerOutput == 0) {
-            m_rollerMotor.set(0);
-            return;
-        }
         m_rollerMotor.set(rollerOutput);
     }
 
@@ -80,38 +66,12 @@ public class IntakeReal implements IntakeIO {
         Angle motorAngle = angle.times(IntakeConstants.ARM_MOTOR_GEAR_RATIO);
         
         // PositionDutyCycle posRequest = new PositionDutyCycle(motorTargetAngle);
-        m_armMotor.setControl(
-            armPosition
-                .withPosition(motorAngle)
-                .withLimitReverseMotion(!m_armLimitSwitch.get())
-            );
+        // m_armMotor.setControl(
+        //     armPosition
+        //         .withPosition(motorAngle)
+        //         .withLimitReverseMotion(!m_armLimitSwitch.get())
+        //     );
 
-    }
-
-    @Override
-    public void testSetArmAngle(IntakeState state, Angle angle){
-        state.armTargetAngle = angle;
-        Angle motorAngle = angle.times(IntakeConstants.ARM_MOTOR_GEAR_RATIO);
-
-        final TrapezoidProfile m_profile = new TrapezoidProfile(
-            new TrapezoidProfile.Constraints(80, 160)
-        );
-
-        // Final target of motorAngle rot, 0 rps
-        // Convert the Angle to a numeric degree value before creating the profile state
-        TrapezoidProfile.State m_goal = new TrapezoidProfile.State(motorAngle.in(Rotations), 0);
-        TrapezoidProfile.State m_setpoint = new TrapezoidProfile.State();
-
-        // create a position closed-loop request, voltage output, slot 0 configs
-        final PositionVoltage m_request = new PositionVoltage(0).withSlot(0);
-
-        // calculate the next profile setpoint
-        m_setpoint = m_profile.calculate(0.020, m_setpoint, m_goal);
-
-        // send the request to the device
-        m_request.Position = m_setpoint.position;
-        m_request.Velocity = m_setpoint.velocity;
-        m_armMotor.setControl(m_request);
     }
 
     @Override
@@ -120,38 +80,62 @@ public class IntakeReal implements IntakeIO {
         // m_rollerMotor.set(0);
     }
 
+    private boolean retractedLimit() {
+        return m_encoder.get() <= IntakeConstants.ARM_LIMIT_RETRACTED.get();
+    }
+    private boolean extendedLimit() {
+        return m_encoder.get() >= IntakeConstants.ARM_LIMIT_EXTENDED.get();
+    }
+
     @Override
     public void armOutput(double percentOutput){
-        m_armMotor.setControl(
-            armPercentOutput.withOutput(percentOutput)
-                .withLimitReverseMotion(!m_armLimitSwitch.get())
-            );
+
+        // if(retractedLimit()) {
+        //     percentOutput = Math.max(percentOutput, 0);
+        // } 
+        
+        if (extendedLimit()) {
+            percentOutput = Math.min(percentOutput, 0);
+        }
+
+        m_armMotor.set(percentOutput);
+
     }
 
     @Override
     public void updateInputs(IntakeState state) {
-        state.armAngle = m_armMotor.getPosition().getValue().div(IntakeConstants.ARM_MOTOR_GEAR_RATIO);
-        state.armMotorCurrent = m_armMotor.getStatorCurrent().getValue();
-        state.rollerOutput = m_rollerMotor.get();
-        state.rollerMotorCurrent = m_rollerMotor.getStatorCurrent().getValue();
-        state.retractedLimit = !m_armLimitSwitch.get();
-        
-        state.armMotorVelocity = m_armMotor.getVelocity().getValue();
-        state.armMotorAcceleration = m_armMotor.getAcceleration().getValue();
+        m_encoder.update();
 
-        if(state.retractedLimit) {
-            // Set the arm motor to be zero if the limit switch is pressed
-            m_armMotor.setPosition(0., 0); 
+
+        state.armAngle = Rotations.of(m_armMotor.getEncoder().getPosition()).div(IntakeConstants.ARM_MOTOR_GEAR_RATIO);
+        state.armMotorVelocity = RotationsPerSecond.of(m_armMotor.getEncoder().getVelocity()).div(IntakeConstants.ARM_MOTOR_GEAR_RATIO);
+        // state.armMotorAcceleration = RotationsPerSecondPerSecond.of(m_armMotor.getEncoder().ge);
+        state.armMotorCurrent = Amps.of(m_armMotor.getOutputCurrent());
+
+        state.rollerOutput = m_rollerMotor.get();
+        state.rollerMotorCurrent = Amps.of(m_rollerMotor.getOutputCurrent());
+
+        state.retractedSoftLimit = retractedLimit();
+        state.extendedSoftLimit = extendedLimit();
+
+        state.intakeEncoder = m_encoder.getRotations();
+        state.encoderConnected = m_encoder.isConnected();
+
+        state.retractedLimitSwitch = m_armMotor.getReverseLimitSwitch().isPressed();
+
+        if(state.retractedLimitSwitch) {
+            m_encoder.resetRotations();
         }
     }
 
     @Override 
     public void updateGains() {
+        m_encoder.loadRotations();
 
-        IntakeConstants.ARM_PID.kP = IntakeConstants.arm_kP.get();
-        IntakeConstants.ARM_PID.kI = IntakeConstants.arm_kI.get();
-        IntakeConstants.ARM_PID.kD = IntakeConstants.arm_kD.get();
-        m_armMotor.getConfigurator().apply(IntakeConstants.ARM_PID);
+        // IntakeConstants.ARM_PID.kP = IntakeConstants.arm_kP.get();
+        // IntakeConstants.ARM_PID.kI = IntakeConstants.arm_kI.get();
+        // IntakeConstants.ARM_PID.kD = IntakeConstants.arm_kD.get();
+        // m_armMotor.getConfigurator().apply(IntakeConstants.ARM_PID);
 
     }
 }

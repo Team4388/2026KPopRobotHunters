@@ -15,13 +15,22 @@ import edu.wpi.first.units.measure.Current;
 public interface IntakeIO {
     @AutoLog
     public class IntakeState {
-        boolean retractedLimit = false;
+        double currentBounceTime = 0;
+
+        boolean retractedLimitSwitch = false;
+        boolean extendedSoftLimit = false;
+        boolean retractedSoftLimit = false;
+
+        boolean encoderConnected = false;
+        Angle intakeEncoder = Rotations.of(0);
+
         Angle armAngle = Rotations.of(0);
         Angle armTargetAngle = Rotations.of(0);
         Current armMotorCurrent = Amps.of(0);
 
+
         AngularVelocity armMotorVelocity = RotationsPerSecond.of(0);
-        AngularAcceleration armMotorAcceleration = RotationsPerSecondPerSecond.of(0);
+        // AngularAcceleration armMotorAcceleration = RotationsPerSecondPerSecond.of(0);
 
         // Angle shooterPitch = Rotations.of(0);
         // Angle shooterTargetPitch = Rotations.of(0);

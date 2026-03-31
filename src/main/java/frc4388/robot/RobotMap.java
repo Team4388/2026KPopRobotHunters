@@ -13,6 +13,7 @@ import org.photonvision.PhotonCamera;
 
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.swerve.SwerveDrivetrain;
+import com.revrobotics.spark.SparkMax;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import frc4388.robot.constants.Constants;
@@ -33,9 +34,11 @@ import frc4388.robot.subsystems.swerve.SwerveIO;
 import frc4388.robot.subsystems.swerve.SwerveReal;
 import frc4388.robot.subsystems.vision.VisionIO;
 import frc4388.robot.subsystems.vision.VisionReal;
+import frc4388.utility.compute.JankCoder;
 import frc4388.utility.status.FaultCANCoder;
 import frc4388.utility.status.FaultPhotonCamera;
 import frc4388.utility.status.FaultPidgeon2;
+import frc4388.utility.status.FaultSparkMax;
 import frc4388.utility.status.FaultTalonFX;
 
 /**
@@ -97,18 +100,17 @@ public class RobotMap {
                 TalonFX indexer = new TalonFX(ShooterConstants.INDEXER_ID.id, Constants.CANIVORE_CANBUS);
                 
                 //Configure Intake 20,21
-                TalonFX arm = new TalonFX(IntakeConstants.ARM_ID.id, Constants.CANIVORE_CANBUS);
-                TalonFX roller = new TalonFX(IntakeConstants.ROLLER_ID.id, Constants.CANIVORE_CANBUS);
-                DigitalInput armLimitSwitch = new DigitalInput(IntakeConstants.ARM_LIMIT_SWITCH_CHANNEL);
+                SparkMax arm = new SparkMax(IntakeConstants.ARM_ID.id, com.revrobotics.spark.SparkLowLevel.MotorType.kBrushless);
+                SparkMax roller = new SparkMax(IntakeConstants.ROLLER_ID.id, com.revrobotics.spark.SparkLowLevel.MotorType.kBrushless);
+                // DigitalInput armLimitSwitch = new DigitalInput(IntakeConstants.ARM_LIMIT_SWITCH_CHANNEL);
                 // DigitalInput basinLimitSwitch = new DigitalInput(ElevatorConstants.BASIN_LIMIT_SWITCH);
                 // DigitalInput endeffectorLimitSwitch = new DigitalInput(ElevatorConstants.ENDEFFECTOR_LIMIT_SWITCH);
                 // DigitalInput IRIntakeBeam = new DigitalInput(ElevatorConstants.INTAKE_LIMIT_SWITCH);
 
-
-                // shooterIO = new ShooterIO() {};
                 shooterIO = new ShooterReal(shooter1, shooter2, indexer);
+                JankCoder armEncoder = new JankCoder(0, IntakeConstants.ARM_ENCODER_OFFSET);
 
-                intakeIO = new IntakeReal(armLimitSwitch, arm, roller);
+                intakeIO = new IntakeReal(arm, roller, armEncoder);
 
                 // Fault
                 FaultPidgeon2.addDevice(swerveDrivetrainReal.getPigeon2(), "Gyro");
@@ -117,8 +119,8 @@ public class RobotMap {
                 FaultTalonFX.addDevice(shooter1, "Shooter1");
                 FaultTalonFX.addDevice(shooter2, "Shooter2");
                 FaultTalonFX.addDevice(indexer, "Indexer");
-                FaultTalonFX.addDevice(arm, "Arm");
-                FaultTalonFX.addDevice(roller, "Roller");
+                FaultSparkMax.addDevice(arm, "Arm");
+                FaultSparkMax.addDevice(roller, "Roller");
                 
                 FaultTalonFX.addDevice(swerveDrivetrainReal.getModule(0).getDriveMotor(), "Module 0 Drive");
                 FaultTalonFX.addDevice(swerveDrivetrainReal.getModule(0).getSteerMotor(), "Module 0 Steer");

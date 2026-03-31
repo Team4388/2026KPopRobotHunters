@@ -1,9 +1,14 @@
 package frc4388.robot.subsystems.intake;
 
+import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Rotations;
+import static edu.wpi.first.units.Units.RotationsPerSecond;
+
 import java.util.function.Supplier;
 
 import org.littletonrobotics.junction.Logger;
+
+import com.ctre.phoenix6.Utils;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -23,18 +28,31 @@ public class Intake extends SubsystemBase {
     }
 
     public enum IntakeMode {
-        Extended,
-        Retracted,
-        Extending,
+        ExtendedREMOVEME,
+        RetractedREMOVEME,
+
+        ExtendingIdle,
+        ExtendingRolling,
+
         Retracting,
+
         Idle,
-        RollerStop
+        Bouncing
     }
 
     private IntakeMode mode = IntakeMode.Idle;
 
     public void setMode(IntakeMode mode) {
         this.mode = mode;
+
+        switch (mode) {
+            case Bouncing:
+                // When bounce is enabled: set the bounce timer
+                this.state.currentBounceTime = Utils.getSystemTimeSeconds() + IntakeConstants.INTAKE_BOUNCE_HALF_PERIOD.get();
+                break;
+            default:
+                break;
+        }
     }
 
     public IntakeMode getMode() {
@@ -78,27 +96,66 @@ public class Intake extends SubsystemBase {
 
         io.updateInputs(state);
 
+        // getCurrentTime
+
         switch (mode) {
-            case Extended:
-                io.setArmAngle(state, Rotations.of(IntakeConstants.ARM_LIMIT_EXTENDED.get()));
-                io.setRollerOutput(state, IntakeConstants.ROLLER_PERCENT_OUTPUT.get());
+            case ExtendedREMOVEME:
+            //     io.setArmAngle(state, Rotations.of(IntakeConstants.ARM_LIMIT_EXTENDED.get()));
+            //     io.setRollerOutput(state, IntakeConstants.ROLLER_PERCENT_OUTPUT.get());
                 break;
-            case Retracted:
-                io.setArmAngle(state, Rotations.of(IntakeConstants.ARM_LIMIT_RETRACTED.get()));
+            case RetractedREMOVEME:
+            //     io.setArmAngle(state, Rotations.of(IntakeConstants.ARM_LIMIT_RETRACTED.get()));
+            //     io.setRollerOutput(state, 0);
+                break;
+
+            case ExtendingIdle:
+                io.armOutput(IntakeConstants.ARM_EXTEND_PERCENT_OUTPUT.get());
                 io.setRollerOutput(state, 0);
                 break;
-            case Extending:
+                
+            case ExtendingRolling:
                 io.armOutput(IntakeConstants.ARM_EXTEND_PERCENT_OUTPUT.get());
                 io.setRollerOutput(state, IntakeConstants.ROLLER_PERCENT_OUTPUT.get());
                 break;
+
             case Retracting:
                 io.armOutput(IntakeConstants.ARM_RETRACT_PERCENT_OUTPUT.get());
-                io.setRollerOutput(state, 0);
+
+                if(state.intakeEncoder.in(Rotations) > IntakeConstants.ARM_REVERSE_ROLLER_RANGE.get()) {
+                    io.setRollerOutput(state, IntakeConstants.ROLLER_RETRACT_PERCENT_OUTPUT.get());
+                } else {
+                    io.setRollerOutput(state, 0);
+                }
+                break;
+            
+            case Bouncing:
+                // io.setRollerOutput(state, 0);
+
+                if(
+                    state.armMotorCurrent.in(Amps) > IntakeConstants.INTAKE_BOUNCE_CURRENT_LIMIT.get()
+                    // Math.abs(state.armMotorVelocity.in(RotationsPerSecond)) < IntakeConstants.INTAKE_BOUNCE_VELOCITY_LIMIT.get()
+                ) {
+                    System.out.println("RESET BOUNCE");
+                    this.state.currentBounceTime = Utils.getSystemTimeSeconds() + IntakeConstants.INTAKE_BOUNCE_HALF_PERIOD.get();
+                }
+
+                // Get the time delta from the last bounce time update
+                double currentTime = Utils.getSystemTimeSeconds() - state.currentBounceTime;
+                // Get the percentage through the bounce period (0 output means one half period has passed)
+                double percentOutput = (currentTime / IntakeConstants.INTAKE_BOUNCE_HALF_PERIOD.get()) * IntakeConstants.INTAKE_BOUNCE_OUTPUT.get();
+                // Clamp the output of the motor to some value
+                percentOutput = -Math.max(Math.min(percentOutput, IntakeConstants.INTAKE_BOUNCE_MAX_OUTPUT.get()), -IntakeConstants.INTAKE_BOUNCE_MAX_OUTPUT.get());
+
+                io.armOutput(percentOutput);
+
+                if(percentOutput < 0) {
+                    io.setRollerOutput(state, IntakeConstants.ROLLER_RETRACT_PERCENT_OUTPUT.get());
+                } else {
+                    io.setRollerOutput(state, 0);
+                }
                 break;
             case Idle:
-                io.stopArm();
-                break;
-            case RollerStop:
+                io.armOutput(0);
                 io.setRollerOutput(state, 0);
                 break;
         }
