@@ -4,6 +4,7 @@ import com.revrobotics.spark.FeedbackSensor;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.LimitSwitchConfig.Behavior;
 import com.revrobotics.spark.config.LimitSwitchConfig.Type;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import frc4388.utility.configurable.ConfigurableDouble;
 import frc4388.utility.status.CanDevice;
@@ -13,7 +14,7 @@ public class IntakeConstants {
 
     public static final double ARM_MOTOR_GEAR_RATIO = 125;
     public static final double ROLLER_MOTOR_GEAR_RATIO = 3;
-    public static final double ARM_ENCODER_OFFSET = -0.466;
+    public static final ConfigurableDouble ARM_ENCODER_OFFSET = new ConfigurableDouble("Arm Encoder Offset", 0);
 
 
 
@@ -42,11 +43,11 @@ public class IntakeConstants {
     // public static final Angle ARM_LIMIT_UPPER = Degrees.of(-90);
 
     public static final ConfigurableDouble ARM_LIMIT_RETRACTED = new ConfigurableDouble("Arm angle retracted", 0.);
-    public static final ConfigurableDouble ARM_LIMIT_EXTENDED = new ConfigurableDouble("Arm angle extended", 1.8);
-    public static final ConfigurableDouble ARM_EXTEND_PERCENT_OUTPUT = new ConfigurableDouble("Arm extend % output", 0.1);
-    public static final ConfigurableDouble ARM_RETRACT_PERCENT_OUTPUT = new ConfigurableDouble("Arm retract % output", -0.1);
+    public static final ConfigurableDouble ARM_LIMIT_EXTENDED = new ConfigurableDouble("Arm angle extended", 1.5);
+    public static final ConfigurableDouble ARM_EXTEND_PERCENT_OUTPUT = new ConfigurableDouble("Arm extend % output", 0.5);
+    public static final ConfigurableDouble ARM_RETRACT_PERCENT_OUTPUT = new ConfigurableDouble("Arm retract % output", -0.5);
 
-    public static final ConfigurableDouble ARM_REVERSE_ROLLER_RANGE = new ConfigurableDouble("Arm reverse roller range", 2.0);
+    public static final ConfigurableDouble ARM_REVERSE_ROLLER_RANGE = new ConfigurableDouble("Arm reverse roller range", 1.17);
     
     public static final ConfigurableDouble ROLLER_PERCENT_OUTPUT = new ConfigurableDouble("Roller Percent Output", .80);
     public static final ConfigurableDouble ROLLER_RETRACT_PERCENT_OUTPUT = new ConfigurableDouble("Roller Retract Output", .40);
@@ -90,6 +91,11 @@ public class IntakeConstants {
             .reverseLimitSwitchType(Type.kNormallyClosed)
             .reverseLimitSwitchPosition(0)
             .reverseLimitSwitchTriggerBehavior(Behavior.kStopMovingMotorAndSetPosition);
+
+        ARM_MOTOR_CONFIG.idleMode(IdleMode.kBrake);
+
+        
+        ROLELR_MOTOR_CONFIG.idleMode(IdleMode.kCoast);
     }
 
     // public static final TalonFXConfiguration ARM_MOTOR_CONFIG = new TalonFXConfiguration()

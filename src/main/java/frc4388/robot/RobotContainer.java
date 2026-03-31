@@ -378,11 +378,14 @@ public class RobotContainer {
         new JoystickButton(getDeadbandedOperatorController(), XboxController.Y_BUTTON)
             .onTrue(new InstantCommand(() -> {
                 m_robotIntake.setMode(IntakeMode.Retracting);
+            }))
+            .onFalse(new InstantCommand(() -> {
+                m_robotIntake.setMode(IntakeMode.Idle);
             }));
 
         
 
-        new Trigger(() -> getDeadbandedDriverController().getPOV() == 90)
+        new Trigger(() -> getDeadbandedOperatorController().getPOV() == 90)
             .onTrue(new InstantCommand(() -> {
                 m_robotIntake.setMode(IntakeMode.ExtendingIdle);
             }))
@@ -390,13 +393,24 @@ public class RobotContainer {
                 m_robotIntake.setMode(IntakeMode.Idle);
             }));
 
-        new Trigger(() -> getDeadbandedDriverController().getPOV() == 270)
+        new Trigger(() -> getDeadbandedOperatorController().getPOV() == 270)
             .onTrue(new InstantCommand(() -> {
                 m_robotIntake.setMode(IntakeMode.Retracting);
             }))
             .onFalse(new InstantCommand(() -> {
                 m_robotIntake.setMode(IntakeMode.Idle);
             }));
+
+            
+        new Trigger(() -> getDeadbandedOperatorController().getPOV() == 0)
+            .onTrue(new InstantCommand(() -> {
+                m_robotIntake.setMode(IntakeMode.Bouncing);
+            }))
+            .onFalse(new InstantCommand(() -> {
+                m_robotIntake.setMode(IntakeMode.Idle);
+            }));
+
+
             // .onFalse(new InstantCommand(() -> {
             //     m_robotIntake.setMode(IntakeMode.Idle);
             // }));
