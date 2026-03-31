@@ -7,37 +7,37 @@
         {
           "type": "named",
           "data": {
-            "name": "Intake Extended"
+            "name": "Climber Extended"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.2
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Bump test"
+            "pathName": "LeftTower"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.2
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "BumpOffsetForward"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "BumpToCenter"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "HubFarLeft-NeutralZone 2-2"
+            "name": "Climber Retracted"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "Spring Break Tests",
+  "folder": null,
   "choreoAuto": false
 }
