@@ -37,6 +37,7 @@ public class Intake extends SubsystemBase {
         Retracting,
 
         Idle,
+        RectractTorque,
         Bouncing
     }
 
@@ -85,6 +86,8 @@ public class Intake extends SubsystemBase {
     //     return FieldZone.InShootZone;
     // }
 
+
+
     @Override
     public void periodic() {
         // FaultReporter.register(this); // TODO Implement fault reporter
@@ -93,6 +96,7 @@ public class Intake extends SubsystemBase {
 
         Logger.processInputs("Intake", state);
         Logger.recordOutput("Intake/IntakeState", this.mode);
+
 
         io.updateInputs(state);
 
@@ -147,6 +151,19 @@ public class Intake extends SubsystemBase {
 
                 io.armOutput(percentOutput);
 
+                if(state.intakeEncoder.in(Rotations) > IntakeConstants.ARM_REVERSE_ROLLER_RANGE.get()) {
+                    io.setRollerOutput(state, IntakeConstants.ROLLER_RETRACT_PERCENT_OUTPUT.get());
+                } else {
+                    io.setRollerOutput(state, 0);
+                }
+                break;
+            case RectractTorque:
+                io.setRollerOutput(state, IntakeConstants.ROLLER_RETRACT_PERCENT_OUTPUT.get());
+                if (state.armMotorCurrent.in(Amps) < IntakeConstants.INTAKE_SQUEEZE_CURRENT_LIMIT.get()){
+                    io.armOutput(IntakeConstants.ARM_SQUEEZE_PERCENT_OUTPUT.get());
+                } else {
+                    io.armOutput(IntakeConstants.ARM_REDUCED_SQUEEZE_PERCENT_OUTPUT.get());
+                }
                 if(state.intakeEncoder.in(Rotations) > IntakeConstants.ARM_REVERSE_ROLLER_RANGE.get()) {
                     io.setRollerOutput(state, IntakeConstants.ROLLER_RETRACT_PERCENT_OUTPUT.get());
                 } else {
