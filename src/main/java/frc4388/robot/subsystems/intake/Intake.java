@@ -119,7 +119,7 @@ public class Intake extends SubsystemBase {
                 
             case ExtendingRolling:
                 io.armOutput(IntakeConstants.ARM_EXTEND_PERCENT_OUTPUT.get());
-                io.setRollerOutput(state, IntakeConstants.ARM_EXTEND_PERCENT_OUTPUT.get());
+                io.setRollerOutput(state, IntakeConstants.ROLLER_PERCENT_OUTPUT.get());
                 break;
 
             case Retracting:
@@ -133,12 +133,13 @@ public class Intake extends SubsystemBase {
                 break;
             
             case Bouncing:
-                io.setRollerOutput(state, 0);
+                // io.setRollerOutput(state, 0);
 
                 if(
-                    state.armMotorCurrent.in(Amps) < IntakeConstants.INTAKE_BOUNCE_CURRENT_LIMIT.get() &&
-                    state.armMotorVelocity.in(RotationsPerSecond) < IntakeConstants.INTAKE_BOUNCE_VELOCITY_LIMIT.get()
+                    state.armMotorCurrent.in(Amps) > IntakeConstants.INTAKE_BOUNCE_CURRENT_LIMIT.get()
+                    // Math.abs(state.armMotorVelocity.in(RotationsPerSecond)) < IntakeConstants.INTAKE_BOUNCE_VELOCITY_LIMIT.get()
                 ) {
+                    System.out.println("RESET BOUNCE");
                     this.state.currentBounceTime = Utils.getSystemTimeSeconds() + IntakeConstants.INTAKE_BOUNCE_HALF_PERIOD.get();
                 }
 
@@ -147,11 +148,11 @@ public class Intake extends SubsystemBase {
                 // Get the percentage through the bounce period (0 output means one half period has passed)
                 double percentOutput = (currentTime / IntakeConstants.INTAKE_BOUNCE_HALF_PERIOD.get()) * IntakeConstants.INTAKE_BOUNCE_OUTPUT.get();
                 // Clamp the output of the motor to some value
-                percentOutput = Math.max(Math.min(percentOutput, IntakeConstants.INTAKE_BOUNCE_MAX_OUTPUT.get()), -IntakeConstants.INTAKE_BOUNCE_MAX_OUTPUT.get());
+                percentOutput = -Math.max(Math.min(percentOutput, IntakeConstants.INTAKE_BOUNCE_MAX_OUTPUT.get()), -IntakeConstants.INTAKE_BOUNCE_MAX_OUTPUT.get());
 
                 io.armOutput(percentOutput);
 
-                if(state.intakeEncoder.in(Rotations) > IntakeConstants.ARM_REVERSE_ROLLER_RANGE.get()) {
+                if(percentOutput < 0) {
                     io.setRollerOutput(state, IntakeConstants.ROLLER_RETRACT_PERCENT_OUTPUT.get());
                 } else {
                     io.setRollerOutput(state, 0);

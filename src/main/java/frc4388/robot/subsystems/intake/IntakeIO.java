@@ -20,6 +20,8 @@ public interface IntakeIO {
         boolean retractedLimitSwitch = false;
         boolean extendedSoftLimit = false;
         boolean retractedSoftLimit = false;
+
+        boolean encoderConnected = false;
         Angle intakeEncoder = Rotations.of(0);
 
         Angle armAngle = Rotations.of(0);

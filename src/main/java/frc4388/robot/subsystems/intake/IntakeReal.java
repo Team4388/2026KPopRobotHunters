@@ -119,6 +119,8 @@ public class IntakeReal implements IntakeIO {
         state.extendedSoftLimit = extendedLimit();
 
         state.intakeEncoder = m_encoder.getRotations();
+        state.encoderConnected = m_encoder.isConnected();
+
         state.retractedLimitSwitch = m_armMotor.getReverseLimitSwitch().isPressed();
 
         if(state.retractedLimitSwitch) {
@@ -128,6 +130,7 @@ public class IntakeReal implements IntakeIO {
 
     @Override 
     public void updateGains() {
+        m_encoder.loadRotations();
 
         // IntakeConstants.ARM_PID.kP = IntakeConstants.arm_kP.get();
         // IntakeConstants.ARM_PID.kI = IntakeConstants.arm_kI.get();
