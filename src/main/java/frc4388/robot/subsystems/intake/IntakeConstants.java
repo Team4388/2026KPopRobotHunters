@@ -25,6 +25,11 @@ public class IntakeConstants {
     public static final ConfigurableDouble INTAKE_BOUNCE_VELOCITY_LIMIT = new ConfigurableDouble("Intake Bounce Velocity Limit", 4);
 
 
+    //squeeze constants
+    public static final ConfigurableDouble INTAKE_SQUEEZE_CURRENT_LIMIT = new ConfigurableDouble("Intake Squeeze Current Limit", 20);
+    public static final ConfigurableDouble ARM_SQUEEZE_PERCENT_OUTPUT = new ConfigurableDouble("Arm squeeze % output", -0.1);
+    public static final ConfigurableDouble ARM_REDUCED_SQUEEZE_PERCENT_OUTPUT = new ConfigurableDouble("Arm squeeze % output", -0.02);
+
 
     //IDs
 
