@@ -21,17 +21,18 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Velocity;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import frc4388.robot.subsystems.shooter.ShooterConstants;
 import frc4388.utility.compute.JankCoder;
 
 public class IntakeReal implements IntakeIO {
 
     SparkMax m_armMotor;
-    SparkMax m_rollerMotor;
+    TalonFX m_rollerMotor;
     JankCoder m_encoder;
 
     public IntakeReal(
         SparkMax armMotor,
-        SparkMax rollerMotor,
+        TalonFX rollerMotor,
         JankCoder jankCoder
     ) {
         // m_angleMotor = angleMotor;
@@ -41,7 +42,7 @@ public class IntakeReal implements IntakeIO {
         m_encoder = jankCoder;
 
         m_armMotor.configure(IntakeConstants.ARM_MOTOR_CONFIG, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
-        m_rollerMotor.configure(IntakeConstants.ROLELR_MOTOR_CONFIG, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
+        m_rollerMotor.getConfigurator().apply(IntakeConstants.ROLLER_MOTOR_CONFIG);
     }
 
 
@@ -113,7 +114,7 @@ public class IntakeReal implements IntakeIO {
         state.armMotorCurrent = Amps.of(m_armMotor.getOutputCurrent());
 
         state.rollerOutput = m_rollerMotor.get();
-        state.rollerMotorCurrent = Amps.of(m_rollerMotor.getOutputCurrent());
+        // state.rollerMotorCurrent = Amps.of(m_rollerMotor.getOutputCurrent());
 
         state.retractedSoftLimit = retractedLimit();
         state.extendedSoftLimit = extendedLimit();
