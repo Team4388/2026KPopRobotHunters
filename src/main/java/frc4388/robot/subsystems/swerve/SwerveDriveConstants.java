@@ -67,16 +67,16 @@ public final class SwerveDriveConstants {
 
     // Operation
     public static final double FORWARD_OFFSET = 90; // 0, 90, 180, 270
+    public static ConfigurableDouble FAR_OFFSET = new ConfigurableDouble("Far Offset", 0.05); // degrees to add to the angle when we are far away, to account for camera misalignment. TODO: find value.
 
     public static final boolean DRIFT_CORRECTION_ENABLED = true;
     public static final boolean INVERT_X = false;
     public static final boolean INVERT_Y = true;
     public static final boolean INVERT_ROTATION = false;
 
-    public static ConfigurableDouble FAR_OFFSET = new ConfigurableDouble("Far Offset", 0.05);
     // public static final Trim POINTLESS_TRIM = new Trim("Pointless Trim", Double.MAX_VALUE, Double.MIN_VALUE, 0.1, 0);
 
-    public static final class ModuleSpecificConstants { //2026
+    private static final class ModuleSpecificConstants { //2025
         //Front Left
         private static final Angle FRONT_LEFT_ENCODER_OFFSET = Rotations.of(0.49707+0.350-0.03+0.0134+0.06-0.043);
         private static final boolean FRONT_LEFT_DRIVE_MOTOR_INVERTED = false;
@@ -166,6 +166,7 @@ public final class SwerveDriveConstants {
         public static final ConfigurableDouble AIM_kP = new ConfigurableDouble("Aim kP", 12);
         public static final ConfigurableDouble AIM_kI = new ConfigurableDouble("Aim kI", 0);
         public static final ConfigurableDouble AIM_kD = new ConfigurableDouble("Aim kD", 0.1);
+        public static final ConfigurableDouble HOLD_POSITION_kP = new ConfigurableDouble("Hold Position kP", 15);
         // public static final Gains AIM_GAINS = new Gains(2.5, 0, 0.1);
     }
 

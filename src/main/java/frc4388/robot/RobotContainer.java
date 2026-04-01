@@ -404,7 +404,7 @@ public class RobotContainer {
             
         new Trigger(() -> getDeadbandedOperatorController().getPOV() == 0)
             .onTrue(new InstantCommand(() -> {
-                m_robotIntake.setMode(IntakeMode.Bouncing);
+                m_robotIntake.setMode(IntakeMode.RectractTorque);
             }))
             .onFalse(new InstantCommand(() -> {
                 m_robotIntake.setMode(IntakeMode.Idle);

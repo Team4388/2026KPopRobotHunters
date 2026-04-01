@@ -26,9 +26,10 @@ public class IntakeConstants {
 
 
     //squeeze constants
-    public static final ConfigurableDouble INTAKE_SQUEEZE_CURRENT_LIMIT = new ConfigurableDouble("Intake Squeeze Current Limit", 20);
+    public static final ConfigurableDouble INTAKE_SQUEEZE_CURRENT_LOWER_THRESHOLD = new ConfigurableDouble("Intake Squeeze Current LOWER THRESHOLD", 20);
+    public static final ConfigurableDouble INTAKE_SQUEEZE_CURRENT_UPPER_THRESHOLD = new ConfigurableDouble("Intake Squeeze Current UPPER THRESHOLD", 25);
     public static final ConfigurableDouble ARM_SQUEEZE_PERCENT_OUTPUT = new ConfigurableDouble("Arm squeeze % output", -0.1);
-    public static final ConfigurableDouble ARM_REDUCED_SQUEEZE_PERCENT_OUTPUT = new ConfigurableDouble("Arm squeeze % output", -0.02);
+    public static final ConfigurableDouble ARM_REDUCED_SQUEEZE_PERCENT_OUTPUT = new ConfigurableDouble("Arm reduce squeeze % output", -0.02);
 
 
     //IDs

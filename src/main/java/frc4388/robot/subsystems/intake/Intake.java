@@ -40,6 +40,7 @@ public class Intake extends SubsystemBase {
         RectractTorque,
         Bouncing
     }
+    private boolean overCompressed = false;
 
     private IntakeMode mode = IntakeMode.Idle;
 
@@ -87,7 +88,6 @@ public class Intake extends SubsystemBase {
     // }
 
 
-
     @Override
     public void periodic() {
         // FaultReporter.register(this); // TODO Implement fault reporter
@@ -99,6 +99,14 @@ public class Intake extends SubsystemBase {
 
 
         io.updateInputs(state);
+
+        if (state.armMotorCurrent.in(Amps) < IntakeConstants.INTAKE_SQUEEZE_CURRENT_LOWER_THRESHOLD.get()){
+            overCompressed = false;
+        } else if (state.armMotorCurrent.in(Amps) > IntakeConstants.INTAKE_SQUEEZE_CURRENT_UPPER_THRESHOLD.get()) {
+            overCompressed = true;
+        }
+
+        Logger.recordOutput("overCompressed", overCompressed);
 
         // getCurrentTime
 
@@ -160,9 +168,9 @@ public class Intake extends SubsystemBase {
                 break;
             case RectractTorque:
                 io.setRollerOutput(state, IntakeConstants.ROLLER_RETRACT_PERCENT_OUTPUT.get());
-                if (state.armMotorCurrent.in(Amps) < IntakeConstants.INTAKE_SQUEEZE_CURRENT_LIMIT.get()){
+                if (!overCompressed){
                     io.armOutput(IntakeConstants.ARM_SQUEEZE_PERCENT_OUTPUT.get());
-                } else {
+                } else if (overCompressed) {
                     io.armOutput(IntakeConstants.ARM_REDUCED_SQUEEZE_PERCENT_OUTPUT.get());
                 }
                 if(state.intakeEncoder.in(Rotations) > IntakeConstants.ARM_REVERSE_ROLLER_RANGE.get()) {
