@@ -101,7 +101,7 @@ public class RobotMap {
                 
                 //Configure Intake 20,21
                 SparkMax arm = new SparkMax(IntakeConstants.ARM_ID.id, com.revrobotics.spark.SparkLowLevel.MotorType.kBrushless);
-                SparkMax roller = new SparkMax(IntakeConstants.ROLLER_ID.id, com.revrobotics.spark.SparkLowLevel.MotorType.kBrushless);
+                TalonFX roller = new TalonFX(IntakeConstants.ROLLER_ID.id, Constants.CANIVORE_CANBUS);
                 // DigitalInput armLimitSwitch = new DigitalInput(IntakeConstants.ARM_LIMIT_SWITCH_CHANNEL);
                 // DigitalInput basinLimitSwitch = new DigitalInput(ElevatorConstants.BASIN_LIMIT_SWITCH);
                 // DigitalInput endeffectorLimitSwitch = new DigitalInput(ElevatorConstants.ENDEFFECTOR_LIMIT_SWITCH);
@@ -120,7 +120,7 @@ public class RobotMap {
                 FaultTalonFX.addDevice(shooter2, "Shooter2");
                 FaultTalonFX.addDevice(indexer, "Indexer");
                 FaultSparkMax.addDevice(arm, "Arm");
-                FaultSparkMax.addDevice(roller, "Roller");
+                FaultTalonFX.addDevice(roller, "Roller");
                 
                 FaultTalonFX.addDevice(swerveDrivetrainReal.getModule(0).getDriveMotor(), "Module 0 Drive");
                 FaultTalonFX.addDevice(swerveDrivetrainReal.getModule(0).getSteerMotor(), "Module 0 Steer");

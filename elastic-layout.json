@@ -8,10 +8,10 @@
         "layouts": [
           {
             "title": "Tag Processed",
-            "x": 896.0,
+            "x": 384.0,
             "y": 0.0,
             "width": 256.0,
-            "height": 384.0,
+            "height": 256.0,
             "type": "List Layout",
             "properties": {
               "label_position": "TOP"
@@ -56,10 +56,26 @@
         ],
         "containers": [
           {
-            "title": "RetractedLimit",
-            "x": 512.0,
+            "title": "MatchTime",
+            "x": 0.0,
             "y": 0.0,
-            "width": 256.0,
+            "width": 384.0,
+            "height": 256.0,
+            "type": "Match Time",
+            "properties": {
+              "topic": "/AdvantageKit/DriverStation/MatchTime",
+              "period": 0.06,
+              "data_type": "double",
+              "time_display_mode": "Minutes and Seconds",
+              "red_start_time": 15,
+              "yellow_start_time": 30
+            }
+          },
+          {
+            "title": "RetractedLimit",
+            "x": 0.0,
+            "y": 384.0,
+            "width": 128.0,
             "height": 128.0,
             "type": "Boolean Box",
             "properties": {
@@ -74,9 +90,9 @@
           },
           {
             "title": "Auto Chooser",
-            "x": 896.0,
-            "y": 384.0,
-            "width": 256.0,
+            "x": 1024.0,
+            "y": 256.0,
+            "width": 384.0,
             "height": 128.0,
             "type": "ComboBox Chooser",
             "properties": {
@@ -87,9 +103,9 @@
           },
           {
             "title": "Roller Percent Output",
-            "x": 512.0,
+            "x": 0.0,
             "y": 256.0,
-            "width": 384.0,
+            "width": 256.0,
             "height": 128.0,
             "type": "Number Slider",
             "properties": {
@@ -104,8 +120,8 @@
           },
           {
             "title": "Shooter OVERRIDE Velocity",
-            "x": 768.0,
-            "y": 0.0,
+            "x": 128.0,
+            "y": 384.0,
             "width": 128.0,
             "height": 128.0,
             "type": "Text Display",
@@ -118,8 +134,8 @@
           },
           {
             "title": "TRIM SHOOTER SPEED",
-            "x": 512.0,
-            "y": 384.0,
+            "x": 256.0,
+            "y": 256.0,
             "width": 384.0,
             "height": 128.0,
             "type": "Number Slider",
@@ -135,8 +151,8 @@
           },
           {
             "title": "Mode",
-            "x": 512.0,
-            "y": 128.0,
+            "x": 256.0,
+            "y": 384.0,
             "width": 384.0,
             "height": 128.0,
             "type": "Text Display",
@@ -148,49 +164,58 @@
             }
           },
           {
-            "title": "IsActive",
-            "x": 0.0,
-            "y": 0.0,
-            "width": 384.0,
-            "height": 256.0,
-            "type": "Boolean Box",
-            "properties": {
-              "topic": "/AdvantageKit/RealOutputs/HubShift/IsActive",
-              "period": 0.06,
-              "data_type": "boolean",
-              "true_color": 4283215696,
-              "false_color": 4294198070,
-              "true_icon": "None",
-              "false_icon": "None"
-            }
-          },
-          {
-            "title": "RemainingInShift",
-            "x": 0.0,
-            "y": 256.0,
-            "width": 384.0,
-            "height": 128.0,
-            "type": "Match Time",
-            "properties": {
-              "topic": "/AdvantageKit/RealOutputs/HubShift/RemainingInShift",
-              "period": 0.06,
-              "data_type": "double",
-              "time_display_mode": "Minutes and Seconds",
-              "red_start_time": 15,
-              "yellow_start_time": 30
-            }
-          },
-          {
-            "title": "Phase",
-            "x": 0.0,
-            "y": 384.0,
-            "width": 384.0,
+            "title": "Time to rev",
+            "x": 768.0,
+            "y": 128.0,
+            "width": 256.0,
             "height": 128.0,
             "type": "Large Text Display",
             "properties": {
-              "topic": "/AdvantageKit/RealOutputs/HubShift/Phase",
+              "topic": "/AdvantageKit/RealOutputs/Time to rev",
               "period": 0.06,
-              "data_type": "string"
+              "data_type": "double"
+            }
+          },
+          {
+            "title": "Arm angle extended",
+            "x": 1152.0,
+            "y": 128.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/SmartDashboard/Arm angle extended",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": true
+            }
+          },
+          {
+            "title": "Current",
+            "x": 640.0,
+            "y": 0.0,
+            "width": 128.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/SmartDashboard/Current",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": false
+            }
+          },
+          {
+            "title": "Position",
+            "x": 768.0,
+            "y": 0.0,
+            "width": 128.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/SmartDashboard/Position",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": false
             }
           }
         ]
@@ -530,8 +555,8 @@
           },
           {
             "title": "Shooter Idle max current",
-            "x": 1024.0,
-            "y": 384.0,
+            "x": 384.0,
+            "y": 512.0,
             "width": 256.0,
             "height": 128.0,
             "type": "Text Display",
@@ -558,8 +583,8 @@
           },
           {
             "title": "Shooter OVERRIDE Velocity",
-            "x": 1024.0,
-            "y": 256.0,
+            "x": 640.0,
+            "y": 512.0,
             "width": 256.0,
             "height": 128.0,
             "type": "Text Display",
@@ -579,44 +604,285 @@
         "layouts": [],
         "containers": [
           {
-            "title": "Stalled Motor: ",
-            "x": 512.0,
-            "y": 128.0,
-            "width": 384.0,
+            "title": "Auto Chooser",
+            "x": 0.0,
+            "y": 0.0,
+            "width": 640.0,
+            "height": 768.0,
+            "type": "ComboBox Chooser",
+            "properties": {
+              "topic": "/SmartDashboard/Auto Chooser",
+              "period": 0.06,
+              "sort_options": false
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "ARM",
+      "grid_layout": {
+        "layouts": [],
+        "containers": [
+          {
+            "title": "IntakeState",
+            "x": 640.0,
+            "y": 256.0,
+            "width": 256.0,
             "height": 128.0,
             "type": "Text Display",
             "properties": {
-              "topic": "/AdvantageKit/RealOutputs/Stalled Motor: ",
+              "topic": "/AdvantageKit/RealOutputs/Intake/IntakeState",
               "period": 0.06,
               "data_type": "string",
               "show_submit_button": false
             }
           },
           {
-            "title": "Shooter idle % output",
-            "x": 128.0,
+            "title": "ArmAngle",
+            "x": 256.0,
+            "y": 128.0,
+            "width": 128.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/AdvantageKit/Intake/ArmAngle",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": false
+            }
+          },
+          {
+            "title": "IntakeEncoder",
+            "x": 256.0,
+            "y": 0.0,
+            "width": 128.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/AdvantageKit/Intake/IntakeEncoder",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": false
+            }
+          },
+          {
+            "title": "RetractedLimitSwitch",
+            "x": 0.0,
+            "y": 0.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Boolean Box",
+            "properties": {
+              "topic": "/AdvantageKit/Intake/RetractedLimitSwitch",
+              "period": 0.06,
+              "data_type": "boolean",
+              "true_color": 4283215696,
+              "false_color": 4294198070,
+              "true_icon": "None",
+              "false_icon": "None"
+            }
+          },
+          {
+            "title": "Roller Retract Output",
+            "x": 384.0,
+            "y": 384.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/SmartDashboard/Roller Retract Output",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": false
+            }
+          },
+          {
+            "title": "Roller Percent Output",
+            "x": 384.0,
             "y": 256.0,
             "width": 256.0,
             "height": 128.0,
             "type": "Text Display",
             "properties": {
-              "topic": "/SmartDashboard/Shooter idle % output",
+              "topic": "/SmartDashboard/Roller Percent Output",
               "period": 0.06,
               "data_type": "double",
               "show_submit_button": true
             }
           },
           {
-            "title": "Auto Chooser",
-            "x": 512.0,
-            "y": 256.0,
-            "width": 384.0,
+            "title": "Arm extend % output",
+            "x": 384.0,
+            "y": 0.0,
+            "width": 256.0,
             "height": 128.0,
-            "type": "ComboBox Chooser",
+            "type": "Text Display",
             "properties": {
-              "topic": "/SmartDashboard/Auto Chooser",
+              "topic": "/SmartDashboard/Arm extend % output",
               "period": 0.06,
-              "sort_options": false
+              "data_type": "double",
+              "show_submit_button": true
+            }
+          },
+          {
+            "title": "Arm retract % output",
+            "x": 384.0,
+            "y": 128.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/SmartDashboard/Arm retract % output",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": true
+            }
+          },
+          {
+            "title": "RetractedSoftLimit",
+            "x": 0.0,
+            "y": 256.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Boolean Box",
+            "properties": {
+              "topic": "/AdvantageKit/Intake/RetractedSoftLimit",
+              "period": 0.06,
+              "data_type": "boolean",
+              "true_color": 4283215696,
+              "false_color": 4294198070,
+              "true_icon": "None",
+              "false_icon": "None"
+            }
+          },
+          {
+            "title": "ExtendedSoftLimit",
+            "x": 0.0,
+            "y": 128.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Boolean Box",
+            "properties": {
+              "topic": "/AdvantageKit/Intake/ExtendedSoftLimit",
+              "period": 0.06,
+              "data_type": "boolean",
+              "true_color": 4283215696,
+              "false_color": 4294198070,
+              "true_icon": "None",
+              "false_icon": "None"
+            }
+          },
+          {
+            "title": "Arm reverse roller range",
+            "x": 640.0,
+            "y": 0.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/SmartDashboard/Arm reverse roller range",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": true
+            }
+          },
+          {
+            "title": "Arm angle extended",
+            "x": 640.0,
+            "y": 128.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/SmartDashboard/Arm angle extended",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": true
+            }
+          },
+          {
+            "title": "Arm Encoder Offset",
+            "x": 0.0,
+            "y": 384.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/SmartDashboard/Arm Encoder Offset",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": false
+            }
+          },
+          {
+            "title": "Bounce Half Period",
+            "x": 896.0,
+            "y": 0.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/SmartDashboard/Bounce Half Period",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": true
+            }
+          },
+          {
+            "title": "Bounce Max Output",
+            "x": 896.0,
+            "y": 128.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/SmartDashboard/Bounce Max Output",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": true
+            }
+          },
+          {
+            "title": "Bounce Output",
+            "x": 896.0,
+            "y": 256.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/SmartDashboard/Bounce Output",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": true
+            }
+          },
+          {
+            "title": "Intake Bounce Current Limit",
+            "x": 896.0,
+            "y": 384.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/SmartDashboard/Intake Bounce Current Limit",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": true
+            }
+          },
+          {
+            "title": "Intake Bounce Velocity Limit",
+            "x": 640.0,
+            "y": 384.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/SmartDashboard/Intake Bounce Velocity Limit",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": true
             }
           }
         ]

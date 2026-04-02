@@ -37,8 +37,10 @@ public class Intake extends SubsystemBase {
         Retracting,
 
         Idle,
+        RectractTorque,
         Bouncing
     }
+    private boolean overCompressed = false;
 
     private IntakeMode mode = IntakeMode.Idle;
 
@@ -85,6 +87,7 @@ public class Intake extends SubsystemBase {
     //     return FieldZone.InShootZone;
     // }
 
+
     @Override
     public void periodic() {
         // FaultReporter.register(this); // TODO Implement fault reporter
@@ -94,7 +97,16 @@ public class Intake extends SubsystemBase {
         Logger.processInputs("Intake", state);
         Logger.recordOutput("Intake/IntakeState", this.mode);
 
+
         io.updateInputs(state);
+
+        if (state.armMotorCurrent.in(Amps) < IntakeConstants.INTAKE_SQUEEZE_CURRENT_LOWER_THRESHOLD.get()){
+            overCompressed = false;
+        } else if (state.armMotorCurrent.in(Amps) > IntakeConstants.INTAKE_SQUEEZE_CURRENT_UPPER_THRESHOLD.get()) {
+            overCompressed = true;
+        }
+
+        Logger.recordOutput("overCompressed", overCompressed);
 
         // getCurrentTime
 
@@ -149,6 +161,19 @@ public class Intake extends SubsystemBase {
                 io.armOutput(percentOutput);
 
                 if(percentOutput < 0) {
+                    io.setRollerOutput(state, IntakeConstants.ROLLER_RETRACT_PERCENT_OUTPUT.get());
+                } else {
+                    io.setRollerOutput(state, 0);
+                }
+                break;
+            case RectractTorque:
+                io.setRollerOutput(state, IntakeConstants.ROLLER_RETRACT_PERCENT_OUTPUT.get());
+                if (!overCompressed){
+                    io.armOutput(IntakeConstants.ARM_SQUEEZE_PERCENT_OUTPUT.get());
+                } else if (overCompressed) {
+                    io.armOutput(IntakeConstants.ARM_REDUCED_SQUEEZE_PERCENT_OUTPUT.get());
+                }
+                if(state.intakeEncoder.in(Rotations) > IntakeConstants.ARM_REVERSE_ROLLER_RANGE.get()) {
                     io.setRollerOutput(state, IntakeConstants.ROLLER_RETRACT_PERCENT_OUTPUT.get());
                 } else {
                     io.setRollerOutput(state, 0);
