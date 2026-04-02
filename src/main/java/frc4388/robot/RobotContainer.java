@@ -415,17 +415,17 @@ public class RobotContainer {
             //     m_robotIntake.setMode(IntakeMode.Idle);
             // }));
 
-        new JoystickButton(getDeadbandedOperatorController(), XboxController.START_BUTTON)
-            .whileTrue(
-                new PathPlannerAuto("Right_AutoClimb")
-            )
-            .onFalse(new InstantCommand(() -> m_robotSwerveDrive.softStop(), m_robotSwerveDrive));
+        // new JoystickButton(getDeadbandedOperatorController(), XboxController.START_BUTTON)
+        //     .whileTrue(
+        //         new PathPlannerAuto("Right_AutoClimb")
+        //     )
+        //     .onFalse(new InstantCommand(() -> m_robotSwerveDrive.softStop(), m_robotSwerveDrive));
 
-        new JoystickButton(getDeadbandedOperatorController(), XboxController.BACK_BUTTON)
-            .whileTrue(
-                new PathPlannerAuto("Left_AutoClimb")
-            )
-            .onFalse(new InstantCommand(() -> m_robotSwerveDrive.softStop(), m_robotSwerveDrive));
+        // new JoystickButton(getDeadbandedOperatorController(), XboxController.BACK_BUTTON)
+        //     .whileTrue(
+        //         new PathPlannerAuto("Left_AutoClimb")
+        //     )
+        //     .onFalse(new InstantCommand(() -> m_robotSwerveDrive.softStop(), m_robotSwerveDrive));
 
         // new JoystickButton(getDeadbandedOperatorController(), XboxController.B_BUTTON)
         //     .onTrue(new InstantCommand(() -> {
