@@ -44,6 +44,6 @@ public class ClimberConstants {
             ).withMotorOutput(
                 new MotorOutputConfigs()
                     .withNeutralMode(NeutralModeValue.Brake) // Must be break because this has to be accurate
-                    .withDutyCycleNeutralDeadband(0.04) // TODO: Figure out what this means
+                    .withDutyCycleNeutralDeadband(0.04) // This sets the minimum output of motor so if its less than 4% it wont move
     );
 }
