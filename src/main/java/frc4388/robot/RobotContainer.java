@@ -81,7 +81,7 @@ public class RobotContainer {
     //Testing of Colors
     public final Vision m_vision = new Vision(m_robotMap.rightCamera, m_robotMap.leftCamera);
     public final SwerveDrive m_robotSwerveDrive = new SwerveDrive(m_robotMap.swerveDrivetrain, m_vision);
-    public final Intake m_robotIntake = new Intake(m_robotMap.intakeIO);
+    public final Intake m_robotIntake = new Intake(m_robotMap.intakeIO, m_robotSwerveDrive);
     public final Shooter m_robotShooter = new Shooter(m_robotMap.shooterIO, m_robotSwerveDrive, m_robotIntake, m_robotLED);
     
 
@@ -109,7 +109,7 @@ public class RobotContainer {
     
     
         private Command IntakeExtended = new SequentialCommandGroup(
-            new InstantCommand(() -> m_robotIntake.setMode(IntakeMode.ExtendedREMOVEME), m_robotIntake)
+            new InstantCommand(() -> m_robotIntake.setMode(IntakeMode.ExtendingRolling), m_robotIntake)
         );
     
         // private Command LidarIntake = new SequentialCommandGroup(
@@ -146,7 +146,7 @@ public class RobotContainer {
         );
     
         private Command IntakeRetracted = new SequentialCommandGroup(
-            new InstantCommand(() -> m_robotIntake.setMode(IntakeMode.RetractedREMOVEME), m_robotIntake)
+            new InstantCommand(() -> m_robotIntake.setMode(IntakeMode.RectractTorque), m_robotIntake)
         );
     
         private Command RobotShoot = new SequentialCommandGroup(
@@ -195,17 +195,17 @@ public class RobotContainer {
     
             NamedCommands.registerCommand("BumpOffsetForward", new InstantCommand(() -> {
                 if (TimesNegativeOne.isRed) {
-                    m_robotSwerveDrive.offsetOdoPosition(FieldConstants.BUMP_OFFSET_RED);
+                    m_robotSwerveDrive.offsetOdoPosition(FieldConstants.BUMP_OFFSET_RED_FRONT);
                 } else {
-                    m_robotSwerveDrive.offsetOdoPosition(FieldConstants.BUMP_OFFSET_BLUE);
+                    m_robotSwerveDrive.offsetOdoPosition(FieldConstants.BUMP_OFFSET_BLUE_FRONT);
                 }
             }));
 
-            NamedCommands.registerCommand("BumpOffsetReverse", new InstantCommand(() -> {
-                if (!TimesNegativeOne.isRed) {
-                    m_robotSwerveDrive.offsetOdoPosition(FieldConstants.BUMP_OFFSET_RED);
+            NamedCommands.registerCommand("BumpOffsetBackward", new InstantCommand(() -> {
+                if (TimesNegativeOne.isRed) {
+                    m_robotSwerveDrive.offsetOdoPosition(FieldConstants.BUMP_OFFSET_RED_BACK);
                 } else {
-                    m_robotSwerveDrive.offsetOdoPosition(FieldConstants.BUMP_OFFSET_BLUE);
+                    m_robotSwerveDrive.offsetOdoPosition(FieldConstants.BUMP_OFFSET_BLUE_BACK);
                 }
             }));
 
@@ -304,8 +304,8 @@ public class RobotContainer {
                     FieldPositions.HUB_POSITION,
                     ShooterConstants.AIM_LEAD_TIME.get()
                     );
-                }, m_robotSwerveDrive)
-            );
+                }, m_robotSwerveDrive))
+            .onFalse(new InstantCommand(() -> m_robotSwerveDrive.softStop(), m_robotSwerveDrive));
 
         // D-PAD fine alignment
         new Trigger(() -> getDeadbandedDriverController().getPOV() != -1)
@@ -423,6 +423,18 @@ public class RobotContainer {
             //     m_robotIntake.setMode(IntakeMode.Idle);
             // }));
 
+        // new JoystickButton(getDeadbandedOperatorController(), XboxController.START_BUTTON)
+        //     .whileTrue(
+        //         new PathPlannerAuto("Right_AutoClimb")
+        //     )
+        //     .onFalse(new InstantCommand(() -> m_robotSwerveDrive.softStop(), m_robotSwerveDrive));
+
+        // new JoystickButton(getDeadbandedOperatorController(), XboxController.BACK_BUTTON)
+        //     .whileTrue(
+        //         new PathPlannerAuto("Left_AutoClimb")
+        //     )
+        //     .onFalse(new InstantCommand(() -> m_robotSwerveDrive.softStop(), m_robotSwerveDrive));
+
         // new JoystickButton(getDeadbandedOperatorController(), XboxController.B_BUTTON)
         //     .onTrue(new InstantCommand(() -> {
         //         m_robotClimber.toggleDeployed();
@@ -435,11 +447,11 @@ public class RobotContainer {
    private void configureSINGLEBindings() {
             
             //Driver controls
-            // new JoystickButton(getDeadbandedDriverController(), XboxController.A_BUTTON)
-            //     .onTrue(new InstantCommand(() -> m_robotSwerveDrive.resetGyro()));
-                
             new JoystickButton(getDeadbandedDriverController(), XboxController.A_BUTTON)
-                .onTrue(new InstantCommand(() -> m_robotSwerveDrive.offsetOdoPosition(FieldConstants.BUMP_OFFSET_RED)));
+                .onTrue(new InstantCommand(() -> m_robotSwerveDrive.resetGyro()));
+                
+            // new JoystickButton(getDeadbandedDriverController(), XboxController.A_BUTTON)
+            //     .onTrue(new InstantCommand(() -> m_robotSwerveDrive.offsetOdoPosition(FieldConstants.BUMP_OFFSET_RED)));
     
             new JoystickButton(getDeadbandedDriverController(), XboxController.RIGHT_BUMPER_BUTTON)
                 .onTrue(new InstantCommand(()  -> m_robotSwerveDrive.shiftUp()));
@@ -596,7 +608,8 @@ public class RobotContainer {
 
         for (String auto : autos) {
             if (auto.endsWith(".auto"))
-                autoChooser.addOption(auto.replaceAll(".auto", ""), auto.replaceAll(".auto", ""));
+                if (auto.startsWith("X. "))
+                    autoChooser.addOption(auto.replaceAll(".auto", ""), auto.replaceAll(".auto", ""));
             // System.out.println(auto);
         }
 

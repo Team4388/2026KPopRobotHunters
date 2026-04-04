@@ -11,15 +11,33 @@
           }
         },
         {
+          "type": "wait",
+          "data": {
+            "waitTime": 0
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "LeftTrench-Neutral-Shoot"
+          }
+        },
+        {
           "type": "named",
           "data": {
             "name": "Robot Rev Up"
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "BumpOffsetBackward"
+          }
+        },
+        {
           "type": "path",
           "data": {
-            "pathName": "Center-Hub-Shoot"
+            "pathName": "LeftRamp-Shoot"
           }
         },
         {
@@ -27,41 +45,11 @@
           "data": {
             "name": "Robot Shoot"
           }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Intake Extended"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Center-NeutralL"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "HubFarLeft-NeutralZone 1-2"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Intake Retracted"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "HubFarLeft-NeutralZone 2-2"
-          }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "HubCenter",
+  "folder": null,
   "choreoAuto": false
 }

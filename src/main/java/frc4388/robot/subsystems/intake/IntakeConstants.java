@@ -6,6 +6,9 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.revrobotics.spark.FeedbackSensor;
 import com.revrobotics.spark.config.SparkMaxConfig;
+
+import edu.wpi.first.units.measure.AngularVelocity;
+
 import com.revrobotics.spark.config.LimitSwitchConfig.Behavior;
 import com.revrobotics.spark.config.LimitSwitchConfig.Type;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
@@ -59,8 +62,9 @@ public class IntakeConstants {
 
     public static final ConfigurableDouble ARM_REVERSE_ROLLER_RANGE = new ConfigurableDouble("Arm reverse roller range", 1.17);
     
-    public static final ConfigurableDouble ROLLER_PERCENT_OUTPUT = new ConfigurableDouble("Roller Percent Output", .20);
-    public static final ConfigurableDouble ROLLER_RETRACT_PERCENT_OUTPUT = new ConfigurableDouble("Roller Retract Output", .20);
+    public static final ConfigurableDouble ROLLER_PERCENT_OUTPUT = new ConfigurableDouble("Roller Percent Output", .50);
+    public static final ConfigurableDouble ROLLER_RETRACT_PERCENT_OUTPUT = new ConfigurableDouble("Roller Retract Output", .40);
+    public static final ConfigurableDouble ROLLER_MULTIPLIER_CONST = new ConfigurableDouble("Roller Multiplier Constant", 0.4);
 
     // public static final ConfigurableDouble ROLL = new ConfigurableDouble("Arm angle extended", 0.25);
 
@@ -79,7 +83,9 @@ public class IntakeConstants {
     // public static ConfigurableDouble arm_kI = new ConfigurableDouble("ARM KI", 0);
     // public static ConfigurableDouble arm_kD = new ConfigurableDouble("ARM KD", 0.05);
     
-
+    public static double getTargetRollerSpeed(double chassisSpeed) {
+        return ROLLER_PERCENT_OUTPUT.get() * (1 + ROLLER_MULTIPLIER_CONST.get() * chassisSpeed);
+    }
 
 
     // 0 is paralell to the ground, 90 is directly up

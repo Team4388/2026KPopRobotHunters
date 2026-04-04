@@ -11,7 +11,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "HubRight-PlayerStation"
+                  "pathName": "RightBump"
                 }
               },
               {
@@ -24,9 +24,15 @@
           }
         },
         {
-          "type": "wait",
+          "type": "named",
           "data": {
-            "waitTime": 2.0
+            "name": "BumpOffsetForward"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "RightBump-Neutral-Shoot"
           }
         },
         {
@@ -36,9 +42,15 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "BumpOffsetBackward"
+          }
+        },
+        {
           "type": "path",
           "data": {
-            "pathName": "PlayerStation-Shoot"
+            "pathName": "RightRamp-Shoot"
           }
         },
         {
@@ -51,6 +63,6 @@
     }
   },
   "resetOdom": true,
-  "folder": "Pikes Peak Autos",
+  "folder": null,
   "choreoAuto": false
 }
