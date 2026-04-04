@@ -16,7 +16,7 @@ public class    ShooterConstants {
     // Motor conversions
     
     public static final double SHOOTERMOTOR_GEAR_RATIO = 1.286; // TODO: supposed to be 9 rotations in to 7 out    -- 0.77 or 1.29
-    public static final double INDEXER_GEAR_RATIO = 1.72; // TODO: change it is supposed to be 18 to 31 
+    // public static final double INDEXER_GEAR_RATIO = 1.;
     public static final double T_CONSTANT = 2;
     public static final double SHOOTER_RADIUS = 2/39.37;
     public static final double INDEXER_RADIUS = 0.625/39.37;
@@ -116,7 +116,7 @@ public class    ShooterConstants {
             ).withMotorOutput(
                 new MotorOutputConfigs()
                     .withNeutralMode(NeutralModeValue.Coast) // Must be coast because this is spinny spinny
-                    .withDutyCycleNeutralDeadband(0.04) // TODO: Figure out what this means
+                    .withDutyCycleNeutralDeadband(0.04) // This sets the minimum output of motor so if its less than 4% it wont move
     );
     public static final TalonFXConfiguration SHOOTER2_MOTOR_CONFIG = new TalonFXConfiguration()
         .withCurrentLimits(
@@ -126,7 +126,7 @@ public class    ShooterConstants {
             ).withMotorOutput(
                 new MotorOutputConfigs()
                     .withNeutralMode(NeutralModeValue.Coast) // Must be coast because this is spinny spinny
-                    .withDutyCycleNeutralDeadband(0.04) // TODO: Figure out what this means
+                    .withDutyCycleNeutralDeadband(0.04) // This sets the minimum output of motor so if its less than 4% it wont move
     );
 
     public static final TalonFXConfiguration INDEXER_MOTOR_CONFIG = new TalonFXConfiguration()
@@ -137,6 +137,6 @@ public class    ShooterConstants {
             ).withMotorOutput(
                 new MotorOutputConfigs()
                     .withNeutralMode(NeutralModeValue.Coast) // Must be coast because this is spinny spinny
-                    .withDutyCycleNeutralDeadband(0.04) // TODO: Figure out what this means
+                    .withDutyCycleNeutralDeadband(0.04) // This sets the minimum output of motor so if its less than 4% it wont move
     );
 }

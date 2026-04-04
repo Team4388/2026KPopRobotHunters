@@ -28,15 +28,15 @@ public class IntakeConstants {
     public static final ConfigurableDouble INTAKE_BOUNCE_HALF_PERIOD = new ConfigurableDouble("Bounce Half Period", 5.);
     public static final ConfigurableDouble INTAKE_BOUNCE_OUTPUT = new ConfigurableDouble("Bounce Output", 0.1);
     public static final ConfigurableDouble INTAKE_BOUNCE_MAX_OUTPUT = new ConfigurableDouble("Bounce Max Output", 0.2);
-    public static final ConfigurableDouble INTAKE_BOUNCE_CURRENT_LIMIT = new ConfigurableDouble("Intake Bounce Current Limit", 16);
+    public static final ConfigurableDouble INTAKE_BOUNCE_CURRENT_LIMIT = new ConfigurableDouble("Intake Bounce Current Limit", 30);
     public static final ConfigurableDouble INTAKE_BOUNCE_VELOCITY_LIMIT = new ConfigurableDouble("Intake Bounce Velocity Limit", 4);
 
 
     //squeeze constants
-    public static final ConfigurableDouble INTAKE_SQUEEZE_CURRENT_LOWER_THRESHOLD = new ConfigurableDouble("Intake Squeeze Current LOWER THRESHOLD", 20);
-    public static final ConfigurableDouble INTAKE_SQUEEZE_CURRENT_UPPER_THRESHOLD = new ConfigurableDouble("Intake Squeeze Current UPPER THRESHOLD", 25);
-    public static final ConfigurableDouble ARM_SQUEEZE_PERCENT_OUTPUT = new ConfigurableDouble("Arm squeeze % output", -0.1);
-    public static final ConfigurableDouble ARM_REDUCED_SQUEEZE_PERCENT_OUTPUT = new ConfigurableDouble("Arm reduce squeeze % output", -0.02);
+    // public static final ConfigurableDouble INTAKE_SQUEEZE_CURRENT_LOWER_THRESHOLD = new ConfigurableDouble("Intake Squeeze Current LOWER THRESHOLD", 20);
+    // public static final ConfigurableDouble INTAKE_SQUEEZE_CURRENT_UPPER_THRESHOLD = new ConfigurableDouble("Intake Squeeze Current UPPER THRESHOLD", 25);
+    public static final ConfigurableDouble ARM_SQUEEZE_PERCENT_OUTPUT = new ConfigurableDouble("Arm squeeze % output", -0.2);
+    public static final ConfigurableDouble ARM_REDUCED_SQUEEZE_PERCENT_OUTPUT = new ConfigurableDouble("Arm reduce squeeze % output", 0.02);
 
 
     //IDs
@@ -57,7 +57,7 @@ public class IntakeConstants {
 
     public static final ConfigurableDouble ARM_LIMIT_RETRACTED = new ConfigurableDouble("Arm angle retracted", 0.);
     public static final ConfigurableDouble ARM_LIMIT_EXTENDED = new ConfigurableDouble("Arm angle extended", 1.75);
-    public static final ConfigurableDouble ARM_EXTEND_PERCENT_OUTPUT = new ConfigurableDouble("Arm extend % output", 0.2);
+    public static final ConfigurableDouble ARM_EXTEND_PERCENT_OUTPUT = new ConfigurableDouble("Arm extend % output", 0.4);
     public static final ConfigurableDouble ARM_RETRACT_PERCENT_OUTPUT = new ConfigurableDouble("Arm retract % output", -0.2);
 
     public static final ConfigurableDouble ARM_REVERSE_ROLLER_RANGE = new ConfigurableDouble("Arm reverse roller range", 1.17);
@@ -122,7 +122,7 @@ public class IntakeConstants {
     //         ).withMotorOutput(
     //             new MotorOutputConfigs()
     //                 .withNeutralMode(NeutralModeValue.Brake) // Must be break because this has to be accurate
-    //                 .withDutyCycleNeutralDeadband(0.04) // TODO: Figure out what this means
+    //                 .withDutyCycleNeutralDeadband(0.04) // This sets the minimum output of motor so if its less than 4% it wont move
     // );
 
     public static final TalonFXConfiguration ROLLER_MOTOR_CONFIG = new TalonFXConfiguration()
@@ -133,6 +133,6 @@ public class IntakeConstants {
             ).withMotorOutput(
                 new MotorOutputConfigs()
                     .withNeutralMode(NeutralModeValue.Coast) // Must be coast because this is spinny spinny
-                    .withDutyCycleNeutralDeadband(0.04) // TODO: Figure out what this means
+                    .withDutyCycleNeutralDeadband(0.04) // This sets the minimum output of motor so if its less than 4% it wont move
     );
 }

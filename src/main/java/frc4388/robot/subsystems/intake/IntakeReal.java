@@ -1,27 +1,15 @@
 package frc4388.robot.subsystems.intake;
 
 import static edu.wpi.first.units.Units.Amps;
-import static edu.wpi.first.units.Units.Rotation;
 import static edu.wpi.first.units.Units.Rotations;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
-import static edu.wpi.first.units.Units.RotationsPerSecondPerSecond;
 
-import com.ctre.phoenix6.controls.DutyCycleOut;
-import com.ctre.phoenix6.controls.PositionDutyCycle;
-import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.revrobotics.PersistMode;
 import com.revrobotics.ResetMode;
 import com.revrobotics.spark.SparkMax;
 
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.math.util.Units;
-import edu.wpi.first.units.measure.Acceleration;
 import edu.wpi.first.units.measure.Angle;
-import edu.wpi.first.units.measure.Velocity;
-import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.DutyCycleEncoder;
-import frc4388.robot.subsystems.shooter.ShooterConstants;
 import frc4388.utility.compute.JankCoder;
 
 public class IntakeReal implements IntakeIO {
@@ -114,7 +102,7 @@ public class IntakeReal implements IntakeIO {
         state.armMotorCurrent = Amps.of(m_armMotor.getOutputCurrent());
 
         state.rollerOutput = m_rollerMotor.get();
-        // state.rollerMotorCurrent = Amps.of(m_rollerMotor.getOutputCurrent());
+        state.rollerMotorCurrent = m_rollerMotor.getStatorCurrent().getValue();
 
         state.retractedSoftLimit = retractedLimit();
         state.extendedSoftLimit = extendedLimit();
