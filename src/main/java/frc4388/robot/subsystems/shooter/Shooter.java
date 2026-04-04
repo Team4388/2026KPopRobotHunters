@@ -261,6 +261,6 @@ public class Shooter extends SubsystemBase {
                 break;
             }
             
-        io.motorStalled(state, m_Intake, m_robotLED);
+        // io.motorStalled(state, m_Intake, m_robotLED);
     }
 }

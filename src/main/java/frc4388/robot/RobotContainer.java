@@ -265,12 +265,12 @@ public class RobotContainer {
             // TEST-> the driver is holding the left trigger, drive slow and rotation up 
             new Trigger(() -> getDeadbandedDriverController().getLeftTriggerAxis() >= 0.5)
                 .onTrue(new InstantCommand(() -> {
-                    m_robotSwerveDrive.setToSlow();
+                    m_robotSwerveDrive.setPercentOutput(0.1);
                     m_robotSwerveDrive.shiftUpRot();
                 }))
                 .onFalse(new InstantCommand(() -> {
                     m_robotSwerveDrive.setToFast();
-                    m_robotSwerveDrive.shiftDownRot();
+                    // m_robotSwerveDrive.shiftDownRot();
             }));
     
             //TEST - > X positino on wheels
@@ -340,7 +340,7 @@ public class RobotContainer {
             }));
         
 
-
+// manually shoot from climb post/ feed balls
         new JoystickButton(getDeadbandedOperatorController(), XboxController.LEFT_BUMPER_BUTTON)
             .onTrue(new InstantCommand(() -> {
                 m_robotShooter.spinUpFeeding();
