@@ -74,6 +74,10 @@ public class Intake extends SubsystemBase {
         return state.rollerTargetOutput;
     }
 
+    public boolean intakeAtReference() {
+        return state.extendedSoftLimit;
+    }
+
     public double getRollerSpeed() {
         return state.rollerOutput;
     }

@@ -36,6 +36,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc4388.robot.commands.waitSupplier;
 import frc4388.robot.commands.Swerve.StayInPosition;
 import frc4388.robot.commands.alignment.AutoAlign;
 import frc4388.robot.constants.Constants;
@@ -137,6 +138,9 @@ public class RobotContainer {
             new InstantCommand(() -> m_robotIntake.setMode(IntakeMode.Idle), m_robotIntake)
         );
 
+        private Command WaitIntakeReference =
+            new WaitUntilCommand(m_robotIntake::intakeAtReference);
+
         private Command RobotShootDriving = new SequentialCommandGroup(
             new RunCommand(() -> 
                 m_robotSwerveDrive.enableRotationOverride(FieldPositions.HUB_POSITION, ShooterConstants.AIM_LEAD_TIME.get(), FieldPositions.HUB_POSITION)
@@ -186,7 +190,7 @@ public class RobotContainer {
             // NamedCommands.registerCommand("Lidar Intake", LidarIntake);
             NamedCommands.registerCommand("Intake Extended", IntakeExtended);
             NamedCommands.registerCommand("Robot Shoot Driving", RobotShootDriving);
-
+            NamedCommands.registerCommand("Intake Reference", WaitIntakeReference);
             NamedCommands.registerCommand("WaitShooter", new WaitUntilCommand(m_robotShooter::isShooterUpToSpeed));
             NamedCommands.registerCommand("AllowShooting", new InstantCommand(() -> m_robotShooter.allowShooting(), m_robotShooter));
             NamedCommands.registerCommand("DenyShooting", new InstantCommand(() -> m_robotShooter.denyShooting(), m_robotShooter));
