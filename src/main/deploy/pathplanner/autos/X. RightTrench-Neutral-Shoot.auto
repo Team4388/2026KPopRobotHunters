@@ -13,25 +13,31 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Bump test"
+            "pathName": "RightTrench-Neutral-Shoot"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "BumpOffsetForward"
+            "name": "Robot Rev Up"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "BumpOffsetBackward"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "BumpToCenter"
+            "pathName": "RightRamp-Shoot"
           }
         },
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "HubFarLeft-NeutralZone 2-2"
+            "name": "Robot Shoot"
           }
         }
       ]

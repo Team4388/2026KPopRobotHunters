@@ -2,7 +2,6 @@ package frc4388.robot.subsystems.intake;
 
 import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Rotations;
-import static edu.wpi.first.units.Units.RotationsPerSecond;
 
 import java.util.function.Supplier;
 
@@ -11,19 +10,23 @@ import org.littletonrobotics.junction.Logger;
 import com.ctre.phoenix6.Utils;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc4388.robot.subsystems.swerve.SwerveDrive;
 
 public class Intake extends SubsystemBase {
     public IntakeIO io;
     IntakeStateAutoLogged state = new IntakeStateAutoLogged();
-
+    SwerveDrive m_SwerveDrive;
     Supplier<Pose2d> m_swervePoseSupplier;
 
     public Intake(
-        IntakeIO io
+        IntakeIO io,
+        SwerveDrive m_SwerveDrive
         // Supplier<Pose2d> swervePoseSupplier
     ) {
         this.io = io;
+        this.m_SwerveDrive = m_SwerveDrive;
         // this.m_swervePoseSupplier = swervePoseSupplier;
     }
 
@@ -92,8 +95,9 @@ public class Intake extends SubsystemBase {
     public void periodic() {
         // FaultReporter.register(this); // TODO Implement fault reporter
         // System.out.println(m_armLimitSwitch.get());
+        ChassisSpeeds chassisSpeeds = m_SwerveDrive.chassisSpeeds;
 
-
+        double ChassisOverallSpeed = Math.hypot(chassisSpeeds.vxMetersPerSecond, chassisSpeeds.vyMetersPerSecond);
         Logger.processInputs("Intake", state);
         Logger.recordOutput("Intake/IntakeState", this.mode);
 
@@ -127,7 +131,7 @@ public class Intake extends SubsystemBase {
                 
             case ExtendingRolling:
                 io.armOutput(IntakeConstants.ARM_EXTEND_PERCENT_OUTPUT.get());
-                io.setRollerOutput(state, IntakeConstants.ROLLER_PERCENT_OUTPUT.get());
+                io.setRollerOutput(state, IntakeConstants. ROLLER_PERCENT_OUTPUT.get()); //getTargetRollerSpeed(ChassisOverallSpeed));
                 break;
 
             case Retracting:

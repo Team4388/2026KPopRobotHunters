@@ -11,27 +11,39 @@
           }
         },
         {
+          "type": "wait",
+          "data": {
+            "waitTime": 0
+          }
+        },
+        {
           "type": "path",
           "data": {
-            "pathName": "Bump test"
+            "pathName": "LeftTrench-Neutral-Shoot"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "BumpOffsetForward"
+            "name": "Robot Rev Up"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "BumpOffsetBackward"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "BumpToCenter"
+            "pathName": "LeftRamp-Shoot"
           }
         },
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "HubFarLeft-NeutralZone 2-2"
+            "name": "Robot Shoot"
           }
         }
       ]
