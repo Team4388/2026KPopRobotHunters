@@ -330,6 +330,7 @@ public class RobotContainer {
         new Trigger(() -> getDeadbandedOperatorController().getRightTriggerAxis() >= 0.5)
             .onTrue(new InstantCommand(() -> {
                 m_robotShooter.allowShooting();
+                m_robotIntake.rollerStop();
             })).onFalse(new InstantCommand(() -> {
                 m_robotShooter.denyShooting();
             }));
@@ -350,7 +351,6 @@ public class RobotContainer {
         new Trigger(() -> getDeadbandedOperatorController().getLeftTriggerAxis() >= 0.5)
             .onTrue(new InstantCommand(() -> {
                 m_robotIntake.setMode(IntakeMode.Idle);
-                m_robotIntake.rollerStop();
                 m_robotShooter.spinUpShooting();
             }))
             .onFalse(new InstantCommand(() -> {
@@ -370,14 +370,11 @@ public class RobotContainer {
         new JoystickButton(getDeadbandedOperatorController(), XboxController.X_BUTTON)
             .onTrue(new InstantCommand(() -> {
                 m_robotIntake.setMode(IntakeMode.ExtendingRolling);
-            }))
-            .onFalse(new InstantCommand(() -> {
-                m_robotIntake.setMode(IntakeMode.ExtendingIdle);
             }));
 
         new JoystickButton(getDeadbandedOperatorController(), XboxController.Y_BUTTON)
             .onTrue(new InstantCommand(() -> {
-                m_robotIntake.setMode(IntakeMode.RectractTorque);
+                m_robotIntake.setMode(IntakeMode.Retracting);
             }))
             .onFalse(new InstantCommand(() -> {
                 m_robotIntake.setMode(IntakeMode.Idle);

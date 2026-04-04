@@ -66,7 +66,8 @@ public class Intake extends SubsystemBase {
     }
 
     public void rollerStop(){
-        io.setRollerOutput(state, 0);
+        this.mode = IntakeMode.Idle;
+        // io.setRollerOutput(state, 0);
     }
 
     public double getRollerTarget() {
@@ -190,7 +191,7 @@ public class Intake extends SubsystemBase {
                 
             case ExpelBalls:
                 io.armOutput(0);
-                io.setRollerOutput(state, -0.2);
+                io.setRollerOutput(state, IntakeConstants.ROLLER_EJECT_PERCENT_OUTPUT.get());
                 break;
         }
         // if (state.retractedLimit){

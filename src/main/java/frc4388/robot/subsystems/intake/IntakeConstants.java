@@ -63,6 +63,8 @@ public class IntakeConstants {
     public static final ConfigurableDouble ARM_REVERSE_ROLLER_RANGE = new ConfigurableDouble("Arm reverse roller range", 1.17);
     
     public static final ConfigurableDouble ROLLER_PERCENT_OUTPUT = new ConfigurableDouble("Roller Percent Output", .50);
+    public static final ConfigurableDouble ROLLER_EJECT_PERCENT_OUTPUT = new ConfigurableDouble("Roller eject Percent Output", -.20);
+    public static final ConfigurableDouble ROLLER_IDLE_PERCENT_OUTPUT = new ConfigurableDouble("Roller IDLE Percent Output", .20);
     public static final ConfigurableDouble ROLLER_RETRACT_PERCENT_OUTPUT = new ConfigurableDouble("Roller Retract Output", .40);
     public static final ConfigurableDouble ROLLER_MULTIPLIER_CONST = new ConfigurableDouble("Roller Multiplier Constant", 0.4);
 
