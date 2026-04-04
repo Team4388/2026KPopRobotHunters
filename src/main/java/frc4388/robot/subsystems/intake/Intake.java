@@ -155,7 +155,6 @@ public class Intake extends SubsystemBase {
                     state.armMotorCurrent.in(Amps) > IntakeConstants.INTAKE_BOUNCE_CURRENT_LIMIT.get()
                     // Math.abs(state.armMotorVelocity.in(RotationsPerSecond)) < IntakeConstants.INTAKE_BOUNCE_VELOCITY_LIMIT.get()
                 ) {
-                    // System.out.println("RESET BOUNCE");
                     this.state.currentBounceTime = Utils.getSystemTimeSeconds() + IntakeConstants.INTAKE_BOUNCE_HALF_PERIOD.get();
                 }
 
