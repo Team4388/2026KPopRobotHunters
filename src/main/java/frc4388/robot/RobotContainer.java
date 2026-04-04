@@ -265,7 +265,7 @@ public class RobotContainer {
             // TEST-> the driver is holding the left trigger, drive slow and rotation up 
             new Trigger(() -> getDeadbandedDriverController().getLeftTriggerAxis() >= 0.5)
                 .onTrue(new InstantCommand(() -> {
-                    m_robotSwerveDrive.setPercentOutput(0.1);
+                    m_robotSwerveDrive.setPercentOutput(0.10);
                     m_robotSwerveDrive.shiftUpRot();
                 }))
                 .onFalse(new InstantCommand(() -> {

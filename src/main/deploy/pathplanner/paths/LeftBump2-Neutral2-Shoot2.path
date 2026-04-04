@@ -36,8 +36,8 @@
         "y": 4.128025641025641
       },
       "prevControl": {
-        "x": 7.182601673147601,
-        "y": 3.9168984964132223
+        "x": 7.1826016731476,
+        "y": 3.9168984964132205
       },
       "nextControl": {
         "x": 7.618820512820513,
@@ -79,7 +79,7 @@
   "rotationTargets": [
     {
       "waypointRelativePos": 3.4736842105263164,
-      "rotationDegrees": 112.5
+      "rotationDegrees": 22.5
     }
   ],
   "constraintZones": [],
@@ -110,8 +110,18 @@
         "y": 8.0
       },
       "rotationOffset": 0.0,
-      "minWaypointRelativePos": 2.1085271317829366,
-      "maxWaypointRelativePos": 3.1893687707641063,
+      "minWaypointRelativePos": 1.8870431893687745,
+      "maxWaypointRelativePos": 2.2768549280177193,
+      "name": "Point Towards Zone"
+    },
+    {
+      "fieldPosition": {
+        "x": 12.0,
+        "y": 8.0
+      },
+      "rotationOffset": 0.0,
+      "minWaypointRelativePos": 2.5603543743078774,
+      "maxWaypointRelativePos": 3.0121816168327573,
       "name": "Point Towards Zone"
     }
   ],
@@ -126,7 +136,7 @@
   },
   "goalEndState": {
     "velocity": 3.0,
-    "rotation": 113.07
+    "rotation": 23.069999999999993
   },
   "reversed": false,
   "folder": null,

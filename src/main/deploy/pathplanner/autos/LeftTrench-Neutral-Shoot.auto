@@ -13,13 +13,31 @@
         {
           "type": "named",
           "data": {
-            "name": "Robot Rev Up"
+            "name": "Intake Reference"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Center-Hub-Shoot"
+            "pathName": "LeftTrench-Neutral-Shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Robot Rev Up"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "BumpOffsetBackward"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "LeftRamp-Shoot"
           }
         },
         {
@@ -32,6 +50,6 @@
     }
   },
   "resetOdom": true,
-  "folder": "Pikes Peak Autos",
+  "folder": null,
   "choreoAuto": false
 }

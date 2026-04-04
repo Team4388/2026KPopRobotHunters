@@ -4,6 +4,7 @@
   "holonomicMode": true,
   "pathFolders": [],
   "autoFolders": [
+    "Spring Break Tests",
     "Pikes Peak Autos"
   ],
   "defaultMaxVel": 3.0,

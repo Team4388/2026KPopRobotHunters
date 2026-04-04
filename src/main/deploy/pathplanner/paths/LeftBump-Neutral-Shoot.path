@@ -79,7 +79,7 @@
   "rotationTargets": [
     {
       "waypointRelativePos": 3.4736842105263164,
-      "rotationDegrees": 112.5
+      "rotationDegrees": 22.5
     }
   ],
   "constraintZones": [],
@@ -99,7 +99,7 @@
         "x": 7.0,
         "y": 0.0
       },
-      "rotationOffset": 180.0,
+      "rotationOffset": 100.0,
       "minWaypointRelativePos": 2.4983388704318887,
       "maxWaypointRelativePos": 3.2956810631229274,
       "name": "Point Towards Zone"
@@ -116,7 +116,7 @@
   },
   "goalEndState": {
     "velocity": 3.0,
-    "rotation": 113.07
+    "rotation": 23.07
   },
   "reversed": false,
   "folder": null,
