@@ -101,7 +101,7 @@ public class RobotMap {
                 
                 //Configure Intake 20,21
                 SparkMax arm = new SparkMax(IntakeConstants.ARM_ID.id, com.revrobotics.spark.SparkLowLevel.MotorType.kBrushless);
-                TalonFX roller = new TalonFX(IntakeConstants.ROLLER_ID.id, Constants.CANIVORE_CANBUS);
+                TalonFX roller = new TalonFX(IntakeConstants.ROLLER_ID.id, Constants.RIO_CANBUS);
                 // DigitalInput armLimitSwitch = new DigitalInput(IntakeConstants.ARM_LIMIT_SWITCH_CHANNEL);
                 // DigitalInput basinLimitSwitch = new DigitalInput(ElevatorConstants.BASIN_LIMIT_SWITCH);
                 // DigitalInput endeffectorLimitSwitch = new DigitalInput(ElevatorConstants.ENDEFFECTOR_LIMIT_SWITCH);

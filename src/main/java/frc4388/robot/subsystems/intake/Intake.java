@@ -38,7 +38,8 @@ public class Intake extends SubsystemBase {
 
         Idle,
         RectractTorque,
-        Bouncing
+        Bouncing,
+        ExpelBalls
     }
     private boolean overCompressed = false;
 
@@ -100,11 +101,9 @@ public class Intake extends SubsystemBase {
 
         io.updateInputs(state);
 
-        if (state.armMotorCurrent.in(Amps) < IntakeConstants.INTAKE_SQUEEZE_CURRENT_LOWER_THRESHOLD.get()){
-            overCompressed = false;
-        } else if (state.armMotorCurrent.in(Amps) > IntakeConstants.INTAKE_SQUEEZE_CURRENT_UPPER_THRESHOLD.get()) {
-            overCompressed = true;
-        }
+        overCompressed = 
+            Math.abs(state.armMotorCurrent.in(Amps)) > IntakeConstants.INTAKE_BOUNCE_CURRENT_LIMIT.get();
+            // Math.abs(state.armMotorVelocity.in(RotationsPerSecond)) < IntakeConstants.INTAKE_BOUNCE_VELOCITY_LIMIT.get();
 
         Logger.recordOutput("overCompressed", overCompressed);
 
@@ -133,11 +132,11 @@ public class Intake extends SubsystemBase {
             case Retracting:
                 io.armOutput(IntakeConstants.ARM_RETRACT_PERCENT_OUTPUT.get());
 
-                if(state.intakeEncoder.in(Rotations) > IntakeConstants.ARM_REVERSE_ROLLER_RANGE.get()) {
-                    io.setRollerOutput(state, IntakeConstants.ROLLER_RETRACT_PERCENT_OUTPUT.get());
-                } else {
-                    io.setRollerOutput(state, 0);
-                }
+                // if(state.intakeEncoder.in(Rotations) > IntakeConstants.ARM_REVERSE_ROLLER_RANGE.get()) {
+                io.setRollerOutput(state, IntakeConstants.ROLLER_RETRACT_PERCENT_OUTPUT.get());
+                // } else {
+                //     io.setRollerOutput(state, 0);
+                // }
                 break;
             
             case Bouncing:
@@ -147,7 +146,7 @@ public class Intake extends SubsystemBase {
                     state.armMotorCurrent.in(Amps) > IntakeConstants.INTAKE_BOUNCE_CURRENT_LIMIT.get()
                     // Math.abs(state.armMotorVelocity.in(RotationsPerSecond)) < IntakeConstants.INTAKE_BOUNCE_VELOCITY_LIMIT.get()
                 ) {
-                    System.out.println("RESET BOUNCE");
+                    // System.out.println("RESET BOUNCE");
                     this.state.currentBounceTime = Utils.getSystemTimeSeconds() + IntakeConstants.INTAKE_BOUNCE_HALF_PERIOD.get();
                 }
 
@@ -170,18 +169,24 @@ public class Intake extends SubsystemBase {
                 io.setRollerOutput(state, IntakeConstants.ROLLER_RETRACT_PERCENT_OUTPUT.get());
                 if (!overCompressed){
                     io.armOutput(IntakeConstants.ARM_SQUEEZE_PERCENT_OUTPUT.get());
-                } else if (overCompressed) {
+                } else {
                     io.armOutput(IntakeConstants.ARM_REDUCED_SQUEEZE_PERCENT_OUTPUT.get());
                 }
-                if(state.intakeEncoder.in(Rotations) > IntakeConstants.ARM_REVERSE_ROLLER_RANGE.get()) {
-                    io.setRollerOutput(state, IntakeConstants.ROLLER_RETRACT_PERCENT_OUTPUT.get());
-                } else {
-                    io.setRollerOutput(state, 0);
-                }
+
+                // if(state.intakeEncoder.in(Rotations) > IntakeConstants.ARM_REVERSE_ROLLER_RANGE.get()) {
+                // io.setRollerOutput(state, IntakeConstants.ROLLER_RETRACT_PERCENT_OUTPUT.get());
+                // } else {
+                    // io.setRollerOutput(state, 0);
+                // }
                 break;
             case Idle:
                 io.armOutput(0);
                 io.setRollerOutput(state, 0);
+                break;
+                
+            case ExpelBalls:
+                io.armOutput(0);
+                io.setRollerOutput(state, -0.2);
                 break;
         }
         // if (state.retractedLimit){
