@@ -158,9 +158,9 @@ public class RobotContainer {
             //new AutoAlign(m_robotSwerveDrive, m_vision, new Pose2d(FieldPositions.HUB_POSITION,  new Rotation2d(0)), false),
             new WaitUntilCommand(m_robotShooter::isShooterUpToSpeed),
             new InstantCommand(()-> m_robotShooter.allowShooting(), m_robotShooter),
-            new WaitCommand(5),
+            new WaitCommand(4),
             IntakeRetracted,
-            new WaitCommand(10),
+            new WaitCommand(7),
             new InstantCommand(() -> m_robotShooter.denyShooting(), m_robotShooter),
             new InstantCommand(()->m_robotShooter.spinUpIdle(), m_robotShooter)
         );
@@ -375,7 +375,13 @@ public class RobotContainer {
             .onTrue(new InstantCommand(() -> {
                 m_robotIntake.setMode(IntakeMode.ExtendingRolling);
             }));
-
+        new JoystickButton(getDeadbandedOperatorController(), XboxController.B_BUTTON)
+            .onTrue(new InstantCommand(() -> {
+                m_robotIntake.setMode(IntakeMode.LabubuGrowl);
+            }))
+            .onFalse(new InstantCommand(() -> {
+                m_robotIntake.setMode(IntakeMode.ExtendingRolling);
+            }));
         new JoystickButton(getDeadbandedOperatorController(), XboxController.Y_BUTTON)
             .onTrue(new InstantCommand(() -> {
                 m_robotIntake.setMode(IntakeMode.Retracting);

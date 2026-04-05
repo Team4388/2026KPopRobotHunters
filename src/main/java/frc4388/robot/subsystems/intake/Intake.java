@@ -42,7 +42,8 @@ public class Intake extends SubsystemBase {
         Idle,
         RectractTorque,
         Bouncing,
-        ExpelBalls
+        ExpelBalls,
+        LabubuGrowl
     }
     private boolean overCompressed = false;
 
@@ -101,20 +102,20 @@ public class Intake extends SubsystemBase {
     public void periodic() {
         // FaultReporter.register(this); // TODO Implement fault reporter
         // System.out.println(m_armLimitSwitch.get());
-        ChassisSpeeds chassisSpeeds = m_SwerveDrive.chassisSpeeds;
+        // ChassisSpeeds chassisSpeeds = m_SwerveDrive.chassisSpeeds;
 
-        double ChassisOverallSpeed = Math.hypot(chassisSpeeds.vxMetersPerSecond, chassisSpeeds.vyMetersPerSecond);
+        // double ChassisOverallSpeed = Math.hypot(chassisSpeeds.vxMetersPerSecond, chassisSpeeds.vyMetersPerSecond);
         Logger.processInputs("Intake", state);
         Logger.recordOutput("Intake/IntakeState", this.mode);
 
 
         io.updateInputs(state);
 
-        overCompressed = 
-            Math.abs(state.armMotorCurrent.in(Amps)) > IntakeConstants.INTAKE_BOUNCE_CURRENT_LIMIT.get();
-            // Math.abs(state.armMotorVelocity.in(RotationsPerSecond)) < IntakeConstants.INTAKE_BOUNCE_VELOCITY_LIMIT.get();
+        // overCompressed = 
+        //     Math.abs(state.armMotorCurrent.in(Amps)) > IntakeConstants.INTAKE_BOUNCE_CURRENT_LIMIT.get();
+        //     // Math.abs(state.armMotorVelocity.in(RotationsPerSecond)) < IntakeConstants.INTAKE_BOUNCE_VELOCITY_LIMIT.get();
 
-        Logger.recordOutput("overCompressed", overCompressed);
+        // Logger.recordOutput("overCompressed", overCompressed);
 
         // getCurrentTime
 
@@ -195,6 +196,10 @@ public class Intake extends SubsystemBase {
             case ExpelBalls:
                 io.armOutput(0);
                 io.setRollerOutput(state, IntakeConstants.ROLLER_EJECT_PERCENT_OUTPUT.get());
+                break;
+            case LabubuGrowl:
+                io.armOutput(0);
+                io.setRollerOutput(state, IntakeConstants.ROLLER_LABUBU_GROWL_PERCENT_OUTPUT.get());
                 break;
         }
         // if (state.retractedLimit){
