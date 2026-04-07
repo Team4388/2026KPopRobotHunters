@@ -112,6 +112,10 @@ public class RobotContainer {
         private Command IntakeExtended = new SequentialCommandGroup(
             new InstantCommand(() -> m_robotIntake.setMode(IntakeMode.ExtendingRolling), m_robotIntake)
         );
+
+        private Command LabubuGrowl = new SequentialCommandGroup(
+            new InstantCommand(() -> m_robotIntake.setMode(IntakeMode.LabubuGrowl), m_robotIntake)
+        );
     
         // private Command LidarIntake = new SequentialCommandGroup(
         //     // Right now this will just go to the closest ball constantly updating - need to make it so it locks on one ball
@@ -189,6 +193,7 @@ public class RobotContainer {
             NamedCommands.registerCommand("Robot Shoot", RobotShoot);
             // NamedCommands.registerCommand("Lidar Intake", LidarIntake);
             NamedCommands.registerCommand("Intake Extended", IntakeExtended);
+            NamedCommands.registerCommand("Labubu Growl", LabubuGrowl);
             NamedCommands.registerCommand("Robot Shoot Driving", RobotShootDriving);
             NamedCommands.registerCommand("Intake Reference", WaitIntakeReference);
             NamedCommands.registerCommand("WaitShooter", new WaitUntilCommand(m_robotShooter::isShooterUpToSpeed));
@@ -615,7 +620,7 @@ public class RobotContainer {
 
         for (String auto : autos) {
             if (auto.endsWith(".auto"))
-                if (auto.startsWith("X. "))
+                if (auto.startsWith("X. ")) // Mira!
                     autoChooser.addOption(auto.replaceAll(".auto", ""), auto.replaceAll(".auto", ""));
             // System.out.println(auto);
         }

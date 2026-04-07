@@ -31,9 +31,6 @@ public class Intake extends SubsystemBase {
     }
 
     public enum IntakeMode {
-        ExtendedREMOVEME,
-        RetractedREMOVEME,
-
         ExtendingIdle,
         ExtendingRolling,
 
@@ -120,15 +117,6 @@ public class Intake extends SubsystemBase {
         // getCurrentTime
 
         switch (mode) {
-            case ExtendedREMOVEME:
-            //     io.setArmAngle(state, Rotations.of(IntakeConstants.ARM_LIMIT_EXTENDED.get()));
-            //     io.setRollerOutput(state, IntakeConstants.ROLLER_PERCENT_OUTPUT.get());
-                break;
-            case RetractedREMOVEME:
-            //     io.setArmAngle(state, Rotations.of(IntakeConstants.ARM_LIMIT_RETRACTED.get()));
-            //     io.setRollerOutput(state, 0);
-                break;
-
             case ExtendingIdle:
                 io.armOutput(IntakeConstants.ARM_EXTEND_PERCENT_OUTPUT.get());
                 io.setRollerOutput(state, 0);
@@ -198,7 +186,7 @@ public class Intake extends SubsystemBase {
                 io.setRollerOutput(state, IntakeConstants.ROLLER_EJECT_PERCENT_OUTPUT.get());
                 break;
             case LabubuGrowl:
-                io.armOutput(0);
+                io.armOutput(IntakeConstants.ARM_EXTEND_PERCENT_OUTPUT.get());
                 io.setRollerOutput(state, IntakeConstants.ROLLER_LABUBU_GROWL_PERCENT_OUTPUT.get());
                 break;
         }
