@@ -23,7 +23,7 @@ public class IntakeConstants {
     public static final double ROLLER_MOTOR_GEAR_RATIO = 3;
     public static final ConfigurableDouble ARM_ENCODER_OFFSET = new ConfigurableDouble("Arm Encoder Offset", 0);
 
-
+    public static final int ARM_LIMIT_SWITCH_CHANNEL = 9;
 
     public static final ConfigurableDouble INTAKE_BOUNCE_HALF_PERIOD = new ConfigurableDouble("Bounce Half Period", 5.);
     public static final ConfigurableDouble INTAKE_BOUNCE_OUTPUT = new ConfigurableDouble("Bounce Output", 0.1);
@@ -60,6 +60,7 @@ public class IntakeConstants {
     public static final ConfigurableDouble ARM_EXTEND_PERCENT_OUTPUT = new ConfigurableDouble("Arm extend % output", 0.4);
     public static final ConfigurableDouble ARM_RETRACT_PERCENT_OUTPUT = new ConfigurableDouble("Arm retract % output", -0.2);
 
+    
     public static final ConfigurableDouble ARM_REVERSE_ROLLER_RANGE = new ConfigurableDouble("Arm reverse roller range", 1.17);
     
     public static final ConfigurableDouble ROLLER_PERCENT_OUTPUT = new ConfigurableDouble("Roller Percent Output", .50);

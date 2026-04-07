@@ -84,6 +84,7 @@ public class RobotMap {
                 // // Configure LiDAR
                 // reefLidar = new LidarReal(LiDARConstants.REEF_LIDAR_DIO_CHANNEL);
                 // reverseLidar = new LidarReal(LiDARConstants.REVERSE_LIDAR_DIO_CHANNEL);
+                DigitalInput armLimitSwitch = new DigitalInput(IntakeConstants.ARM_LIMIT_SWITCH_CHANNEL);
 
                 // Configure swerve drive train
                 SwerveDrivetrain<TalonFX, TalonFX, CANcoder> swerveDrivetrainReal = new SwerveDrivetrain<TalonFX, TalonFX, CANcoder> (TalonFX::new, TalonFX::new, CANcoder::new, 
@@ -110,8 +111,7 @@ public class RobotMap {
                 shooterIO = new ShooterReal(shooter1, shooter2, indexer);
                 JankCoder armEncoder = new JankCoder(0, IntakeConstants.ARM_ENCODER_OFFSET);
 
-                intakeIO = new IntakeReal(arm, roller, armEncoder);
-
+                intakeIO = new IntakeReal(armLimitSwitch, arm, roller, armEncoder);
                 // Fault
                 FaultPidgeon2.addDevice(swerveDrivetrainReal.getPigeon2(), "Gyro");
 

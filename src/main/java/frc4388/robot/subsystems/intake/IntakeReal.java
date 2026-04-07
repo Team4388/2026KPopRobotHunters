@@ -12,17 +12,20 @@ import com.revrobotics.spark.SparkLimitSwitch;
 import com.revrobotics.spark.SparkMax;
 
 import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.wpilibj.DigitalInput;
 import frc4388.utility.compute.JankCoder;
 
 public class IntakeReal implements IntakeIO {
 
     SparkMax m_armMotor;
     RelativeEncoder arm_encoder;
-    SparkLimitSwitch reverse_limit;
+    // SparkLimitSwitch reverse_limit;
     TalonFX m_rollerMotor;
     JankCoder m_encoder;
+    DigitalInput m_armLimitSwitch;
 
     public IntakeReal(
+        DigitalInput armLimitSwitch,
         SparkMax armMotor,
         TalonFX rollerMotor,
         JankCoder jankCoder
@@ -31,7 +34,7 @@ public class IntakeReal implements IntakeIO {
         // m_pitchMotor = pitchMotor;
         m_armMotor = armMotor;
         arm_encoder = m_armMotor.getEncoder();
-        reverse_limit = m_armMotor.getReverseLimitSwitch();
+        m_armLimitSwitch = armLimitSwitch;
         m_rollerMotor = rollerMotor;
         m_encoder = jankCoder;
 
@@ -75,9 +78,9 @@ public class IntakeReal implements IntakeIO {
         // m_rollerMotor.set(0);
     }
 
-    private boolean retractedLimit() {
-        return m_encoder.get() <= IntakeConstants.ARM_LIMIT_RETRACTED.get();
-    }
+    // private boolean retractedLimit() {
+    //     return m_encoder.get() <= IntakeConstants.ARM_LIMIT_RETRACTED.get();
+    // }
     private boolean extendedLimit() {
         return m_encoder.get() >= IntakeConstants.ARM_LIMIT_EXTENDED.get();
     }
@@ -94,6 +97,7 @@ public class IntakeReal implements IntakeIO {
         }
 
         m_armMotor.set(percentOutput);
+        // System.out.println(percentOutput);
 
     }
 
@@ -110,13 +114,13 @@ public class IntakeReal implements IntakeIO {
         state.rollerOutput = m_rollerMotor.get();
         state.rollerMotorCurrent = m_rollerMotor.getStatorCurrent().getValue();
 
-        state.retractedSoftLimit = retractedLimit();
+        // state.retractedSoftLimit = retractedLimit();
         state.extendedSoftLimit = extendedLimit();
 
         state.intakeEncoder = m_encoder.getRotations();
         state.encoderConnected = m_encoder.isConnected();
 
-        state.retractedLimitSwitch = reverse_limit.isPressed();
+        state.retractedLimitSwitch = m_armLimitSwitch.get();
 
         if(state.retractedLimitSwitch) {
             m_encoder.resetRotations();

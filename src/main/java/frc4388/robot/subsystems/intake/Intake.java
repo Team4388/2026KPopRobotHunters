@@ -124,7 +124,7 @@ public class Intake extends SubsystemBase {
                 
             case ExtendingRolling:
                 io.armOutput(IntakeConstants.ARM_EXTEND_PERCENT_OUTPUT.get());
-                io.setRollerOutput(state, IntakeConstants. ROLLER_PERCENT_OUTPUT.get()); //getTargetRollerSpeed(ChassisOverallSpeed));
+                io.setRollerOutput(state, IntakeConstants.ROLLER_PERCENT_OUTPUT.get()); //getTargetRollerSpeed(ChassisOverallSpeed));
                 break;
 
             case Retracting:
