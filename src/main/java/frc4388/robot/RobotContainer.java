@@ -622,8 +622,7 @@ public class RobotContainer {
 
         for (String auto : autos) {
             if (auto.endsWith(".auto"))
-                if (auto.startsWith("X. ")) // Mira!
-                    autoChooser.addOption(auto.replaceAll(".auto", ""), auto.replaceAll(".auto", ""));
+                autoChooser.addOption(auto.replaceAll(".auto", ""), auto.replaceAll(".auto", ""));
             // System.out.println(auto);
         }
 
