@@ -140,7 +140,6 @@ public class RobotContainer {
             new InstantCommand(() -> m_robotShooter.spinUpShooting(), m_robotShooter),
             IntakeExtended,
             new InstantCommand(() -> m_robotIntake.setMode(IntakeMode.ExpelBalls), m_robotIntake)
-            // new InstantCommand(() -> m_robotIntake.setMode(IntakeMode.Idle), m_robotIntake)
         );
 
         private Command WaitIntakeReference =
@@ -607,7 +606,7 @@ public class RobotContainer {
     public boolean autoChooserUpdated = false;
     public void makeAutoChooser() {
         autoChooser = new SendableChooser<String>();
-        
+        autoChooser.setDefaultOption("None", "None");
         File dir;
 
         if(RobotBase.isReal()) {
@@ -630,6 +629,10 @@ public class RobotContainer {
 
         autoChooser.onChange((filename) -> {
             autoChooserUpdated = true;
+            if (filename == null || filename.equals("None")) {
+                autoCommand = null;
+                return;
+            }
             // if (filename.equals("Taxi%")) {
             //     autoCommand = new SequentialCommandGroup(
             //         new MoveForTimeCommand(m_robotSwerveDrive, 
