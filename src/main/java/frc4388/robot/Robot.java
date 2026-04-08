@@ -82,7 +82,6 @@ public class Robot extends LoggedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
-
   }
   /**
    * This function is called once each time the robot enters Disabled mode.
@@ -251,10 +250,13 @@ public class Robot extends LoggedRobot {
     // Set up data receivers & replay source
     switch (SimConstants.currentMode) {
       case REAL:
-        // Running on a real robot, log to a USB stick ("/U/logs")
-        Logger.addDataReceiver(new WPILOGWriter());
-        Logger.addDataReceiver(new NT4Publisher());
-        break;
+          try {
+            Logger.addDataReceiver(new WPILOGWriter());
+          } catch (Exception e) {
+            System.out.println("[AdvantageKit] Failed to open log file, skipping USB logging: " + e.getMessage());
+            }
+          Logger.addDataReceiver(new NT4Publisher());
+    break;
 
       case SIM:
         // Running a physics simulator, log to NT

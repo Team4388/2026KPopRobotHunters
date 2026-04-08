@@ -138,7 +138,8 @@ public class RobotContainer {
     
         private Command RobotRev = new SequentialCommandGroup(
             new InstantCommand(() -> m_robotShooter.spinUpShooting(), m_robotShooter),
-            IntakeExtended,
+            new InstantCommand(() -> m_robotIntake.setMode(IntakeMode.RectractTorque), m_robotIntake)
+,
             new InstantCommand(() -> m_robotIntake.setMode(IntakeMode.ExpelBalls), m_robotIntake)
             // new InstantCommand(() -> m_robotIntake.setMode(IntakeMode.Idle), m_robotIntake)
         );
@@ -165,7 +166,7 @@ public class RobotContainer {
             new InstantCommand(() -> m_robotIntake.setMode(IntakeMode.Idle), m_robotIntake),
             new InstantCommand(()-> m_robotShooter.allowShooting(), m_robotShooter),
             new WaitCommand(3),
-            IntakeRetracted,
+            new InstantCommand(() -> m_robotIntake.setMode(IntakeMode.RectractTorque), m_robotIntake),
             new WaitCommand(4.5),
             new InstantCommand(() -> m_robotShooter.denyShooting(), m_robotShooter),
             new InstantCommand(()->m_robotShooter.spinUpIdle(), m_robotShooter)
@@ -191,19 +192,19 @@ public class RobotContainer {
                 m_robotShooter.io.updateGains();
             }, true);
     
-            NamedCommands.registerCommand("Robot Rev Up", RobotRev);
-            NamedCommands.registerCommand("Intake Retracted", IntakeRetracted);
-            NamedCommands.registerCommand("Robot Shoot", RobotShoot);
+            // NamedCommands.registerCommand("Robot Rev Up", RobotRev);
+            // NamedCommands.registerCommand("Intake Retracted", IntakeRetracted);
+            // NamedCommands.registerCommand("Robot Shoot", RobotShoot);
             // NamedCommands.registerCommand("Lidar Intake", LidarIntake);
-            NamedCommands.registerCommand("Intake Extended", IntakeExtended);
-            NamedCommands.registerCommand("Labubu Growl", LabubuGrowl);
-            NamedCommands.registerCommand("Robot Shoot Driving", RobotShootDriving);
-            NamedCommands.registerCommand("Intake Reference", WaitIntakeReference);
-            NamedCommands.registerCommand("WaitShooter", new WaitUntilCommand(m_robotShooter::isShooterUpToSpeed));
-            NamedCommands.registerCommand("AllowShooting", new InstantCommand(() -> m_robotShooter.allowShooting(), m_robotShooter));
-            NamedCommands.registerCommand("DenyShooting", new InstantCommand(() -> m_robotShooter.denyShooting(), m_robotShooter));
-            NamedCommands.registerCommand("SpinUpShooting", new InstantCommand(() -> m_robotShooter.spinUpShooting(), m_robotShooter));
-            NamedCommands.registerCommand("SpinUpIdle", new InstantCommand(() -> m_robotShooter.spinUpIdle(), m_robotShooter));
+            // NamedCommands.registerCommand("Intake Extended", IntakeExtended);
+            // NamedCommands.registerCommand("Labubu Growl", LabubuGrowl);
+            // NamedCommands.registerCommand("Robot Shoot Driving", RobotShootDriving);
+            // NamedCommands.registerCommand("Intake Reference", WaitIntakeReference);
+            // NamedCommands.registerCommand("WaitShooter", new WaitUntilCommand(m_robotShooter::isShooterUpToSpeed));
+            // NamedCommands.registerCommand("AllowShooting", new InstantCommand(() -> m_robotShooter.allowShooting(), m_robotShooter));
+            // NamedCommands.registerCommand("DenyShooting", new InstantCommand(() -> m_robotShooter.denyShooting(), m_robotShooter));
+            // NamedCommands.registerCommand("SpinUpShooting", new InstantCommand(() -> m_robotShooter.spinUpShooting(), m_robotShooter));
+            // NamedCommands.registerCommand("SpinUpIdle", new InstantCommand(() -> m_robotShooter.spinUpIdle(), m_robotShooter));
     
             NamedCommands.registerCommand("BumpOffsetForward", new InstantCommand(() -> {
                 if (TimesNegativeOne.isRed) {
@@ -361,7 +362,6 @@ public class RobotContainer {
         //set shooter ready (rev) with left trigger hold
         new Trigger(() -> getDeadbandedOperatorController().getLeftTriggerAxis() >= 0.5)
             .onTrue(new InstantCommand(() -> {
-                m_robotIntake.setMode(IntakeMode.Idle);
                 m_robotShooter.spinUpShooting();
             }))
             .onFalse(new InstantCommand(() -> {
