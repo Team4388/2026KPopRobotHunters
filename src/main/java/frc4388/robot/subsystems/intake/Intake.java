@@ -35,6 +35,7 @@ public class Intake extends SubsystemBase {
         ExtendingRolling,
 
         Retracting,
+        ArmIdleRollingNot,
 
         Idle,
         RectractTorque,
@@ -79,7 +80,6 @@ public class Intake extends SubsystemBase {
     public double getRollerSpeed() {
         return state.rollerOutput;
     }
-
     // public enum FieldZone {
     //     // The robot should aim at the hub
     //     InShootZone,
@@ -136,7 +136,10 @@ public class Intake extends SubsystemBase {
                 //     io.setRollerOutput(state, 0);
                 // }
                 break;
-            
+            case ArmIdleRollingNot:
+                io.armOutput(0);
+                io.setRollerOutput(state, IntakeConstants.ROLLER_RETRACT_PERCENT_OUTPUT.get());
+                break;
             case Bouncing:
                 // io.setRollerOutput(state, 0);
 

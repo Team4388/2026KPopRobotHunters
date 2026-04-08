@@ -23,7 +23,7 @@ public class IntakeConstants {
     public static final double ROLLER_MOTOR_GEAR_RATIO = 3;
     public static final ConfigurableDouble ARM_ENCODER_OFFSET = new ConfigurableDouble("Arm Encoder Offset", 0);
 
-    public static final int ARM_LIMIT_SWITCH_CHANNEL = 9;
+    public static final int ARM_LIMIT_SWITCH_CHANNEL = 7;
 
     public static final ConfigurableDouble INTAKE_BOUNCE_HALF_PERIOD = new ConfigurableDouble("Bounce Half Period", 5.);
     public static final ConfigurableDouble INTAKE_BOUNCE_OUTPUT = new ConfigurableDouble("Bounce Output", 0.1);
@@ -56,7 +56,7 @@ public class IntakeConstants {
     // public static final Angle ARM_LIMIT_UPPER = Degrees.of(-90);
 
     public static final ConfigurableDouble ARM_LIMIT_RETRACTED = new ConfigurableDouble("Arm angle retracted", 0.);
-    public static final ConfigurableDouble ARM_LIMIT_EXTENDED = new ConfigurableDouble("Arm angle extended", 1.75);
+    public static final ConfigurableDouble ARM_LIMIT_EXTENDED = new ConfigurableDouble("Arm angle extended", 1.8); //new soft limt
     public static final ConfigurableDouble ARM_EXTEND_PERCENT_OUTPUT = new ConfigurableDouble("Arm extend % output", 0.4);
     public static final ConfigurableDouble ARM_RETRACT_PERCENT_OUTPUT = new ConfigurableDouble("Arm retract % output", -0.2);
 
@@ -108,9 +108,9 @@ public class IntakeConstants {
             .forwardLimitSwitchType(Type.kNormallyOpen)
             .forwardLimitSwitchTriggerBehavior(Behavior.kKeepMovingMotor)
 
-            .reverseLimitSwitchType(Type.kNormallyClosed)
-            .reverseLimitSwitchPosition(0)
-            .reverseLimitSwitchTriggerBehavior(Behavior.kStopMovingMotorAndSetPosition);
+             .reverseLimitSwitchType(Type.kNormallyOpen)
+            // .reverseLimitSwitchPosition(0)
+            .reverseLimitSwitchTriggerBehavior(Behavior.kKeepMovingMotor);
 
         ARM_MOTOR_CONFIG.idleMode(IdleMode.kBrake);
 

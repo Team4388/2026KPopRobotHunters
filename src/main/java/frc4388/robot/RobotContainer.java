@@ -139,7 +139,8 @@ public class RobotContainer {
         private Command RobotRev = new SequentialCommandGroup(
             new InstantCommand(() -> m_robotShooter.spinUpShooting(), m_robotShooter),
             IntakeExtended,
-            new InstantCommand(() -> m_robotIntake.setMode(IntakeMode.Idle), m_robotIntake)
+            new InstantCommand(() -> m_robotIntake.setMode(IntakeMode.ExpelBalls), m_robotIntake)
+            // new InstantCommand(() -> m_robotIntake.setMode(IntakeMode.Idle), m_robotIntake)
         );
 
         private Command WaitIntakeReference =
@@ -161,10 +162,11 @@ public class RobotContainer {
             // TEST NEW AUTO ALIGN
             //new AutoAlign(m_robotSwerveDrive, m_vision, new Pose2d(FieldPositions.HUB_POSITION,  new Rotation2d(0)), false),
             new WaitUntilCommand(m_robotShooter::isShooterUpToSpeed),
+            new InstantCommand(() -> m_robotIntake.setMode(IntakeMode.Idle), m_robotIntake),
             new InstantCommand(()-> m_robotShooter.allowShooting(), m_robotShooter),
-            new WaitCommand(4),
+            new WaitCommand(3),
             IntakeRetracted,
-            new WaitCommand(7),
+            new WaitCommand(4.5),
             new InstantCommand(() -> m_robotShooter.denyShooting(), m_robotShooter),
             new InstantCommand(()->m_robotShooter.spinUpIdle(), m_robotShooter)
         );
@@ -183,7 +185,8 @@ public class RobotContainer {
             DeferredBlock.addBlock(() -> {
                 TimesNegativeOne.update();
                 FieldPositions.update();
-    
+                m_robotIntake.setMode(IntakeMode.Idle);
+                m_robotShooter.spinUpIdle();
                 m_robotIntake.io.updateGains();
                 m_robotShooter.io.updateGains();
             }, true);
@@ -339,7 +342,6 @@ public class RobotContainer {
         new Trigger(() -> getDeadbandedOperatorController().getRightTriggerAxis() >= 0.5)
             .onTrue(new InstantCommand(() -> {
                 m_robotShooter.allowShooting();
-                m_robotIntake.rollerStop();
             })).onFalse(new InstantCommand(() -> {
                 m_robotShooter.denyShooting();
             }));
@@ -380,6 +382,7 @@ public class RobotContainer {
             .onTrue(new InstantCommand(() -> {
                 m_robotIntake.setMode(IntakeMode.ExtendingRolling);
             }));
+            
         new JoystickButton(getDeadbandedOperatorController(), XboxController.B_BUTTON)
             .onTrue(new InstantCommand(() -> {
                 m_robotIntake.setMode(IntakeMode.LabubuGrowl);
@@ -392,7 +395,7 @@ public class RobotContainer {
                 m_robotIntake.setMode(IntakeMode.Retracting);
             }))
             .onFalse(new InstantCommand(() -> {
-                m_robotIntake.setMode(IntakeMode.Idle);
+                m_robotIntake.setMode(IntakeMode.ArmIdleRollingNot);
             }));
 
         

@@ -4,6 +4,8 @@ import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Rotations;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 
+import org.littletonrobotics.junction.Logger;
+
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.revrobotics.PersistMode;
 import com.revrobotics.ResetMode;
@@ -13,6 +15,8 @@ import com.revrobotics.spark.SparkMax;
 
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.Timer;
+import frc4388.robot.constants.Constants;
 import frc4388.utility.compute.JankCoder;
 
 public class IntakeReal implements IntakeIO {
@@ -23,6 +27,9 @@ public class IntakeReal implements IntakeIO {
     TalonFX m_rollerMotor;
     JankCoder m_encoder;
     DigitalInput m_armLimitSwitch;
+    boolean m_limitTRIGGER = false;
+    private final Timer m_limitTimer = new Timer();
+
 
     public IntakeReal(
         DigitalInput armLimitSwitch,
@@ -78,9 +85,12 @@ public class IntakeReal implements IntakeIO {
         // m_rollerMotor.set(0);
     }
 
-    // private boolean retractedLimit() {
-    //     return m_encoder.get() <= IntakeConstants.ARM_LIMIT_RETRACTED.get();
-    // }
+    private boolean retractedLimit() {
+        return m_armLimitSwitch.get();
+    }
+    private boolean retractedSoftLimit() {
+        return m_encoder.get() <= IntakeConstants.ARM_LIMIT_RETRACTED.get();
+    }
     private boolean extendedLimit() {
         return m_encoder.get() >= IntakeConstants.ARM_LIMIT_EXTENDED.get();
     }
@@ -88,9 +98,9 @@ public class IntakeReal implements IntakeIO {
     @Override
     public void armOutput(double percentOutput){
 
-        // if(retractedLimit()) {
-        //     percentOutput = Math.max(percentOutput, 0);
-        // } 
+        if(retractedSoftLimit()) {
+            percentOutput = Math.max(percentOutput, 0);
+        } 
         
         if (extendedLimit()) {
             percentOutput = Math.min(percentOutput, 0);
@@ -120,16 +130,30 @@ public class IntakeReal implements IntakeIO {
         state.intakeEncoder = m_encoder.getRotations();
         state.encoderConnected = m_encoder.isConnected();
 
-        state.retractedLimitSwitch = m_armLimitSwitch.get();
+        state.retractedLimitSwitch = retractedLimit();
 
-        if(state.retractedLimitSwitch) {
-            m_encoder.resetRotations();
-        }
+        // if(state.retractedLimitSwitch && (state.armMotorVelocity.in(RotationsPerSecond) <0)) {
+        //     if (!m_limitTRIGGER) {
+        //         m_limitTRIGGER = true;
+        //         m_limitTimer.restart();
+        //     }
+        //     if (m_limitTimer.hasElapsed(1.0)) {
+        //         m_encoder.resetRotations();
+        //     }
+        // } else {
+        //     m_limitTRIGGER = false;
+        //     m_limitTimer.reset();
+        // }
     }
 
     @Override 
     public void updateGains() {
-        m_encoder.loadRotations();
+        // m_encoder.loadRotations();
+
+
+        if(retractedLimit()) {
+            m_encoder.resetRotations();
+        }
 
         // IntakeConstants.ARM_PID.kP = IntakeConstants.arm_kP.get();
         // IntakeConstants.ARM_PID.kI = IntakeConstants.arm_kI.get();

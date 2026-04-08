@@ -97,7 +97,7 @@ public final class Constants {
    
 
     public static final class LEDConstants {
-        public static final int LED_SPARK_ID = 9;
+        public static final int LED_SPARK_ID = 8;
 
         public static final LEDPatterns DEFAULT_PATTERN = LEDPatterns.FOREST_RAINBOW;
 
