@@ -39,6 +39,7 @@ public class Intake extends SubsystemBase {
 
         Idle,
         RectractTorque,
+        RectractAuto,
         Bouncing,
         ExpelBalls,
         LabubuGrowl
@@ -178,6 +179,10 @@ public class Intake extends SubsystemBase {
                 // } else {
                     // io.setRollerOutput(state, 0);
                 // }
+                break;
+            case RectractAuto:
+                io.setRollerOutput(state, IntakeConstants.ROLLER_RETRACT_PERCENT_OUTPUT.get());
+                io.armOutput(IntakeConstants.ARM_AUTO_OUTPUT.get());
                 break;
             case Idle:
                 io.armOutput(0);
