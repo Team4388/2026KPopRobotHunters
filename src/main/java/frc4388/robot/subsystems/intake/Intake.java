@@ -75,7 +75,7 @@ public class Intake extends SubsystemBase {
     }
 
     public boolean intakeAtReference() {
-        return true;//state.extendedSoftLimit;
+        return state.extendedSoftLimit;
     }
 
     public double getRollerSpeed() {
