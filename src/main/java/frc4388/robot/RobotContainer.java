@@ -178,12 +178,12 @@ public class RobotContainer {
             // Called on first robot enable
             DeferredBlock.addBlock(() -> {
                 m_robotSwerveDrive.resetGyro();
-                m_robotIntake.setMode(IntakeMode.Idle);
-                m_robotShooter.spinUpIdle();
             }, false);
     
             // Called on every robot enable
             DeferredBlock.addBlock(() -> {
+                // m_robotIntake.setMode(IntakeMode.Idle);
+                // m_robotShooter.spinUpIdle();
                 TimesNegativeOne.update();
                 FieldPositions.update();
                 m_robotIntake.io.updateGains();
