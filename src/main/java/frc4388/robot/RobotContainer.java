@@ -167,7 +167,7 @@ public class RobotContainer {
             IntakeRetracted,
             new WaitCommand(4.4),
             new InstantCommand(() -> m_robotShooter.denyShooting(), m_robotShooter),
-            new InstantCommand(()->m_robotShooter.spinUpIdle(), m_robotShooter)
+            new InstantCommand(()-> m_robotShooter.spinUpIdle(), m_robotShooter)
         );
     
         
@@ -382,6 +382,11 @@ public class RobotContainer {
                 m_robotIntake.setMode(IntakeMode.ExtendingRolling);
             }));
             
+        new JoystickButton(getDeadbandedOperatorController(), XboxController.BACK_BUTTON)
+            .onTrue(new InstantCommand(()  -> {
+                m_robotIntake.setMode(IntakeMode.EncoderFix);
+            }));
+
         new JoystickButton(getDeadbandedOperatorController(), XboxController.B_BUTTON)
             .onTrue(new InstantCommand(() -> {
                 m_robotIntake.setMode(IntakeMode.LabubuGrowl);

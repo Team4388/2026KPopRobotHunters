@@ -52,6 +52,7 @@ public interface IntakeIO {
     public default void stopArm() {}
     public default void setRollerOutput(IntakeState state, double rollerOutput) {}
     public default void armOutput(double percentOutput) {}
+    public default void armFix(double percentOutput) {}
     public default void updateInputs(IntakeState state) {}
     public default void updateGains() {}
 }

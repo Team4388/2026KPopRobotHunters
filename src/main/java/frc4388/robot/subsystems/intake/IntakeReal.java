@@ -112,6 +112,11 @@ public class IntakeReal implements IntakeIO {
     }
 
     @Override
+    public void armFix(double percentOutput) {
+        m_armMotor.set(percentOutput);
+    }
+
+    @Override
     public void updateInputs(IntakeState state) {
         m_encoder.update();
 

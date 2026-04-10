@@ -34,6 +34,7 @@ public class Intake extends SubsystemBase {
         ExtendingIdle,
         ExtendingRolling,
 
+        EncoderFix,
         Retracting,
         ArmIdleRollingNot,
 
@@ -122,10 +123,16 @@ public class Intake extends SubsystemBase {
                 io.armOutput(IntakeConstants.ARM_EXTEND_PERCENT_OUTPUT.get());
                 io.setRollerOutput(state, 0);
                 break;
+        
                 
             case ExtendingRolling:
                 io.armOutput(IntakeConstants.ARM_EXTEND_PERCENT_OUTPUT.get());
                 io.setRollerOutput(state, IntakeConstants.ROLLER_PERCENT_OUTPUT.get()); //getTargetRollerSpeed(ChassisOverallSpeed));
+                break;
+
+            case EncoderFix:
+                io.armFix(IntakeConstants.FIX_ARM_PERCENT_OUTPUT.get());
+                io.setRollerOutput(state, 0);
                 break;
 
             case Retracting:

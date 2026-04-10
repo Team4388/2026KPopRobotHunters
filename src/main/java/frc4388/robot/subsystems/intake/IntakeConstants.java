@@ -37,7 +37,7 @@ public class IntakeConstants {
     // public static final ConfigurableDouble INTAKE_SQUEEZE_CURRENT_UPPER_THRESHOLD = new ConfigurableDouble("Intake Squeeze Current UPPER THRESHOLD", 25);
     public static final ConfigurableDouble ARM_SQUEEZE_PERCENT_OUTPUT = new ConfigurableDouble("Arm squeeze % output", -0.2);
     public static final ConfigurableDouble ARM_REDUCED_SQUEEZE_PERCENT_OUTPUT = new ConfigurableDouble("Arm reduce squeeze % output", 0.02);
-
+    public static final ConfigurableDouble FIX_ARM_PERCENT_OUTPUT = new ConfigurableDouble("Arm encoder fix % output", -0.1);
 
     //IDs
 
