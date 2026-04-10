@@ -45,7 +45,7 @@
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 5.0
+                        "waitTime": 5.75
                       }
                     },
                     {
@@ -70,12 +70,6 @@
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Intake Extended"
           }
         }
       ]
