@@ -45,7 +45,7 @@
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 4.2
+                        "waitTime": 4.5
                       }
                     },
                     {

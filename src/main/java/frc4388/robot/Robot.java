@@ -158,10 +158,10 @@ public class Robot extends LoggedRobot {
   public void teleopPeriodic() {
     var info = HubShiftTimer.getShiftInfo();
 
-    double rumble = (info.remainingInShift() < 5.  && info.remainingInShift() > 3.9) ? 1 : 0;
+    double rumble = (info.remainingInShift() < 5.  && info.remainingInShift() > 0.1) ? 1 : 0;
 
-    m_robotContainer.getDeadbandedDriverController().setRumble(RumbleType.kBothRumble, rumble);
-    m_robotContainer.getDeadbandedOperatorController().setRumble(RumbleType.kBothRumble, rumble);
+    // m_robotContainer.getDeadbandedDriverController().setRumble(RumbleType.kBothRumble, rumble);
+    // m_robotContainer.getDeadbandedOperatorController().setRumble(RumbleType.kBothRumble, rumble);
   }
 
   /**

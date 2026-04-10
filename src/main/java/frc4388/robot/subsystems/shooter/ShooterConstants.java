@@ -26,7 +26,7 @@ public class    ShooterConstants {
     // public static final ConfigurableDouble SHOOTER_RESTING_VELOCITY = new ConfigurableDouble("Shooter Resting Velocity", 0.0);
     
     
-    public static final ConfigurableDouble SHOOTER_IDLE_PERCENT_OUTPUT = new ConfigurableDouble("Shooter idle % output", -0.1);
+    public static final ConfigurableDouble SHOOTER_IDLE_PERCENT_OUTPUT = new ConfigurableDouble("Shooter idle % output", -0.15);
     // public static final ConfigurableDouble SHOOTER_IDLE_TARGET_VEL = new ConfigurableDouble("Shooter idle target velocity", 20.);
     // public static final ConfigurableDouble SHOOTER_IDLE_MAX_CURRENT = new ConfigurableDouble("Shooter Idle max current", 10);
 

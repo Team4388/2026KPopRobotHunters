@@ -156,27 +156,16 @@ public class RobotContainer {
         private Command IntakeRetracted = new SequentialCommandGroup(
             new InstantCommand(() -> m_robotIntake.setMode(IntakeMode.RectractTorque), m_robotIntake)
         );
-
-        private Command RobotHalfShoot = new SequentialCommandGroup(
-            new WaitUntilCommand(m_robotShooter::isShooterUpToSpeed),
-            new InstantCommand(() -> m_robotIntake.setMode(IntakeMode.Idle), m_robotIntake),
-            new InstantCommand(()-> m_robotShooter.allowShooting(), m_robotShooter),
-            new WaitCommand(2.0),
-            new InstantCommand(() -> m_robotShooter.denyShooting(), m_robotShooter),
-            new InstantCommand(()->m_robotShooter.spinUpIdle(), m_robotShooter)
-        );
     
-        private Command RobotFullShoot = new SequentialCommandGroup(
+        private Command RobotShoot = new SequentialCommandGroup(
             // TEST NEW AUTO ALIGN
             //new AutoAlign(m_robotSwerveDrive, m_vision, new Pose2d(FieldPositions.HUB_POSITION,  new Rotation2d(0)), false),
             new WaitUntilCommand(m_robotShooter::isShooterUpToSpeed),
             new InstantCommand(() -> m_robotIntake.setMode(IntakeMode.Idle), m_robotIntake),
             new InstantCommand(()-> m_robotShooter.allowShooting(), m_robotShooter),
-            new WaitCommand(2.5),
-            // new WaitCommand(2.25),
+            new WaitCommand(2.75),
             IntakeRetracted,
-            new WaitCommand(5),
-            // new WaitCommand(4.25),
+            new WaitCommand(4.4),
             new InstantCommand(() -> m_robotShooter.denyShooting(), m_robotShooter),
             new InstantCommand(()->m_robotShooter.spinUpIdle(), m_robotShooter)
         );
@@ -203,8 +192,7 @@ public class RobotContainer {
     
             NamedCommands.registerCommand("Robot Rev Up", RobotRev);
             NamedCommands.registerCommand("Intake Retracted", IntakeRetracted);
-            NamedCommands.registerCommand("Robot Shoot", RobotFullShoot);
-            NamedCommands.registerCommand("Robot Half Shot", RobotHalfShoot);
+            NamedCommands.registerCommand("Robot Shoot", RobotShoot);
             // NamedCommands.registerCommand("Lidar Intake", LidarIntake);
             NamedCommands.registerCommand("Intake Extended", IntakeExtended);
             NamedCommands.registerCommand("Labubu Growl", LabubuGrowl);
