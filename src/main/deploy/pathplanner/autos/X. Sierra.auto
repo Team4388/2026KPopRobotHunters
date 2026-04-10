@@ -29,7 +29,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "LeftTrench-Neutral-Trench-Shoot"
+                  "pathName": "SierraOne"
                 }
               },
               {
@@ -47,30 +47,6 @@
                       "data": {
                         "name": "Labubu Growl"
                       }
-                    },
-                    {
-                      "type": "wait",
-                      "data": {
-                        "waitTime": 5.0
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "Robot Rev Up"
-                      }
-                    },
-                    {
-                      "type": "wait",
-                      "data": {
-                        "waitTime": 1.5
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "Robot Shoot"
-                      }
                     }
                   ]
                 }
@@ -82,6 +58,36 @@
           "type": "named",
           "data": {
             "name": "Intake Extended"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "SierraTwo"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.5
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Robot Rev Up"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "PlayerStation-Shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Robot Shoot"
           }
         }
       ]

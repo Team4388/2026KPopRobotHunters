@@ -145,6 +145,9 @@ public class RobotContainer {
         private Command WaitIntakeReference =
             new WaitUntilCommand(m_robotIntake::intakeAtReference);
 
+        private Command ZeroEncoder =
+            new InstantCommand(() -> m_robotIntake.io.fixEncoder(), m_robotIntake);
+
         private Command RobotShootDriving = new SequentialCommandGroup(
             new RunCommand(() -> 
                 m_robotSwerveDrive.enableRotationOverride(FieldPositions.HUB_POSITION, ShooterConstants.AIM_LEAD_TIME.get(), FieldPositions.HUB_POSITION)
@@ -163,9 +166,9 @@ public class RobotContainer {
             new WaitUntilCommand(m_robotShooter::isShooterUpToSpeed),
             new InstantCommand(() -> m_robotIntake.setMode(IntakeMode.Idle), m_robotIntake),
             new InstantCommand(()-> m_robotShooter.allowShooting(), m_robotShooter),
-            new WaitCommand(2.75),
+            new WaitCommand(3.5),
             IntakeRetracted,
-            new WaitCommand(4.4),
+            new WaitCommand(5),
             new InstantCommand(() -> m_robotShooter.denyShooting(), m_robotShooter),
             new InstantCommand(()-> m_robotShooter.spinUpIdle(), m_robotShooter)
         );
@@ -191,6 +194,7 @@ public class RobotContainer {
             }, true);
     
             NamedCommands.registerCommand("Robot Rev Up", RobotRev);
+            NamedCommands.registerCommand("Zero Encoder", ZeroEncoder);
             NamedCommands.registerCommand("Intake Retracted", IntakeRetracted);
             NamedCommands.registerCommand("Robot Shoot", RobotShoot);
             // NamedCommands.registerCommand("Lidar Intake", LidarIntake);
