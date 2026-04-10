@@ -23,7 +23,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "RightTrench-Neutral-Trench-Shoot"
+                  "pathName": "LeftTrench-Neutral-Trench-Shoot"
                 }
               },
               {
@@ -45,7 +45,7 @@
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 4.5
+                        "waitTime": 5.0
                       }
                     },
                     {
@@ -76,36 +76,6 @@
           "type": "named",
           "data": {
             "name": "Intake Extended"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "ShotRightT-PlayerStation"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 1.5
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Robot Rev Up"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "PlayerStation-Shoot"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Robot Shoot"
           }
         }
       ]

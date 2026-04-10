@@ -163,9 +163,9 @@ public class RobotContainer {
             new WaitUntilCommand(m_robotShooter::isShooterUpToSpeed),
             new InstantCommand(() -> m_robotIntake.setMode(IntakeMode.Idle), m_robotIntake),
             new InstantCommand(()-> m_robotShooter.allowShooting(), m_robotShooter),
-            new WaitCommand(3),
+            new WaitCommand(2.75),
             IntakeRetracted,
-            new WaitCommand(4.5),
+            new WaitCommand(4.4),
             new InstantCommand(() -> m_robotShooter.denyShooting(), m_robotShooter),
             new InstantCommand(()->m_robotShooter.spinUpIdle(), m_robotShooter)
         );
@@ -184,9 +184,9 @@ public class RobotContainer {
             DeferredBlock.addBlock(() -> {
                 // m_robotIntake.setMode(IntakeMode.Idle);
                 // m_robotShooter.spinUpIdle();
+                m_robotIntake.io.updateGains();
                 TimesNegativeOne.update();
                 FieldPositions.update();
-                m_robotIntake.io.updateGains();
                 m_robotShooter.io.updateGains();
             }, true);
     
@@ -261,7 +261,7 @@ public class RobotContainer {
                 .onTrue(new InstantCommand(() -> m_robotSwerveDrive.shiftDown()));
     
         
-            
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
             new JoystickButton(getDeadbandedDriverController(), XboxController.BACK_BUTTON)
                 .onTrue(new InstantCommand(()  -> {
                     m_robotIntake.io.updateGains();
