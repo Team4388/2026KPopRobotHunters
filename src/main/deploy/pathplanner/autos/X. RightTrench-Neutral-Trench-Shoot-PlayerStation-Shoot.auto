@@ -45,7 +45,7 @@
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 4.5
+                        "waitTime": 4.2
                       }
                     },
                     {
@@ -63,7 +63,7 @@
                     {
                       "type": "named",
                       "data": {
-                        "name": "Robot Half Shot"
+                        "name": "Robot Shoot"
                       }
                     }
                   ]
@@ -87,7 +87,7 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 1.25
+            "waitTime": 1.5
           }
         },
         {

@@ -161,7 +161,6 @@ public class RobotContainer {
             new WaitUntilCommand(m_robotShooter::isShooterUpToSpeed),
             new InstantCommand(() -> m_robotIntake.setMode(IntakeMode.Idle), m_robotIntake),
             new InstantCommand(()-> m_robotShooter.allowShooting(), m_robotShooter),
-            IntakeRetracted,
             new WaitCommand(2.0),
             new InstantCommand(() -> m_robotShooter.denyShooting(), m_robotShooter),
             new InstantCommand(()->m_robotShooter.spinUpIdle(), m_robotShooter)
