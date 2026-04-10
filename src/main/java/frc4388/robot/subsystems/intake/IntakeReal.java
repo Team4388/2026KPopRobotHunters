@@ -166,4 +166,20 @@ public class IntakeReal implements IntakeIO {
         // m_armMotor.getConfigurator().apply(IntakeConstants.ARM_PID);
 
     }
+
+    @Override 
+    public void fixEncoder() {
+        // m_encoder.loadRotations();
+
+
+        // if(retractedLimit()) {
+            m_encoder.resetRotations();
+        // }
+
+        // IntakeConstants.ARM_PID.kP = IntakeConstants.arm_kP.get();
+        // IntakeConstants.ARM_PID.kI = IntakeConstants.arm_kI.get();
+        // IntakeConstants.ARM_PID.kD = IntakeConstants.arm_kD.get();
+        // m_armMotor.getConfigurator().apply(IntakeConstants.ARM_PID);
+
+    }
 }

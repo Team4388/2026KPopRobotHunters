@@ -55,4 +55,5 @@ public interface IntakeIO {
     public default void armFix(double percentOutput) {}
     public default void updateInputs(IntakeState state) {}
     public default void updateGains() {}
+    public default void fixEncoder() {}
 }
