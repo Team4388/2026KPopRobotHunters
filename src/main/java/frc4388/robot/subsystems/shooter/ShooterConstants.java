@@ -27,6 +27,7 @@ public class    ShooterConstants {
     
     
     public static final ConfigurableDouble SHOOTER_IDLE_PERCENT_OUTPUT = new ConfigurableDouble("Shooter idle % output", -0.15);
+    public static final ConfigurableDouble DEMO_PERCENT_OUTPUT = new ConfigurableDouble("Shooter idle % output", -0.15);
     // public static final ConfigurableDouble SHOOTER_IDLE_TARGET_VEL = new ConfigurableDouble("Shooter idle target velocity", 20.);
     // public static final ConfigurableDouble SHOOTER_IDLE_MAX_CURRENT = new ConfigurableDouble("Shooter Idle max current", 10);
 
@@ -55,31 +56,31 @@ public class    ShooterConstants {
 
     // 
     public static AngularVelocity getTargetShooterSpeed(double hubDistMeters, double chassisXSpeed) {
-            double speed = 0;
+        double speed = DEMO_PERCENT_OUTPUT.get();
 
-        if (Math.abs(chassisXSpeed) < 0.1){
-            speed = 0.0593402*hubDistMeters*hubDistMeters +
-            4.90561*hubDistMeters +
-            30.35696 + MODEL_TRIM.get();
-        } else if (chassisXSpeed > 0){
-            speed = 0.0593402*hubDistMeters*hubDistMeters +
-            4.90561*hubDistMeters +
-            30.35696 + chassisXSpeed * POS_OFFSET.get() + MODEL_TRIM.get();
+        // if (Math.abs(chassisXSpeed) < 0.1){
+        //     speed = 0.0593402*hubDistMeters*hubDistMeters +
+        //     4.90561*hubDistMeters +
+        //     30.35696 + MODEL_TRIM.get();
+        // } else if (chassisXSpeed > 0){
+        //     speed = 0.0593402*hubDistMeters*hubDistMeters +
+        //     4.90561*hubDistMeters +
+        //     30.35696 + chassisXSpeed * POS_OFFSET.get() + MODEL_TRIM.get();
             
-        } else { // Negative is closer to hub
-            speed = 0.0593402*hubDistMeters*hubDistMeters +
-            4.90561*hubDistMeters +
-            30.35696 + chassisXSpeed * NEG_OFFSET.get() + MODEL_TRIM.get();
-        }
+        // } else { // Negative is closer to hub
+        //     speed = 0.0593402*hubDistMeters*hubDistMeters +
+        //     4.90561*hubDistMeters +
+        //     30.35696 + chassisXSpeed * NEG_OFFSET.get() + MODEL_TRIM.get();
+        // }
         
-        double max = SHOOTER_MAX_VELOCITY.get();
+        // double max = SHOOTER_MAX_VELOCITY.get();
 
-        // Clamp speed to max
-        if(speed > max) {
-            speed = max;
-        } else if(speed < -max) {
-            speed = -max;
-        }
+        // // Clamp speed to max
+        // if(speed > max) {
+        //     speed = max;
+        // } else if(speed < -max) {
+        //     speed = -max;
+        // }
 
         // double speed = SHOOTER_MAX_VELOCITY.get();
         

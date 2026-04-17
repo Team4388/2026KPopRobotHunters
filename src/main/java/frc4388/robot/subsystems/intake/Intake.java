@@ -120,23 +120,23 @@ public class Intake extends SubsystemBase {
 
         switch (mode) {
             case ExtendingIdle:
-                io.armOutput(IntakeConstants.ARM_EXTEND_PERCENT_OUTPUT.get());
+                // io.armOutput(IntakeConstants.ARM_EXTEND_PERCENT_OUTPUT.get());
                 io.setRollerOutput(state, 0);
                 break;
         
                 
             case ExtendingRolling:
-                io.armOutput(IntakeConstants.ARM_EXTEND_PERCENT_OUTPUT.get());
+                // io.armOutput(IntakeConstants.ARM_EXTEND_PERCENT_OUTPUT.get());
                 io.setRollerOutput(state, IntakeConstants.ROLLER_PERCENT_OUTPUT.get()); //getTargetRollerSpeed(ChassisOverallSpeed));
                 break;
 
             case EncoderFix:
-                io.armFix(IntakeConstants.FIX_ARM_PERCENT_OUTPUT.get());
+                // io.armFix(IntakeConstants.FIX_ARM_PERCENT_OUTPUT.get());
                 io.setRollerOutput(state, 0);
                 break;
 
             case Retracting:
-                io.armOutput(IntakeConstants.ARM_RETRACT_PERCENT_OUTPUT.get());
+                // io.armOutput(IntakeConstants.ARM_RETRACT_PERCENT_OUTPUT.get());
 
                 // if(state.intakeEncoder.in(Rotations) > IntakeConstants.ARM_REVERSE_ROLLER_RANGE.get()) {
                 io.setRollerOutput(state, IntakeConstants.ROLLER_RETRACT_PERCENT_OUTPUT.get());
@@ -145,41 +145,41 @@ public class Intake extends SubsystemBase {
                 // }
                 break;
             case ArmIdleRollingNot:
-                io.armOutput(0);
+                // io.armOutput(0);
                 io.setRollerOutput(state, IntakeConstants.ROLLER_RETRACT_PERCENT_OUTPUT.get());
                 break;
             case Bouncing:
                 // io.setRollerOutput(state, 0);
 
-                if(
-                    state.armMotorCurrent.in(Amps) > IntakeConstants.INTAKE_BOUNCE_CURRENT_LIMIT.get()
-                    // Math.abs(state.armMotorVelocity.in(RotationsPerSecond)) < IntakeConstants.INTAKE_BOUNCE_VELOCITY_LIMIT.get()
-                ) {
-                    this.state.currentBounceTime = Utils.getSystemTimeSeconds() + IntakeConstants.INTAKE_BOUNCE_HALF_PERIOD.get();
-                }
+            //     if(
+            //         state.armMotorCurrent.in(Amps) > IntakeConstants.INTAKE_BOUNCE_CURRENT_LIMIT.get()
+            //         // Math.abs(state.armMotorVelocity.in(RotationsPerSecond)) < IntakeConstants.INTAKE_BOUNCE_VELOCITY_LIMIT.get()
+            //     ) {
+            //         this.state.currentBounceTime = Utils.getSystemTimeSeconds() + IntakeConstants.INTAKE_BOUNCE_HALF_PERIOD.get();
+            //     }
 
-                // Get the time delta from the last bounce time update
-                double currentTime = Utils.getSystemTimeSeconds() - state.currentBounceTime;
-                // Get the percentage through the bounce period (0 output means one half period has passed)
-                double percentOutput = (currentTime / IntakeConstants.INTAKE_BOUNCE_HALF_PERIOD.get()) * IntakeConstants.INTAKE_BOUNCE_OUTPUT.get();
-                // Clamp the output of the motor to some value
-                percentOutput = -Math.max(Math.min(percentOutput, IntakeConstants.INTAKE_BOUNCE_MAX_OUTPUT.get()), -IntakeConstants.INTAKE_BOUNCE_MAX_OUTPUT.get());
+            //     // Get the time delta from the last bounce time update
+            //     double currentTime = Utils.getSystemTimeSeconds() - state.currentBounceTime;
+            //     // Get the percentage through the bounce period (0 output means one half period has passed)
+            //     double percentOutput = (currentTime / IntakeConstants.INTAKE_BOUNCE_HALF_PERIOD.get()) * IntakeConstants.INTAKE_BOUNCE_OUTPUT.get();
+            //     // Clamp the output of the motor to some value
+            //     percentOutput = -Math.max(Math.min(percentOutput, IntakeConstants.INTAKE_BOUNCE_MAX_OUTPUT.get()), -IntakeConstants.INTAKE_BOUNCE_MAX_OUTPUT.get());
 
-                io.armOutput(percentOutput);
+            //     io.armOutput(percentOutput);
 
-                if(percentOutput < 0) {
-                    io.setRollerOutput(state, IntakeConstants.ROLLER_RETRACT_PERCENT_OUTPUT.get());
-                } else {
-                    io.setRollerOutput(state, 0);
-                }
-                break;
-            case RectractTorque:
-                io.setRollerOutput(state, IntakeConstants.ROLLER_RETRACT_PERCENT_OUTPUT.get());
-                if (!overCompressed){
-                    io.armOutput(IntakeConstants.ARM_SQUEEZE_PERCENT_OUTPUT.get());
-                } else {
-                    io.armOutput(IntakeConstants.ARM_REDUCED_SQUEEZE_PERCENT_OUTPUT.get());
-                }
+            //     if(percentOutput < 0) {
+            //         io.setRollerOutput(state, IntakeConstants.ROLLER_RETRACT_PERCENT_OUTPUT.get());
+            //     } else {
+            //         io.setRollerOutput(state, 0);
+            //     }
+            //     break;
+            // case RectractTorque:
+            //     io.setRollerOutput(state, IntakeConstants.ROLLER_RETRACT_PERCENT_OUTPUT.get());
+            //     if (!overCompressed){
+            //         io.armOutput(IntakeConstants.ARM_SQUEEZE_PERCENT_OUTPUT.get());
+            //     } else {
+            //         io.armOutput(IntakeConstants.ARM_REDUCED_SQUEEZE_PERCENT_OUTPUT.get());
+            //     }
 
                 // if(state.intakeEncoder.in(Rotations) > IntakeConstants.ARM_REVERSE_ROLLER_RANGE.get()) {
                 // io.setRollerOutput(state, IntakeConstants.ROLLER_RETRACT_PERCENT_OUTPUT.get());
@@ -189,19 +189,19 @@ public class Intake extends SubsystemBase {
                 break;
             case RectractAuto:
                 io.setRollerOutput(state, IntakeConstants.ROLLER_RETRACT_PERCENT_OUTPUT.get());
-                io.armOutput(IntakeConstants.ARM_AUTO_OUTPUT.get());
+                // io.armOutput(IntakeConstants.ARM_AUTO_OUTPUT.get());
                 break;
             case Idle:
-                io.armOutput(0);
+                // io.armOutput(0);
                 io.setRollerOutput(state, 0);
                 break;
                 
             case ExpelBalls:
-                io.armOutput(0);
+                // io.armOutput(0);
                 io.setRollerOutput(state, IntakeConstants.ROLLER_EJECT_PERCENT_OUTPUT.get());
                 break;
             case LabubuGrowl:
-                io.armOutput(IntakeConstants.ARM_EXTEND_PERCENT_OUTPUT.get());
+                // io.armOutput(IntakeConstants.ARM_EXTEND_PERCENT_OUTPUT.get());
                 io.setRollerOutput(state, IntakeConstants.ROLLER_LABUBU_GROWL_PERCENT_OUTPUT.get());
                 break;
         }
