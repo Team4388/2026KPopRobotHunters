@@ -99,7 +99,11 @@ public final class Constants {
     public static final class LEDConstants {
         public static final int LED_SPARK_ID = 8;
 
-        public static final LEDPatterns DEFAULT_PATTERN = LEDPatterns.FOREST_RAINBOW;
+        public static final LEDPatterns RAGE = LEDPatterns.SOLID_RED;
+
+        public static final LEDPatterns DEFAULT_PATTERN = LEDPatterns.PARTY_RAINBOW;
+        public static final LEDPatterns GURT = LEDPatterns.FOREST_BPM;
+
 
         // // // LED color for when the intake is out
         // public static final LEDPatterns INTAKE_OUT = LEDPatterns.SOLID_RED;

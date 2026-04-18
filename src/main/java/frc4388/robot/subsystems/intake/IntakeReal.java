@@ -26,13 +26,13 @@ public class IntakeReal implements IntakeIO {
     // SparkLimitSwitch reverse_limit;
     TalonFX m_rollerMotor;
     JankCoder m_encoder;
-    DigitalInput m_armLimitSwitch;
+    // DigitalInput m_armLimitSwitch;
     boolean m_limitTRIGGER = false;
     private final Timer m_limitTimer = new Timer();
 
 
     public IntakeReal(
-        DigitalInput armLimitSwitch,
+        // DigitalInput armLimitSwitch,
         SparkMax armMotor,
         TalonFX rollerMotor,
         JankCoder jankCoder
@@ -41,7 +41,7 @@ public class IntakeReal implements IntakeIO {
         // m_pitchMotor = pitchMotor;
         m_armMotor = armMotor;
         arm_encoder = m_armMotor.getEncoder();
-        m_armLimitSwitch = armLimitSwitch;
+        // m_armLimitSwitch = armLimitSwitch;
         m_rollerMotor = rollerMotor;
         m_encoder = jankCoder;
 
@@ -85,9 +85,9 @@ public class IntakeReal implements IntakeIO {
         // m_rollerMotor.set(0);
     }
 
-    private boolean retractedLimit() {
-        return m_armLimitSwitch.get();
-    }
+    // private boolean retractedLimit() {
+    //     // return m_armLimitSwitch.get();
+    // }
     private boolean retractedSoftLimit() {
         return m_encoder.get() <= IntakeConstants.ARM_LIMIT_RETRACTED.get();
     }
@@ -135,7 +135,7 @@ public class IntakeReal implements IntakeIO {
         state.intakeEncoder = m_encoder.getRotations();
         state.encoderConnected = m_encoder.isConnected();
 
-        state.retractedLimitSwitch = retractedLimit();
+        // state.retractedLimitSwitch = retractedLimit();
 
         // if(state.retractedLimitSwitch && (state.armMotorVelocity.in(RotationsPerSecond) <0)) {
         //     if (!m_limitTRIGGER) {
@@ -156,9 +156,9 @@ public class IntakeReal implements IntakeIO {
         // m_encoder.loadRotations();
 
 
-        if(retractedLimit()) {
-            m_encoder.resetRotations();
-        }
+        // if(retractedLimit()) {
+        //     m_encoder.resetRotations();
+        // }
 
         // IntakeConstants.ARM_PID.kP = IntakeConstants.arm_kP.get();
         // IntakeConstants.ARM_PID.kI = IntakeConstants.arm_kI.get();

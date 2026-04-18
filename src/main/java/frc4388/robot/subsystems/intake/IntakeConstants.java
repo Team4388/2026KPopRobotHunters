@@ -57,17 +57,17 @@ public class IntakeConstants {
 
     public static final ConfigurableDouble ARM_LIMIT_RETRACTED = new ConfigurableDouble("Arm angle retracted", 0.);
     public static final ConfigurableDouble ARM_LIMIT_EXTENDED = new ConfigurableDouble("Arm angle extended", 1.625); //new soft limt
-    public static final ConfigurableDouble ARM_EXTEND_PERCENT_OUTPUT = new ConfigurableDouble("Arm extend % output", 0.3);
-    public static final ConfigurableDouble ARM_RETRACT_PERCENT_OUTPUT = new ConfigurableDouble("Arm retract % output", -0.15);
+    public static final ConfigurableDouble ARM_EXTEND_PERCENT_OUTPUT = new ConfigurableDouble("Arm extend % output", 0.);
+    public static final ConfigurableDouble ARM_RETRACT_PERCENT_OUTPUT = new ConfigurableDouble("Arm retract % output", -0.);
 
     public static final ConfigurableDouble ARM_AUTO_OUTPUT = new ConfigurableDouble("Arm auto output", -0.07);
     public static final ConfigurableDouble ARM_REVERSE_ROLLER_RANGE = new ConfigurableDouble("Arm reverse roller range", 1.17);
     
-    public static final ConfigurableDouble ROLLER_PERCENT_OUTPUT = new ConfigurableDouble("Roller Percent Output", .50);
-    public static final ConfigurableDouble ROLLER_LABUBU_GROWL_PERCENT_OUTPUT = new ConfigurableDouble("Roller Labubu Growl Percent Output", .7);
-    public static final ConfigurableDouble ROLLER_EJECT_PERCENT_OUTPUT = new ConfigurableDouble("Roller eject Percent Output", -.20);
-    public static final ConfigurableDouble ROLLER_IDLE_PERCENT_OUTPUT = new ConfigurableDouble("Roller IDLE Percent Output", .20);
-    public static final ConfigurableDouble ROLLER_RETRACT_PERCENT_OUTPUT = new ConfigurableDouble("Roller Retract Output", .40);
+    public static final ConfigurableDouble ROLLER_PERCENT_OUTPUT = new ConfigurableDouble("Roller Percent Output", .0);
+    public static final ConfigurableDouble ROLLER_LABUBU_GROWL_PERCENT_OUTPUT = new ConfigurableDouble("Roller Labubu Growl Percent Output", .0);
+    public static final ConfigurableDouble ROLLER_EJECT_PERCENT_OUTPUT = new ConfigurableDouble("Roller eject Percent Output", .0);
+    public static final ConfigurableDouble ROLLER_IDLE_PERCENT_OUTPUT = new ConfigurableDouble("Roller IDLE Percent Output", .0);
+    public static final ConfigurableDouble ROLLER_RETRACT_PERCENT_OUTPUT = new ConfigurableDouble("Roller Retract Output", .0);
     public static final ConfigurableDouble ROLLER_MULTIPLIER_CONST = new ConfigurableDouble("Roller Multiplier Constant", 0.4);
 
     // public static final ConfigurableDouble ROLL = new ConfigurableDouble("Arm angle extended", 0.25);

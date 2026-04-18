@@ -182,30 +182,30 @@ public class Shooter extends SubsystemBase {
                 switch (bitmask) {
                     case 0b000: // No errors but button is not pressed
                         io.setIndexerOutput(state, ShooterConstants.INDEXER_REVERSE_OUTPUT.get());
-                        m_robotLED.setMode(Constants.LEDConstants.OPREADY);
+                        // m_robotLED.setMode(Constants.LEDConstants.OPREADY);
                         break;
 
                     case 0b001: // No errors and shoot button is pressed     
                         io.setIndexerOutput(state, ShooterConstants.INDEXER_FORWARD_OUTPUT.get());
-                        m_robotLED.setMode(Constants.LEDConstants.OPREADY);
+                        // m_robotLED.setMode(Constants.LEDConstants.OPREADY);
                         break;
 
                     case 0b010: // Bad shooter velocity, button is not pressed
                     case 0b011: // Bad shooter velocty, button is pressed
                         io.setIndexerOutput(state, ShooterConstants.INDEXER_REVERSE_OUTPUT.get());
-                        m_robotLED.setMode(Constants.LEDConstants.BAD_FLYWEEL);
+                        // m_robotLED.setMode(Constants.LEDConstants.BAD_FLYWEEL);
                         break;
 
                     case 0b100: // Driver error, button is not pressed
                     case 0b101: // Driver error, button is pressed
                         io.setIndexerOutput(state, 0);
-                        m_robotLED.setMode(Constants.LEDConstants.OPREADY_BADPHYS);
+                        // m_robotLED.setMode(Constants.LEDConstants.OPREADY_BADPHYS);
                         break;
 
                     case 0b110: // Driver error, bad shooter vel, button is not pressed
                     case 0b111: // Driver error, bad shooter vel, button is pressed
                         io.setIndexerOutput(state, 0);
-                        m_robotLED.setMode(Constants.LEDConstants.BAD_FLYWEEL_BADPHYS);
+                        // m_robotLED.setMode(Constants.LEDConstants.BAD_FLYWEEL_BADPHYS);
                         break;
                 }
                 break;
@@ -220,18 +220,18 @@ public class Shooter extends SubsystemBase {
                 switch (bitmask2) {
                     case 0b000: // No errors but button is not pressed
                         io.setIndexerOutput(state, 0);
-                        m_robotLED.setMode(Constants.LEDConstants.OPREADY_FEED);
+                        // m_robotLED.setMode(Constants.LEDConstants.OPREADY_FEED);
                         break;
 
                     case 0b001: // No errors and shoot button is pressed
                         io.setIndexerOutput(state, ShooterConstants.INDEXER_FORWARD_OUTPUT.get());
-                        m_robotLED.setMode(Constants.LEDConstants.OPREADY_FEED);
+                        // m_robotLED.setMode(Constants.LEDConstants.OPREADY_FEED);
                         break;
 
                     case 0b010: // Bad shooter velocity, button is not pressed
                     case 0b011: // Bad shooter velocty, button is pressed
                         io.setIndexerOutput(state, 0);
-                        m_robotLED.setMode(Constants.LEDConstants.BAD_FLYWEEL);
+                        // m_robotLED.setMode(Constants.LEDConstants.BAD_FLYWEEL);
                         break;
 
                     // case 0b100: // Driver error, button is not pressed
@@ -257,7 +257,7 @@ public class Shooter extends SubsystemBase {
                     // RotationsPerSecond.of(ShooterConstants.INDEXER_REVERSE_OUTPUT.get())
                 );
                 io.setIndexerOutput(state, 0);
-                m_robotLED.setMode(Constants.LEDConstants.DEFAULT_PATTERN);
+                // m_robotLED.setMode(Constants.LEDConstants.DEFAULT_PATTERN);
                 break;
             }
             

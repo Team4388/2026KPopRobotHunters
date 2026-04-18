@@ -49,6 +49,13 @@ public class LED extends SubsystemBase implements Queryable {
     }
   }
 
+  public void goonCycle(){
+    LEDPatterns[] patterns = LEDPatterns.values();
+    int currentPatternIndex = mode.ordinal();
+    int nextPatternIndex = (currentPatternIndex + 1)% patterns.length;
+    setMode(patterns[nextPatternIndex]);
+  }
+
   @AutoLogOutput
   public String getMode(){
     return mode.name();
