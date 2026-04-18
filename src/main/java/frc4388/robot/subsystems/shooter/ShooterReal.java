@@ -156,6 +156,15 @@ public class ShooterReal implements ShooterIO {
         state.indexerTargetOutput = percentOutput;
         m_indexerMotor.set(percentOutput);
     }
+    
+    // @Override
+    // public boolean demoSpeed(ShooterState state) {
+    //     boolean demo = false;
+    //     if((Math.abs(Math.abs(state.motor1TargetVelocity.in(RotationsPerSecond))-Math.abs(state.motor2TargetVelocity.in(RotationsPerSecond))) < 3)){
+    //         demo = true;
+    //     }
+    //     return demo;
+    // }
 
 
     @Override

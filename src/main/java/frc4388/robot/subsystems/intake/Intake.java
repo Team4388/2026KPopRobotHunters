@@ -146,7 +146,7 @@ public class Intake extends SubsystemBase {
                 break;
             case ArmIdleRollingNot:
                 // io.armOutput(0);
-                io.setRollerOutput(state, IntakeConstants.ROLLER_RETRACT_PERCENT_OUTPUT.get());
+                io.setRollerOutput(state, 0);
                 break;
             case Bouncing:
                 // io.setRollerOutput(state, 0);

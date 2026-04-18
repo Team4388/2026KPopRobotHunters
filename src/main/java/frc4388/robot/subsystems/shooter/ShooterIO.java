@@ -52,6 +52,13 @@ public interface ShooterIO {
     public default void updateInputs(ShooterState state) {}
 
     public default void motorStalled(ShooterState state, Intake m_Intake, LED m_robotLED) {}
+    public default boolean demoSpeed(ShooterState state) {
+        boolean demo = false;
+        if((Math.abs(Math.abs(state.motor1TargetVelocity.in(RotationsPerSecond))-Math.abs(state.motor2TargetVelocity.in(RotationsPerSecond))) < 3)){
+            demo = true;
+        }
+        return demo;
+    }
     
     public default void updateGains() {}
 }

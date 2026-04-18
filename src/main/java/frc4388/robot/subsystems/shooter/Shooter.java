@@ -210,43 +210,13 @@ public class Shooter extends SubsystemBase {
                 }
                 break;
             case ManualShoot:
-                io.setShooterVelocity(state, RotationsPerSecond.of(ShooterConstants.SHOOTER_OVERRIDE_VELOCITY.get()));
-
-                int bitmask2 = (
-                    (shooterButtonReady ? 1 : 0) +
-                    (badShooterVelocity ? 2 : 0)
-                );
-
-                switch (bitmask2) {
-                    case 0b000: // No errors but button is not pressed
-                        io.setIndexerOutput(state, 0);
-                        m_robotLED.setMode(Constants.LEDConstants.OPREADY_FEED);
-                        break;
-
-                    case 0b001: // No errors and shoot button is pressed
-                        io.setIndexerOutput(state, ShooterConstants.INDEXER_FORWARD_OUTPUT.get());
-                        m_robotLED.setMode(Constants.LEDConstants.OPREADY_FEED);
-                        break;
-
-                    case 0b010: // Bad shooter velocity, button is not pressed
-                    case 0b011: // Bad shooter velocty, button is pressed
-                        io.setIndexerOutput(state, 0);
-                        m_robotLED.setMode(Constants.LEDConstants.BAD_FLYWEEL);
-                        break;
-
-                    // case 0b100: // Driver error, button is not pressed
-                    // case 0b101: // Driver error, button is pressed
-                    //     m_robotLED.setMode(Constants.LEDConstants.BAD_FLYWEEL);
-                    //     io.setIndexerOutput(state, ShooterConstants.INDEXER_REVERSE_OUTPUT.get());
-                    //     break;
-
-                    // case 0b110: // Driver error, bad shooter vel, button is not pressed
-                    // case 0b111: // Driver error, bad shooter vel, button is pressed
-                    //     m_robotLED.setMode(Constants.LEDConstants.BAD_FLYWEEL_BADPHYS);
-                    //     io.setIndexerOutput(state, ShooterConstants.INDEXER_REVERSE_OUTPUT.get());
-                    //     break;
+                if(io.demoSpeed(state)){
+            io.setIndexerOutput(state, -0.5);
+                }else{
+                    io.setIndexerOutput(state, 0.2);
                 }
-
+                io.setShooterVelocity(state, RotationsPerSecond.of(ShooterConstants.SHOOTER_OVERRIDE_VELOCITY.get()));
+                m_robotLED.setMode(Constants.LEDConstants.OPREADY_FEED);
                 break;
             case Idle:
 
