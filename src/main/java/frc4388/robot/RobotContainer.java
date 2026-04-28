@@ -12,37 +12,31 @@
 package frc4388.robot;
 
 import java.io.File;
-import java.util.Optional;
 
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 // Commands
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc4388.robot.commands.waitSupplier;
 import frc4388.robot.commands.Swerve.StayInPosition;
-import frc4388.robot.commands.alignment.AutoAlign;
 import frc4388.robot.constants.Constants;
-import frc4388.robot.constants.FieldConstants;
 import frc4388.robot.constants.Constants.OIConstants;
 import frc4388.robot.constants.Constants.SimConstants.Mode;
+import frc4388.robot.constants.FieldConstants;
 import frc4388.robot.subsystems.intake.Intake;
 import frc4388.robot.subsystems.intake.Intake.IntakeMode;
 import frc4388.robot.subsystems.led.LED;
@@ -50,7 +44,6 @@ import frc4388.robot.subsystems.shooter.Shooter;
 import frc4388.robot.subsystems.shooter.ShooterConstants;
 import frc4388.robot.subsystems.swerve.SimpleSwerveSim;
 import frc4388.robot.subsystems.swerve.SwerveDrive;
-import frc4388.robot.subsystems.vision.Lidar;
 import frc4388.robot.subsystems.vision.Vision;
 import frc4388.utility.DeferredBlock;
 import frc4388.utility.compute.FieldPositions;
@@ -107,76 +100,14 @@ public class RobotContainer {
         // ! /*  Autos */
         private SendableChooser<String> autoChooser;
         private Command autoCommand;
-    
-    
-        private Command IntakeExtended = new SequentialCommandGroup(
-            new InstantCommand(() -> m_robotIntake.setMode(IntakeMode.ExtendingRolling), m_robotIntake)
-        );
+     
 
-        private Command LabubuGrowl = new SequentialCommandGroup(
-            new InstantCommand(() -> m_robotIntake.setMode(IntakeMode.LabubuGrowl), m_robotIntake)
-        );
-    
-        // private Command LidarIntake = new SequentialCommandGroup(
-        //     // Right now this will just go to the closest ball constantly updating - need to make it so it locks on one ball
-        //     // RobotIntakeDown,
-        //     // new WaitCommand(1),
-        //     // new InstantCommand(() -> System.out.println("Closest Ball: " + m_lidar.getClosestBall())),
-        //     new AutoAlign(m_robotSwerveDrive, m_vision, m_lidar, true)
-    
-        //     // new RunCommand(
-        //     // () -> m_robotSwerveDrive.driveWithInput(
-        //     //         m_lidar.getClosestBall(),
-        //     //         new Translation2d(m_lidar.getLatestBallAngle().getCos() * 0.1, 0),
-        //     //         false
-        //     //     ),
-        //     //     m_robotSwerveDrive
-        //     // )
-        //     // .withTimeout(5.0)
-        //     // .andThen(new InstantCommand(() -> m_robotSwerveDrive.softStop(), m_robotSwerveDrive))
-        // );
-    
-        private Command RobotRev = new SequentialCommandGroup(
-            new InstantCommand(() -> m_robotShooter.spinUpShooting(), m_robotShooter),
-            IntakeExtended,
-            new InstantCommand(() -> m_robotIntake.setMode(IntakeMode.ExpelBalls), m_robotIntake)
-        );
-
-        private Command WaitIntakeReference =
-            new WaitUntilCommand(m_robotIntake::intakeAtReference);
-
-        private Command ZeroEncoder =
-            new InstantCommand(() -> m_robotIntake.io.fixEncoder(), m_robotIntake);
-
-        private Command RobotShootDriving = new SequentialCommandGroup(
-            new RunCommand(() -> 
-                m_robotSwerveDrive.enableRotationOverride(FieldPositions.HUB_POSITION, ShooterConstants.AIM_LEAD_TIME.get(), FieldPositions.HUB_POSITION)
-            ).withTimeout(20)
-            ).finallyDo((interrupted) -> 
-             m_robotSwerveDrive.disableRotationOverride()
-        );
-    
-        private Command IntakeRetracted = new SequentialCommandGroup(
-            new InstantCommand(() -> m_robotIntake.setMode(IntakeMode.RectractTorque), m_robotIntake)
-        );
-    
-        private Command RobotShoot = new SequentialCommandGroup(
-            // TEST NEW AUTO ALIGN
-            //new AutoAlign(m_robotSwerveDrive, m_vision, new Pose2d(FieldPositions.HUB_POSITION,  new Rotation2d(0)), false),
-            new WaitUntilCommand(m_robotShooter::isShooterUpToSpeed),
-            new InstantCommand(() -> m_robotIntake.setMode(IntakeMode.Idle), m_robotIntake),
-            new InstantCommand(()-> m_robotShooter.allowShooting(), m_robotShooter),
-            new WaitCommand(3.5),
-            IntakeRetracted,
-            new WaitCommand(5),
-            new InstantCommand(() -> m_robotShooter.denyShooting(), m_robotShooter),
-            new InstantCommand(()-> m_robotShooter.spinUpIdle(), m_robotShooter)
-        );
+  
     
         
         public RobotContainer() {
             
-            configureButtonBindings();
+            configureSINGLEBindings();
             
             // Called on first robot enable
             DeferredBlock.addBlock(() -> {
@@ -193,15 +124,6 @@ public class RobotContainer {
                 m_robotShooter.io.updateGains();
             }, true);
     
-            NamedCommands.registerCommand("Robot Rev Up", RobotRev);
-            NamedCommands.registerCommand("Zero Encoder", ZeroEncoder);
-            NamedCommands.registerCommand("Intake Retracted", IntakeRetracted);
-            NamedCommands.registerCommand("Robot Shoot", RobotShoot);
-            // NamedCommands.registerCommand("Lidar Intake", LidarIntake);
-            NamedCommands.registerCommand("Intake Extended", IntakeExtended);
-            NamedCommands.registerCommand("Labubu Growl", LabubuGrowl);
-            NamedCommands.registerCommand("Robot Shoot Driving", RobotShootDriving);
-            NamedCommands.registerCommand("Intake Reference", WaitIntakeReference);
             NamedCommands.registerCommand("WaitShooter", new WaitUntilCommand(m_robotShooter::isShooterUpToSpeed));
             NamedCommands.registerCommand("AllowShooting", new InstantCommand(() -> m_robotShooter.allowShooting(), m_robotShooter));
             NamedCommands.registerCommand("DenyShooting", new InstantCommand(() -> m_robotShooter.denyShooting(), m_robotShooter));
@@ -244,57 +166,14 @@ public class RobotContainer {
         }
         
     
-    
-    
-        /**
-         * Use this method to define your button->command mappings. Buttons can be
-         * created by instantiating a {@link GenericHID} or one of its subclasses
-         * ({@link edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then
-         * passing it to a {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
-         */
-        private void configureButtonBindings() {
-            
-            //Driver controls
-            new JoystickButton(getDeadbandedDriverController(), XboxController.A_BUTTON)
-                .onTrue(new InstantCommand(() -> m_robotSwerveDrive.resetGyro()));
-    
-            new JoystickButton(getDeadbandedDriverController(), XboxController.RIGHT_BUMPER_BUTTON)
-                .onTrue(new InstantCommand(()  -> m_robotSwerveDrive.shiftUp()));
-            
-            new JoystickButton(getDeadbandedDriverController(), XboxController.LEFT_BUMPER_BUTTON)
-                .onTrue(new InstantCommand(() -> m_robotSwerveDrive.shiftDown()));
-        
-
-            // manually shoot from climb post/ feed balls
-        new JoystickButton(getDeadbandedOperatorController(), XboxController.LEFT_BUMPER_BUTTON)
-            .onTrue(new InstantCommand(() -> {
-                m_robotShooter.spinUpFeeding();
-                m_robotIntake.rollerStop();
-            }))
-            .onFalse(new InstantCommand(() -> {
-                m_robotShooter.spinUpIdle();
-            }));
-
-
-
-        new JoystickButton(getDeadbandedOperatorController(), XboxController.X_BUTTON)
-            .onTrue(new InstantCommand(() -> {
-                m_robotIntake.setMode(IntakeMode.ExtendingRolling);
-            }));
-        
-        new JoystickButton(getDeadbandedOperatorController(), XboxController.Y_BUTTON)
-            .onTrue(new InstantCommand(() -> {
-                m_robotIntake.setMode(IntakeMode.ArmIdleRollingNot);
-            }));
-
-
-   }
 
 
    private void configureSINGLEBindings() {
-            
-              
-            //Driver controls
+
+            String controllerInstructions = "Single Controller: \n- A: Reset Gyro \n- Right Bumper: Shift Up \n- Left Bumper: Shift Down \n- X Button: Roller On \n- Y Button: Roller Off \n- B Button: Labubu Growl \n- Back Button: Manual shoot \n- Menu Button: Expels balls";
+
+            SmartDashboard.putString("Controller Binds", controllerInstructions);
+
             new JoystickButton(getDeadbandedDriverController(), XboxController.A_BUTTON)
                 .onTrue(new InstantCommand(() -> m_robotSwerveDrive.resetGyro()));
     
@@ -303,10 +182,8 @@ public class RobotContainer {
             
             new JoystickButton(getDeadbandedDriverController(), XboxController.LEFT_BUMPER_BUTTON)
                 .onTrue(new InstantCommand(() -> m_robotSwerveDrive.shiftDown()));
-        
 
-            // manually shoot from climb post/ feed balls
-        new JoystickButton(getDeadbandedDriverController(), XboxController.LEFT_BUMPER_BUTTON)
+            new JoystickButton(getDeadbandedDriverController(), XboxController.BACK_BUTTON)
             .onTrue(new InstantCommand(() -> {
                 m_robotShooter.spinUpFeeding();
                 m_robotIntake.rollerStop();
@@ -315,18 +192,27 @@ public class RobotContainer {
                 m_robotShooter.spinUpIdle();
             }));
 
-
-
-        new JoystickButton(getDeadbandedDriverController(), XboxController.X_BUTTON)
+            new JoystickButton(getDeadbandedDriverController(), XboxController.START_BUTTON)
             .onTrue(new InstantCommand(() -> {
-                m_robotIntake.setMode(IntakeMode.ExtendingRolling);
+                m_robotShooter.spinUpFeeding();
+                m_robotIntake.rollerStop();
+            }));
+
+
+            new JoystickButton(getDeadbandedDriverController(), XboxController.X_BUTTON)
+            .onTrue(new InstantCommand(() -> {
+                m_robotIntake.setMode(IntakeMode.RollerOn);
             }));
         
-        new JoystickButton(getDeadbandedDriverController(), XboxController.Y_BUTTON)
+            new JoystickButton(getDeadbandedDriverController(), XboxController.Y_BUTTON)
             .onTrue(new InstantCommand(() -> {
-                m_robotIntake.setMode(IntakeMode.ArmIdleRollingNot);
+                m_robotIntake.setMode(IntakeMode.RollerOff);
             }));
 
+            new JoystickButton(getDeadbandedDriverController(), XboxController.B_BUTTON)
+            .onTrue(new InstantCommand(() -> {
+                m_robotIntake.setMode(IntakeMode.LabubuGrowl);
+            }));
         }
 
 //.onTrue(new InstantCommand(()  -> m_robotLED.setMode(LEDPatterns.SOLID_PINK_HOT)));

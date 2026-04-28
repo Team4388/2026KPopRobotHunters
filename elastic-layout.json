@@ -3,6 +3,87 @@
   "grid_size": 128,
   "tabs": [
     {
+      "name": "DEMO",
+      "grid_layout": {
+        "layouts": [],
+        "containers": [
+          {
+            "title": "Controller Binds",
+            "x": 0.0,
+            "y": 0.0,
+            "width": 384.0,
+            "height": 512.0,
+            "type": "Large Text Display",
+            "properties": {
+              "topic": "/SmartDashboard/Controller Binds",
+              "period": 0.06,
+              "data_type": "string"
+            }
+          },
+          {
+            "title": "Demo % output",
+            "x": 512.0,
+            "y": 128.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/SmartDashboard/Demo % output",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": true
+            }
+          },
+          {
+            "title": "Indexer FWD % Output",
+            "x": 512.0,
+            "y": 256.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/SmartDashboard/Indexer FWD % Output",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": true
+            }
+          },
+          {
+            "title": "IndexerTargetOutput",
+            "x": 896.0,
+            "y": 0.0,
+            "width": 256.0,
+            "height": 256.0,
+            "type": "Graph",
+            "properties": {
+              "topic": "/AdvantageKit/Shooter/IndexerTargetOutput",
+              "period": 0.033,
+              "data_type": "double",
+              "time_displayed": 5.0,
+              "color": 4278238420,
+              "line_width": 2.0
+            }
+          },
+          {
+            "title": "IndexerOutput",
+            "x": 896.0,
+            "y": 256.0,
+            "width": 256.0,
+            "height": 256.0,
+            "type": "Graph",
+            "properties": {
+              "topic": "/AdvantageKit/Shooter/IndexerOutput",
+              "period": 0.033,
+              "data_type": "double",
+              "time_displayed": 5.0,
+              "color": 4278238420,
+              "line_width": 2.0
+            }
+          }
+        ]
+      }
+    },
+    {
       "name": "Teleoperated",
       "grid_layout": {
         "layouts": [

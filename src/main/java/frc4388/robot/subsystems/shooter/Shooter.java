@@ -1,8 +1,5 @@
 package frc4388.robot.subsystems.shooter;
 
-import static edu.wpi.first.units.Units.Amps;
-import static edu.wpi.first.units.Units.Rotation;
-import static edu.wpi.first.units.Units.Rotations;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 
 import org.littletonrobotics.junction.AutoLogOutput;
@@ -12,9 +9,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.units.measure.AngularVelocity;
-import edu.wpi.first.units.measure.Current;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc4388.robot.constants.Constants;
 import frc4388.robot.subsystems.intake.Intake;
@@ -162,12 +156,6 @@ public class Shooter extends SubsystemBase {
 
         badShooterVelocity = Math.abs(shooterSpeed - shooterSpeedTarget) > ShooterConstants.SHOOTER_SPEED_TOLERANCE.get();
 
-        //revtime calculations
-        // double shooterAcceleration = 
-        double shooterSpeedTargetPretend = ShooterConstants.getTargetShooterSpeed(distanceToHub, chassisXSpeed).in(RotationsPerSecond);
-        double revTime = (Math.abs(shooterSpeed - shooterSpeedTargetPretend)/((7 - shooterSpeedTargetPretend)/ShooterConstants.T_CONSTANT));
-        // double revTimeExp = ShooterConstants.T_CONSTANT * Math.log(1 - Math.abs(shooterSpeed/shooterSpeedTargetPretend));
-        Logger.recordOutput("Time to rev", revTime);
 
         switch (mode) {
             case Shooting:
@@ -211,9 +199,9 @@ public class Shooter extends SubsystemBase {
                 break;
             case ManualShoot:
                 if(io.demoSpeed(state)){
-            io.setIndexerOutput(state, -0.5);
+                    io.setIndexerOutput(state, ShooterConstants.INDEXER_FORWARD_OUTPUT.get());
                 }else{
-                    io.setIndexerOutput(state, 0.2);
+                    io.setIndexerOutput(state, ShooterConstants.INDEXER_REVERSE_OUTPUT.get());
                 }
                 io.setShooterVelocity(state, RotationsPerSecond.of(ShooterConstants.SHOOTER_OVERRIDE_VELOCITY.get()));
                 m_robotLED.setMode(Constants.LEDConstants.OPREADY_FEED);
