@@ -203,7 +203,7 @@ public class Shooter extends SubsystemBase {
                 }else{
                     io.setIndexerOutput(state, ShooterConstants.INDEXER_REVERSE_OUTPUT.get());
                 }
-                io.setShooterVelocity(state, RotationsPerSecond.of(ShooterConstants.SHOOTER_OVERRIDE_VELOCITY.get()));
+                io.setShooterVelocity(state, ShooterConstants.getTargetShooterSpeed(distanceToHub, chassisXSpeed));
                 m_robotLED.setMode(Constants.LEDConstants.OPREADY_FEED);
                 break;
             case Idle:
