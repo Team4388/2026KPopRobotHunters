@@ -170,7 +170,7 @@ public class RobotContainer {
 
    private void configureSINGLEBindings() {
 
-            String controllerInstructions = "Single Controller: \n- A: Reset Gyro \n- Right Bumper: Shift Up \n- Left Bumper: Shift Down \n- X Button: Roller On \n- Y Button: Roller Off \n- B Button: Labubu Growl \n- Back Button: Manual shoot \n- Menu Button: Expels balls";
+            String controllerInstructions = "Single Controller: \n- A: Reset Gyro \n- Right Bumper: Shift Up \n- Left Bumper: Shift Down \n- X Button: Roller On \n- Y Button: Roller Off \n- B Button: Labubu Growl \n- Right Trigger: Manual shoot \n- Menu Button: Expels balls";
 
             SmartDashboard.putString("Controller Binds", controllerInstructions);
 
@@ -183,7 +183,7 @@ public class RobotContainer {
             new JoystickButton(getDeadbandedDriverController(), XboxController.LEFT_BUMPER_BUTTON)
                 .onTrue(new InstantCommand(() -> m_robotSwerveDrive.shiftDown()));
 
-            new JoystickButton(getDeadbandedDriverController(), XboxController.BACK_BUTTON)
+            new Trigger(() -> getDeadbandedDriverController().getRightTriggerAxis() >= 0.5)
             .onTrue(new InstantCommand(() -> {
                 m_robotShooter.spinUpFeeding();
                 m_robotIntake.rollerStop();
@@ -194,8 +194,7 @@ public class RobotContainer {
 
             new JoystickButton(getDeadbandedDriverController(), XboxController.START_BUTTON)
             .onTrue(new InstantCommand(() -> {
-                m_robotShooter.spinUpFeeding();
-                m_robotIntake.rollerStop();
+                m_robotIntake.setMode(IntakeMode.ExpelBalls);
             }));
 
 
