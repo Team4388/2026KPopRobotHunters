@@ -54,7 +54,7 @@ public interface ShooterIO {
     public default void motorStalled(ShooterState state, Intake m_Intake, LED m_robotLED) {}
     public default boolean demoSpeed(ShooterState state) {
         boolean demo = false;
-        if((Math.abs(Math.abs(state.motor1TargetVelocity.in(RotationsPerSecond))-Math.abs(state.motor1Velocity.in(RotationsPerSecond))) < 3)){
+        if((Math.abs(Math.abs(state.motor1TargetVelocity.in(RotationsPerSecond))-Math.abs(state.motor1Velocity.in(RotationsPerSecond))) < 4)){
             demo = true;
         }
         return demo;

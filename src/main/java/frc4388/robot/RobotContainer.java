@@ -106,8 +106,10 @@ public class RobotContainer {
     
         
         public RobotContainer() {
-            
+            // Change bindings here!
+
             configureSINGLEBindings();
+            //configureDOUBLEBindings();
             
             // Called on first robot enable
             DeferredBlock.addBlock(() -> {
@@ -166,6 +168,51 @@ public class RobotContainer {
         }
         
     
+    private void configureDOUBLEBindings() {
+
+            String controllerInstructions = "Driver Controller: \n- A: Reset Gyro \n- Right Bumper: Shift Up \n- Left Bumper: Shift Down \n\n Operator Controller: \n- X Button: Roller On \n- Y Button: Roller Off \n- B Button: Labubu Growl \n- Right Trigger: Manual shoot \n- Menu Button: Expels balls";
+
+            SmartDashboard.putString("Controller Binds", controllerInstructions);
+
+            new JoystickButton(getDeadbandedDriverController(), XboxController.A_BUTTON)
+                .onTrue(new InstantCommand(() -> m_robotSwerveDrive.resetGyro()));
+    
+            new JoystickButton(getDeadbandedDriverController(), XboxController.RIGHT_BUMPER_BUTTON)
+                .onTrue(new InstantCommand(()  -> m_robotSwerveDrive.shiftUp()));
+            
+            new JoystickButton(getDeadbandedDriverController(), XboxController.LEFT_BUMPER_BUTTON)
+                .onTrue(new InstantCommand(() -> m_robotSwerveDrive.shiftDown()));
+
+            new Trigger(() -> getDeadbandedOperatorController().getRightTriggerAxis() >= 0.5)
+            .onTrue(new InstantCommand(() -> {
+                m_robotShooter.spinUpFeeding();
+                m_robotIntake.rollerStop();
+            }))
+            .onFalse(new InstantCommand(() -> {
+                m_robotShooter.spinUpIdle();
+            }));
+
+            new JoystickButton(getDeadbandedOperatorController(), XboxController.START_BUTTON)
+            .onTrue(new InstantCommand(() -> {
+                m_robotIntake.setMode(IntakeMode.ExpelBalls);
+            }));
+
+
+            new JoystickButton(getDeadbandedOperatorController(), XboxController.X_BUTTON)
+            .onTrue(new InstantCommand(() -> {
+                m_robotIntake.setMode(IntakeMode.RollerOn);
+            }));
+        
+            new JoystickButton(getDeadbandedOperatorController(), XboxController.Y_BUTTON)
+            .onTrue(new InstantCommand(() -> {
+                m_robotIntake.setMode(IntakeMode.RollerOff);
+            }));
+
+            new JoystickButton(getDeadbandedOperatorController(), XboxController.B_BUTTON)
+            .onTrue(new InstantCommand(() -> {
+                m_robotIntake.setMode(IntakeMode.LabubuGrowl);
+            }));
+        }
 
 
    private void configureSINGLEBindings() {
