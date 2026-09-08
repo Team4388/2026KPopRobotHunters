@@ -253,7 +253,34 @@ public class RobotContainer {
          * passing it to a {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
          */
         private void configureButtonBindings() {
-            
+            String controllerInstructions = "" +
+            "Driver Controller:\n" +
+            "- A: Reset Gyro\n" +
+            "- Right Bumper: Shift Up\n" +
+            "- Left Bumper: Shift Down\n" +
+            "- Back: Fix Intake Encoder + Update Shooter Gains\n" +
+            "- X (hold): Defense X-Lock Wheels\n" +
+            "- B (hold): Hold Current Position (PID Lock)\n" +
+            "- Left Trigger (hold): Slow Mode + Rotation Boost\n" +
+            "- Right Trigger (hold): Slow Mode + Aim/Drive Facing Hub\n" +
+            "- DPAD (hold): Fine Alignment\n" +
+
+            "Operator Controller:\n" +
+            "- Right Trigger (hold): Allow Shooting\n" +
+            "- Left Trigger (hold): Idle Intake + Rev Shooter (Spin Up)\n" +
+            "- Left Bumper (hold): Spin Up Feeding + Stop Roller (Climb Post Feed)\n" +
+            "- X (press): Intake Extending + Rolling\n" +
+            "- B (hold): Labubu Growl Mode, releases to Extending Rolling\n" +
+            "- Y (hold): Retract Intake, releases to Arm Idle (Not Rolling)\n" +
+            "- Back: Intake Encoder Fix\n" +
+            "- DPAD Up (hold): Retract Torque\n" +
+            "- DPAD Down (hold): Expel Balls\n" +
+            "- DPAD Left (hold): Retracting\n" +
+            "- DPAD Right (hold): Extending Idle";
+
+            SmartDashboard.putString("Controller Binds", controllerInstructions);
+
+
             //Driver controls
             new JoystickButton(getDeadbandedDriverController(), XboxController.A_BUTTON)
                 .onTrue(new InstantCommand(() -> m_robotSwerveDrive.resetGyro()));
