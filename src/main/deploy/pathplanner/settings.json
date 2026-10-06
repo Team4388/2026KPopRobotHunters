@@ -3,10 +3,7 @@
   "robotLength": 0.889,
   "holonomicMode": true,
   "pathFolders": [],
-  "autoFolders": [
-    "Spring Break Tests",
-    "Pikes Peak Autos"
-  ],
+  "autoFolders": [],
   "defaultMaxVel": 3.0,
   "defaultMaxAccel": 3.0,
   "defaultMaxAngVel": 600.0,
