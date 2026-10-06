@@ -4,9 +4,8 @@
 
 package frc4388.robot.subsystems.swerve;
 
-import static edu.wpi.first.units.Units.Rotations;
-import static edu.wpi.first.units.Units.RotationsPerSecond;
-
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -15,10 +14,13 @@ import org.littletonrobotics.junction.Logger;
 
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.trajectory.PathPlannerTrajectory;
+import com.pathplanner.lib.trajectory.PathPlannerTrajectoryState;
 import com.pathplanner.lib.util.PathPlannerLogging;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -27,10 +29,10 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc4388.robot.constants.Constants.AutoConstants;
 import frc4388.robot.subsystems.vision.Vision;
@@ -67,6 +69,18 @@ public class SwerveDrive extends SubsystemBase implements Queryable {
     public double rotTarget = 0.0;
     public Rotation2d orientRotTarget = new Rotation2d();
     public ChassisSpeeds chassisSpeeds = new ChassisSpeeds();
+    private final Field2d m_field = new Field2d();
+
+    // Auto Playback//
+
+    private final Field2d m_autoPreviewField = new Field2d();
+    private final Timer m_autoPreviewTimer = new Timer();
+    private final List<PathPlannerTrajectory> m_autoPreviewTrajectories = new ArrayList<>();
+    private double m_autoPreviewTotalTime = 0.0;
+    private boolean m_autoPreviewEnabled = false;
+    private RobotConfig m_pathPlannerRobotConfig;
+
+
 
     private final PIDController m_rotationOverridePID = new PIDController(
         SwerveDriveConstants.PIDConstants.AIM_kP.get(),
@@ -86,14 +100,21 @@ public class SwerveDrive extends SubsystemBase implements Queryable {
         this.state = new SwerveStateAutoLogged();
 
         this.vision = vision;
+        SmartDashboard.putData("Field", m_field);
+        SmartDashboard.putData("AutoPreview", m_autoPreviewField);
 
         RobotConfig config;
         try {
-            config = RobotConfig.fromGUISettings();
+            m_pathPlannerRobotConfig = RobotConfig.fromGUISettings();
         } catch (Exception e) {
-            // Handle exception as needed
-            config = null;
+            DriverStation.reportError(
+                "Could not load PathPlanner RobotConfig: " + e.getMessage(),
+                e.getStackTrace()
+            );
+
+            m_pathPlannerRobotConfig = null;
         }
+
 
         PPHolonomicDriveController driveController = new PPHolonomicDriveController(
             new PIDConstants(5.0, 0.0, 0.0), // Translation PID
@@ -120,7 +141,7 @@ public class SwerveDrive extends SubsystemBase implements Queryable {
                         .withSpeeds(speeds)), // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds.
                                               // Also optionally outputs individual module feedforwards
                 driveController, // <-- use the variable, not inline new PPHolonomicDriveController(...)
-                config, // The robot configuration
+                m_pathPlannerRobotConfig, // The robot configuration
                 () -> {
                     // Boolean supplier that controls when the path will be mirrored for the red
                     // alliance
@@ -301,6 +322,116 @@ public class SwerveDrive extends SubsystemBase implements Queryable {
                 .withVelocityY(leftStick.getY() * speedAdjust)
                 .withTargetDirection(rightStick.getAngle()));
     }
+
+    public void setAutoPreview(String autoName) {
+            m_autoPreviewTrajectories.clear();
+            m_autoPreviewTotalTime = 0.0;
+            m_autoPreviewTimer.reset();
+
+            if (autoName == null || autoName.equals("None")) {
+                m_autoPreviewEnabled = false;
+                m_autoPreviewField.setRobotPose(new Pose2d());
+                return;
+            }
+
+            if (m_pathPlannerRobotConfig == null) {
+                DriverStation.reportError(
+                    "Cannot preview auto: PathPlanner RobotConfig is null",
+                    false
+                );
+                m_autoPreviewEnabled = false;
+                return;
+            }
+
+            try {
+                List<PathPlannerPath> paths =
+                    PathPlannerAuto.getPathGroupFromAutoFile(autoName);
+
+                if (paths.isEmpty()) {
+                    m_autoPreviewEnabled = false;
+                    return;
+                }
+
+                for (PathPlannerPath path : paths) {
+
+                    // PathPlanner normally flips paths for red alliance.
+                    // Do the same thing for our preview.
+                    if (TimesNegativeOne.isRed && !path.preventFlipping) {
+                        path = path.mirrorPath();
+                    }
+
+                    PathPlannerTrajectory trajectory =
+                        path.generateTrajectory(
+                            new ChassisSpeeds(),
+                            path.getInitialHeading(),
+                            m_pathPlannerRobotConfig
+                        );
+
+                    m_autoPreviewTrajectories.add(trajectory);
+
+                    m_autoPreviewTotalTime += trajectory.getTotalTimeSeconds();
+                }
+
+                m_autoPreviewEnabled = !m_autoPreviewTrajectories.isEmpty();
+
+                if (m_autoPreviewEnabled) {
+                    m_autoPreviewTimer.restart();
+
+                    // Put the ghost at the beginning immediately.
+                    m_autoPreviewField.setRobotPose(
+                        m_autoPreviewTrajectories.get(0)
+                            .getInitialState()
+                            .pose
+                    );
+                }
+
+            } catch (Exception e) {
+                DriverStation.reportError(
+                    "Could not load auto preview for " + autoName
+                        + ": " + e.getMessage(),
+                    e.getStackTrace()
+                );
+
+                m_autoPreviewEnabled = false;
+            }
+        }
+
+        private void updateAutoPreview() {
+        if (!m_autoPreviewEnabled || m_autoPreviewTrajectories.isEmpty()) {
+            return;
+        }
+
+        double time = m_autoPreviewTimer.get();
+
+        // Loop the preview.
+        if (time >= m_autoPreviewTotalTime) {
+            m_autoPreviewTimer.restart();
+            time = 0.0;
+        }
+
+        double elapsed = 0.0;
+
+        for (PathPlannerTrajectory trajectory : m_autoPreviewTrajectories) {
+
+            double trajectoryTime = trajectory.getTotalTimeSeconds();
+
+            if (time <= elapsed + trajectoryTime) {
+
+                double localTime = time - elapsed;
+
+                PathPlannerTrajectoryState state =
+                    trajectory.sample(localTime);
+
+                m_autoPreviewField.setRobotPose(state.pose);
+
+                return;
+            }
+
+            elapsed += trajectoryTime;
+        }
+        
+    }
+
 
     public void driveRelativeAngle(Translation2d leftStick, Rotation2d heading) {
         
@@ -575,7 +706,7 @@ public class SwerveDrive extends SubsystemBase implements Queryable {
 
         io.updateInputs(state);
         Logger.processInputs("SwerveDrive", state);
-        
+        m_field.setRobotPose(getPose2d());
         vision.setLastOdomPose(state.currentPose);
         setLastOdomSpeed(state.currentPose, state.lastPose, state.odometryRate);
 
@@ -602,6 +733,10 @@ public class SwerveDrive extends SubsystemBase implements Queryable {
         }
 
         // if(e.isPresent())
+        if (DriverStation.isDisabled()) {
+            updateAutoPreview();
+        }
+
     }
 
     private void reset_index() {

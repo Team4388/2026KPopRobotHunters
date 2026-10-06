@@ -91,6 +91,8 @@ public class RobotContainer {
     private final DeadbandedXboxController m_operatorXbox = new DeadbandedXboxController(OIConstants.XBOX_OPERATOR_ID);
 
 
+    private final Field2d m_field = new Field2d();
+
     // private final ButtonBox m_buttonBox = new ButtonBox(OIConstants.BUTTONBOX_ID);
 
     // public List<Subsystem> subsystems = new ArrayList<>();
@@ -237,7 +239,6 @@ public class RobotContainer {
             .withName("SwerveDrive DefaultCommand"));
             
             m_robotSwerveDrive.setToSlow();
-            
             makeAutoChooser();
             SmartDashboard.putData("Auto Chooser", autoChooser);
     
@@ -253,7 +254,8 @@ public class RobotContainer {
          * passing it to a {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
          */
         private void configureButtonBindings() {
-            String controllerInstructions = "" +
+
+            String driverInstructions = "" +
             "Driver Controller:\n" +
             "- A: Reset Gyro\n" +
             "- Right Bumper: Shift Up\n" +
@@ -263,8 +265,9 @@ public class RobotContainer {
             "- B (hold): Hold Current Position (PID Lock)\n" +
             "- Left Trigger (hold): Slow Mode + Rotation Boost\n" +
             "- Right Trigger (hold): Slow Mode + Aim/Drive Facing Hub\n" +
-            "- DPAD (hold): Fine Alignment\n" +
+            "- DPAD (hold): Fine Alignment";
 
+            String operatorInstructions = "" +
             "Operator Controller:\n" +
             "- Right Trigger (hold): Allow Shooting\n" +
             "- Left Trigger (hold): Idle Intake + Rev Shooter (Spin Up)\n" +
@@ -278,8 +281,8 @@ public class RobotContainer {
             "- DPAD Left (hold): Retracting\n" +
             "- DPAD Right (hold): Extending Idle";
 
-            SmartDashboard.putString("Controller Binds", controllerInstructions);
-
+            SmartDashboard.putString("Driver Binds", driverInstructions);
+            SmartDashboard.putString("Operator Binds", operatorInstructions);
 
             //Driver controls
             new JoystickButton(getDeadbandedDriverController(), XboxController.A_BUTTON)
@@ -683,6 +686,7 @@ public class RobotContainer {
             PathPlannerAuto auto = new PathPlannerAuto(filename);
             m_robotSwerveDrive.setInitalPose(auto.getStartingPose());
             //-----
+            m_robotSwerveDrive.setAutoPreview(filename);
         });
         SmartDashboard.putData(autoChooser);
 
