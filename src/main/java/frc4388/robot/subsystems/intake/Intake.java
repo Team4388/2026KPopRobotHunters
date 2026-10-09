@@ -104,11 +104,12 @@ public class Intake extends SubsystemBase {
         // ChassisSpeeds chassisSpeeds = m_SwerveDrive.chassisSpeeds;
 
         // double ChassisOverallSpeed = Math.hypot(chassisSpeeds.vxMetersPerSecond, chassisSpeeds.vyMetersPerSecond);
+        io.updateInputs(state);
         Logger.processInputs("Intake", state);
         Logger.recordOutput("Intake/IntakeState", this.mode);
-
-
-        io.updateInputs(state);
+        Logger.recordOutput("Intake/ArmPositionRotations", state.armAngle.in(Rotations));
+        Logger.recordOutput("Intake/ArmExtended", state.extendedSoftLimit);
+        Logger.recordOutput("Intake/ArmRetracted", state.retractedSoftLimit);
 
         // overCompressed = 
         //     Math.abs(state.armMotorCurrent.in(Amps)) > IntakeConstants.INTAKE_BOUNCE_CURRENT_LIMIT.get();

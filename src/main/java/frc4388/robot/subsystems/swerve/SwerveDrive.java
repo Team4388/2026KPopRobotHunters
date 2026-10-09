@@ -590,7 +590,6 @@ public class SwerveDrive extends SubsystemBase implements Queryable {
         // Calculate the angle between the current position and the lead position
         //Rotation2d ang = getPose2d().getTranslation().minus(fieldPos).getAngle();
         Rotation2d ang = new Rotation2d(0,1);
-        System.out.println(ang);
 
         driveFieldAngle(leftStick, ang);
     }
