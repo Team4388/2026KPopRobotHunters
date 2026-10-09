@@ -23,6 +23,7 @@ import frc4388.robot.constants.Constants.VisionConstants;
 import frc4388.robot.subsystems.intake.IntakeConstants;
 import frc4388.robot.subsystems.intake.IntakeIO;
 import frc4388.robot.subsystems.intake.IntakeReal;
+import frc4388.robot.subsystems.intake.IntakeSim;
 import frc4388.robot.subsystems.shooter.ShooterConstants;
 import frc4388.robot.subsystems.shooter.ShooterIO;
 import frc4388.robot.subsystems.shooter.ShooterReal;
@@ -143,7 +144,7 @@ public class RobotMap {
                 swerveDrivetrain = new SimpleSwerveSim() {};
 
                 shooterIO = new ShooterIO() {};
-                intakeIO = new IntakeIO() {};
+                intakeIO = new IntakeSim();
                 break;
             default:
                 leftCamera = new VisionIO() {};
