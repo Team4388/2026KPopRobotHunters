@@ -171,7 +171,7 @@ public class IntakeReal implements IntakeIO {
     public void fixEncoder() {
         // m_encoder.loadRotations();
 
-
+        System.out.println("RESET!!");
         // if(retractedLimit()) {
             m_encoder.resetRotations();
         // }

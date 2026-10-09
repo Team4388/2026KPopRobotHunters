@@ -260,7 +260,7 @@ public class RobotContainer {
             "- A: Reset Gyro\n" +
             "- Right Bumper: Shift Up\n" +
             "- Left Bumper: Shift Down\n" +
-            "- Back: Fix Intake Encoder + Update Shooter Gains\n" +
+            "- Back: Fix Intake Encoder (sets as 0)\n" +
             "- X (hold): Defense X-Lock Wheels\n" +
             "- B (hold): Hold Current Position (PID Lock)\n" +
             "- Left Trigger (hold): Slow Mode + Rotation Boost\n" +
@@ -275,7 +275,7 @@ public class RobotContainer {
             "- X (press): Intake Extending + Rolling\n" +
             "- B (hold): Labubu Growl Mode, releases to Extending Rolling\n" +
             "- Y (hold): Retract Intake, releases to Arm Idle (Not Rolling)\n" +
-            "- Back: Intake Encoder Fix\n" +
+            "- Back: Intake Encoder Fix (goes up)\n" +
             "- DPAD Up (hold): Retract Torque\n" +
             "- DPAD Down (hold): Expel Balls\n" +
             "- DPAD Left (hold): Retracting\n" +
@@ -419,6 +419,9 @@ public class RobotContainer {
         new JoystickButton(getDeadbandedOperatorController(), XboxController.BACK_BUTTON)
             .onTrue(new InstantCommand(()  -> {
                 m_robotIntake.setMode(IntakeMode.EncoderFix);
+            }))
+            .onFalse(new InstantCommand(() -> {
+                m_robotIntake.setMode(IntakeMode.ArmIdleRollingNot);
             }));
 
         new JoystickButton(getDeadbandedOperatorController(), XboxController.B_BUTTON)
