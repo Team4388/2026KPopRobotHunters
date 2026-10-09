@@ -276,7 +276,7 @@ public class RobotContainer {
             "- B (hold): Labubu Growl Mode, releases to Extending Rolling\n" +
             "- Y (hold): Retract Intake, releases to Arm Idle (Not Rolling)\n" +
             "- Back: Intake Encoder Fix (goes up)\n" +
-            "- DPAD Up (hold): Retract Torque\n" +
+            // "- DPAD Up (hold): Retract Torque\n" +
             "- DPAD Down (hold): Expel Balls\n" +
             "- DPAD Left (hold): Retracting\n" +
             "- DPAD Right (hold): Extending Idle";
@@ -458,13 +458,13 @@ public class RobotContainer {
             }));
 
             
-        new Trigger(() -> getDeadbandedOperatorController().getPOV() == 0)
-            .onTrue(new InstantCommand(() -> {
-                m_robotIntake.setMode(IntakeMode.RectractTorque);
-            }))
-            .onFalse(new InstantCommand(() -> {
-                m_robotIntake.setMode(IntakeMode.Idle);
-            }));
+        // new Trigger(() -> getDeadbandedOperatorController().getPOV() == 0)
+        //     .onTrue(new InstantCommand(() -> {
+        //         m_robotIntake.setMode(IntakeMode.RectractTorque);
+        //     }))
+        //     .onFalse(new InstantCommand(() -> {
+        //         m_robotIntake.setMode(IntakeMode.Idle);
+        //     }));
 
         new Trigger(() -> getDeadbandedOperatorController().getPOV() == 180)
             .onTrue(new InstantCommand(() -> {
@@ -654,8 +654,8 @@ public class RobotContainer {
         if(RobotBase.isReal()) {
             dir = new File("/home/lvuser/deploy/pathplanner/autos/");
         } else {
-            // dir = new File("C:\\Users\\Ridgebotics\\Documents\\GitHub\\2026KPopRobotHunters\\src\\main\\deploy\\pathplanner\\autos\\");
-            dir = new File("C:\\Users\\Ligma\\Documents\\GitHub\\2026KPopRobotHunters\\src\\main\\deploy\\pathplanner\\autos\\");
+            dir = new File("C:\\Users\\Ridgebotics\\Documents\\GitHub\\2026KPopRobotHunters\\src\\main\\deploy\\pathplanner\\autos\\");
+            // dir = new File("C:\\Users\\Ligma\\Documents\\GitHub\\2026KPopRobotHunters\\src\\main\\deploy\\pathplanner\\autos\\");
         }
 
         String[] autos = dir.list();
