@@ -48,6 +48,7 @@ public class Robot extends LoggedRobot {
 
   private RobotTime m_robotTime = RobotTime.getInstance();
   private RobotContainer m_robotContainer;
+  private final BatteryTelemetry batteryTelemetry = new BatteryTelemetry();
   //private LED mled = new LED();
   /**
    * This function is run when the robot is first started up and should be
@@ -83,6 +84,7 @@ public class Robot extends LoggedRobot {
   @Override
   public void robotPeriodic() {   
     m_robotTime.updateTimes();
+    batteryTelemetry.periodic();
     // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
     // commands, running already-scheduled commands, removing finished or interrupted commands,
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
