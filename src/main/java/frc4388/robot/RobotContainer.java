@@ -139,9 +139,9 @@ public class RobotContainer {
         // );
     
         private Command RobotRev = new SequentialCommandGroup(
-            new InstantCommand(() -> m_robotShooter.spinUpShooting(), m_robotShooter),
-            IntakeExtended,
-            new InstantCommand(() -> m_robotIntake.setMode(IntakeMode.ExpelBalls), m_robotIntake)
+            new InstantCommand(() -> m_robotShooter.spinUpShooting(), m_robotShooter)
+            // IntakeExtended,
+            // new InstantCommand(() -> m_robotIntake.setMode(IntakeMode.ExpelBalls), m_robotIntake)
         );
 
         private Command WaitIntakeReference =
@@ -165,11 +165,12 @@ public class RobotContainer {
         private Command RobotShoot = new SequentialCommandGroup(
             // TEST NEW AUTO ALIGN
             //new AutoAlign(m_robotSwerveDrive, m_vision, new Pose2d(FieldPositions.HUB_POSITION,  new Rotation2d(0)), false),
+            new WaitCommand(2.0),
             new WaitUntilCommand(m_robotShooter::isShooterUpToSpeed),
             new InstantCommand(() -> m_robotIntake.setMode(IntakeMode.Idle), m_robotIntake),
             new InstantCommand(()-> m_robotShooter.allowShooting(), m_robotShooter),
             new WaitCommand(3.5),
-            IntakeRetracted,
+            // IntakeRetracted,
             new WaitCommand(5),
             new InstantCommand(() -> m_robotShooter.denyShooting(), m_robotShooter),
             new InstantCommand(()-> m_robotShooter.spinUpIdle(), m_robotShooter)
